@@ -65,6 +65,17 @@ const uz = {
     selfStudy: "Mustaqil ta'lim",
     profile: 'Profil',
   },
+  notFound: {
+    title: 'Sahifa topilmadi',
+    description: "Bu manzilda sahifa yo'q. Havola eskirgan yoki xato yozilgan bo'lishi mumkin.",
+    home: 'Bosh sahifaga',
+  },
+  crash: {
+    title: 'Nimadir buzildi',
+    description: "Sahifani ko'rsatishda kutilmagan xato yuz berdi. Qayta yuklab ko'ring.",
+    reload: 'Qayta yuklash',
+    home: 'Bosh sahifaga',
+  },
   placeholder: {
     title: 'Tez orada',
     description: "Bu bo'lim keyingi bosqichda qo'shiladi.",
@@ -174,6 +185,10 @@ const uz = {
       `${total} ta mavzudan ${mastered} tasi o'zlashtirildi`,
     noMasteryTopics: "Hali mavzular yo'q",
     allTopics: 'Barcha mavzular',
+    nextStep: 'Keyingi qadam',
+    checkpointReady:
+      "Quizdan yaxshi o'tdingiz! Endi mavzuni Sardorga tushuntirib, uni o'zlashtiring.",
+    checkpointButton: 'Tushuntir checkpoint',
   },
   topics: {
     title: 'Darsliklar',

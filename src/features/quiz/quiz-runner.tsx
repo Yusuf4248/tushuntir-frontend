@@ -22,6 +22,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { ProgressBar } from '@/components/ui/progress-bar'
 import { useToast } from '@/components/ui/toast'
 import { t } from '@/lib/strings.uz'
+import { useDocumentTitle } from '@/lib/use-document-title'
 import { paths } from '@/routes/paths'
 
 import { AnswerInput } from './answer-input'
@@ -75,6 +76,7 @@ export function QuizRunner({ view }: { view: AttemptView }) {
     () => stored?.misconceptions ?? {},
   )
   const [deadlinePassed, setDeadlinePassed] = useState(false)
+  useDocumentTitle(kind === 'quiz' ? t.quiz.lessonQuiz : t.quiz.practiceQuiz)
   const [hintOpen, setHintOpen] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
 

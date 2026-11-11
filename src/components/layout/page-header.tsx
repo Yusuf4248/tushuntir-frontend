@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router'
 
 import { Button } from '@/components/ui/button'
 import { t } from '@/lib/strings.uz'
+import { useDocumentTitle } from '@/lib/use-document-title'
 import { cn } from '@/lib/utils'
 
 type PageHeaderProps = {
@@ -27,6 +28,7 @@ export function PageHeader({
 }: PageHeaderProps) {
   const navigate = useNavigate()
   const location = useLocation()
+  useDocumentTitle(title)
 
   function goBack() {
     // 'default' = first entry of this tab's history, so there is nothing to go back to.

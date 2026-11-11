@@ -7,6 +7,7 @@ import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import { Input, Label } from '@/components/ui/input'
 import { t } from '@/lib/strings.uz'
+import { useDocumentTitle } from '@/lib/use-document-title'
 
 import { useAuth } from './auth-context'
 import { formatLocal, isCompleteLocal, PHONE_PREFIX, toE164, toLocalDigits } from './phone'
@@ -25,6 +26,7 @@ function loginErrorMessage(error: unknown): string {
 
 export function LoginPage() {
   const { state, login } = useAuth()
+  useDocumentTitle(t.auth.title)
   const location = useLocation()
   const ids = { phone: useId(), password: useId(), phoneErr: useId(), passwordErr: useId() }
 

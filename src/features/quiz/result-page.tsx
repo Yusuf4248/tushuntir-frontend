@@ -18,6 +18,7 @@ import { StatusChip } from '@/components/status-chip'
 import { Button } from '@/components/ui/button'
 import { Chip } from '@/components/ui/chip'
 import { t } from '@/lib/strings.uz'
+import { useDocumentTitle } from '@/lib/use-document-title'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
@@ -69,6 +70,7 @@ export function ResultPage() {
 
 function ResultView({ result }: { result: SubmitResult }) {
   const mastery = useMastery()
+  useDocumentTitle(t.result.title)
   const topicId = result.mastery?.topicId ?? null
   const topic = mastery.data?.topics.find((item) => item.topicId === topicId)
   const mistakes = result.totalQuestions - result.correctCount
