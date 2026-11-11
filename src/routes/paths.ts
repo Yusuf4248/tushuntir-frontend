@@ -10,7 +10,6 @@ export const paths = {
     const qs = query.toString()
     return `/topics/${topicId}${qs ? `?${qs}` : ''}`
   },
-  topicQuiz: (topicId: number) => `/topics/${topicId}/quiz`,
   quiz: (quizId: number) => `/quiz/${quizId}`,
   practice: (topicId: number) => `/practice/${topicId}`,
   checkpoint: (topicId: number) => `/checkpoint/${topicId}`,

@@ -155,6 +155,8 @@ const uz = {
       "Oldingi mavzu hali o'zlashtirilmagan, lekin bu mavzuni hozir ham o'rganishingiz mumkin.",
     quiz: 'Quiz',
     quizHint: 'Bilimingizni tekshiring',
+    quizDone: "Topshirilgan — natijani ko'ring",
+    quizUnavailable: "Hozir ochiq quiz yo'q. Quiz dars tugagach ochiladi.",
     practice: 'Mashq',
     practiceHint: '5 ta savol bilan mashq qiling',
     explain: 'Tushuntir',
