@@ -1,6 +1,6 @@
 import { CheckCircle2, ChevronLeft, ChevronRight, Lock, SearchX } from 'lucide-react'
 import { useEffect, useRef } from 'react'
-import { Link, useParams, useSearchParams } from 'react-router'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 
 import { ApiError, errorMessage } from '@/api/errors'
 import { useMastery, useTopic } from '@/api/me'
@@ -15,7 +15,7 @@ import { Skeleton, SkeletonCard } from '@/components/ui/skeleton'
 import { t } from '@/lib/strings.uz'
 import { paths } from '@/routes/paths'
 
-import { Textbook } from './textbook'
+import { AskableTextbook } from './askable-textbook'
 import { TopicActions } from './topic-actions'
 import { useTextbookFocus } from './use-textbook-focus'
 
@@ -55,6 +55,7 @@ export function TopicPage() {
 
 function TopicView({ topic }: { topic: TopicDetail }) {
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
   const { highlightedId, focus } = useTextbookFocus(topic.paragraphs)
 
   // From the mistake review: ?paragraph=ID (or ?page=N) scrolls there and highlights it once.
@@ -120,7 +121,11 @@ function TopicView({ topic }: { topic: TopicDetail }) {
           {topic.paragraphs.length === 0 ? (
             <p className="text-muted-foreground">{t.topicPage.noText}</p>
           ) : (
-            <Textbook paragraphs={topic.paragraphs} highlightedId={highlightedId} />
+            <AskableTextbook
+              paragraphs={topic.paragraphs}
+              highlightedId={highlightedId}
+              onAsk={(ask) => void navigate(paths.chat(topic.topicId), { state: { ask } })}
+            />
           )}
         </section>
 

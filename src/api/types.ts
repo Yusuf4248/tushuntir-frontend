@@ -38,6 +38,9 @@ export type Review = Schemas['ReviewDto']
 export type ConfirmResult = Schemas['ConfirmResultDto']
 export type AttemptHistoryItem = Schemas['AttemptHistoryItemDto']
 
+export type ChatMessageBody = Schemas['ChatMessageDto']
+export type ChatAction = NonNullable<ChatMessageBody['action']>
+
 /** What the API sends on an error. `message` is a string, or a list for validation errors. */
 export type ApiErrorBody = {
   statusCode?: number

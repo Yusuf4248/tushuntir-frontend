@@ -91,7 +91,7 @@ export function Textbook({ paragraphs, highlightedId, renderActions }: TextbookP
               data-paragraph-id={p.id}
               data-page={p.page ?? undefined}
               className={cn(
-                '-mx-2 my-1 scroll-mt-24 rounded-xl px-2 py-2 transition-colors duration-700',
+                'group/para relative -mx-2 my-1 scroll-mt-24 rounded-xl px-2 py-2 transition-colors duration-700',
                 highlightedId === p.id && 'bg-warning-soft ring-2 ring-warning/40',
               )}
             >

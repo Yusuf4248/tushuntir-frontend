@@ -178,6 +178,14 @@ const uz = {
     explain: 'Tushuntir',
     actions: 'Amallar',
   },
+  ask: {
+    menuLabel: "Belgilangan matn bo'yicha AI dan so'rash",
+    paragraphButton: "AI dan so'rash",
+    explain_simple: 'Tushuntir',
+    real_life_example: 'Hayotiy misol',
+    in_russian: 'Ruschada',
+    quiz_me: 'Shu qismdan savol ber',
+  },
   quiz: {
     lessonQuiz: "Dars bo'yicha quiz",
     practiceQuiz: 'Mashq',
