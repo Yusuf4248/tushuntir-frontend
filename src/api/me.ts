@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { fetchAttemptHistory } from './attempts'
 import { apiRequest } from './client'
 import type {
   FinishLessonResponse,
@@ -67,6 +68,13 @@ export function useTopic(topicId: number) {
     queryKey: meKeys.topic(topicId),
     queryFn: ({ signal }) => apiRequest<TopicDetail>(`/me/topics/${topicId}`, { signal }),
     enabled: Number.isInteger(topicId) && topicId > 0,
+  })
+}
+
+export function useRecentAttempts(limit = 10) {
+  return useQuery({
+    queryKey: [...meKeys.attempts(), limit],
+    queryFn: ({ signal }) => fetchAttemptHistory({ limit }, signal),
   })
 }
 
