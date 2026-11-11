@@ -140,6 +140,27 @@ const uz = {
     noMasteryTopics: "Hali mavzular yo'q",
     allTopics: 'Barcha mavzular',
   },
+  topics: {
+    title: 'Darsliklar',
+    lockedNote:
+      "Qulf belgisi: oldingi mavzu hali o'zlashtirilmagan. Bu faqat ma'lumot — barcha mavzular ochiq.",
+    lockedLabel: 'qulflangan',
+    noChapter: "Bo'limsiz",
+    empty: "Hali mavzular yo'q",
+    emptyHint: "Darsliklar qo'shilgach, mavzular shu yerda ko'rinadi.",
+    notFound: 'Mavzu topilmadi',
+    notFoundHint: "Bu mavzu sizning darsliklaringizda yo'q.",
+    backToTopics: "Mavzular ro'yxatiga",
+    topicLocked:
+      "Oldingi mavzu hali o'zlashtirilmagan, lekin bu mavzuni hozir ham o'rganishingiz mumkin.",
+    quiz: 'Quiz',
+    quizHint: 'Bilimingizni tekshiring',
+    practice: 'Mashq',
+    practiceHint: '5 ta savol bilan mashq qiling',
+    explain: 'Tushuntir',
+    explainHint: "Mavzuni o'z so'zlaringiz bilan tushuntiring",
+    count: (n: number) => `${n} ta mavzu`,
+  },
 }
 
 type Widen<T> = T extends (...args: infer A) => infer R

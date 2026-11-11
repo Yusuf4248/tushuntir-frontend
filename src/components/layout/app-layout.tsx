@@ -56,7 +56,7 @@ export function AppLayout() {
                 end={end}
                 className={({ isActive }) =>
                   cn(
-                    'flex h-16 flex-col items-center justify-center gap-1 px-1 text-xs leading-tight font-medium transition-colors',
+                    'flex h-16 flex-col items-center justify-center gap-1 px-0.5 text-[11px] leading-tight font-medium transition-colors min-[380px]:text-xs',
                     isActive ? 'text-primary' : 'text-muted-foreground',
                   )
                 }

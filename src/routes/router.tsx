@@ -8,6 +8,7 @@ import { CheckpointPlaceholderPage } from '@/features/checkpoint/checkpoint-plac
 import { HomePage } from '@/features/home/home-page'
 import { ProfilePage } from '@/features/profile/profile-page'
 import { QuizPlaceholderPage } from '@/features/quiz/quiz-placeholder-page'
+import { TopicPage } from '@/features/topics/topic-page'
 import { TopicsPage } from '@/features/topics/topics-page'
 
 import { RequireStudent } from './require-student'
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
             children: [
               { index: true, element: <HomePage /> },
               { path: 'topics', element: <TopicsPage /> },
+              { path: 'topics/:topicId', element: <TopicPage /> },
               { path: 'self-study', element: <SelfStudyPage /> },
               { path: 'profile', element: <ProfilePage /> },
             ],
