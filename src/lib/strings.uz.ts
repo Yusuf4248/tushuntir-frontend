@@ -57,6 +57,30 @@ const uz = {
     otherAccount: 'Boshqa hisob bilan kirish',
     logout: 'Chiqish',
   },
+  nav: {
+    label: 'Asosiy menyu',
+    home: 'Bosh sahifa',
+    topics: 'Darsliklar',
+    selfStudy: "Mustaqil ta'lim",
+    profile: 'Profil',
+  },
+  placeholder: {
+    title: 'Tez orada',
+    description: "Bu bo'lim keyingi bosqichda qo'shiladi.",
+    quiz: 'Quiz',
+    practice: 'Mashq',
+    checkpoint: 'Tushuntir',
+    close: 'Yopish',
+  },
+  selfStudy: {
+    title: "Mustaqil ta'lim",
+    description: "Istalgan mavzu bo'yicha savol bering — yordamchi darslikka tayanib tushuntiradi.",
+  },
+  profile: {
+    title: 'Profil',
+    phone: 'Telefon',
+    school: 'Maktab',
+  },
 }
 
 type Widen<T> = T extends (...args: infer A) => infer R
