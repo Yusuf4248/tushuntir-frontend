@@ -4,6 +4,26 @@
  */
 
 export interface paths {
+  '/api/health': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Liveness for the host's health check (no login)
+     * @description 200 when the database answers and the pgvector extension is installed; 503 otherwise.
+     */
+    get: operations['HealthController_check']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/auth/login': {
     parameters: {
       query?: never
@@ -1612,7 +1632,7 @@ export interface paths {
     put?: never
     /**
      * End a lesson now so its quiz unlocks (DEMO_MODE only)
-     * @description Only when DEMO_MODE=true; otherwise 404. Sets lessons.ended_at to now. If the lesson's quiz would close within an hour, its deadline moves to two hours from now.
+     * @description Only when DEMO_MODE=true; otherwise 404. Students may end a lesson of their own class, teachers only their own lessons (others get 404; other roles 403). Sets lessons.ended_at to now. If the lesson's quiz would close within an hour, its deadline moves to two hours from now.
      */
     post: operations['DemoController_finishLesson']
     delete?: never
@@ -1675,6 +1695,46 @@ export interface paths {
      * @description Picks 10 random approved questions of the quiz topic (a different set and order per student). One attempt per quiz: calling again returns the same open attempt; 409 once submitted, before the lesson ends or after the deadline.
      */
     post: operations['MeController_start']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/attempts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The student's quiz and checkpoint history, newest first
+     * @description Lesson quizzes, practice quizzes and Tushuntir checkpoint tries (exams are not listed). For quizzes `id` is the attempt id (open the review with it); for checkpoints it is the checkpoint id.
+     */
+    get: operations['MeController_attemptHistory']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/attempts/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * One of the student's attempts (to resume a quiz)
+     * @description The same view as quiz start: questions in order, saved answers and the hints already revealed. Only the student's own attempts (404 otherwise).
+     */
+    get: operations['MeController_attempt']
+    put?: never
+    post?: never
     delete?: never
     options?: never
     head?: never
@@ -1855,6 +1915,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/me/topics/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * A textbook topic: summary, key ideas and paragraphs
+     * @description Only topics of the student's class subjects and grade (else 404). Paragraphs are the topic's textbook text in order, each with its real page. status / unlocked follow docs/mastery-rules.md; prevTopicId / nextTopicId follow book order within the textbook.
+     */
+    get: operations['MeController_topic']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/me/topics/{id}/practice': {
     parameters: {
       query?: never
@@ -1935,6 +2015,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/me/subjects': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Subjects of the student's class with topic progress
+     * @description topicsTotal counts the topics of the subject's textbook(s) at the class grade (0 when there is no textbook yet); topicsMastered counts those with status mastered.
+     */
+    get: operations['MeController_subjects']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/me/mastery': {
     parameters: {
       query?: never
@@ -1959,6 +2059,23 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
+    HealthDto: {
+      /**
+       * @example ok
+       * @enum {string}
+       */
+      status: 'ok' | 'error'
+      /**
+       * @description The database answered
+       * @example true
+       */
+      database: boolean
+      /**
+       * @description The pgvector extension is installed
+       * @example true
+       */
+      vector: boolean
+    }
     ErrorResponseDto: {
       /** @example 404 */
       statusCode: number
@@ -2659,6 +2776,11 @@ export interface components {
        *     ]
        */
       keyIdeas?: string[] | null
+      /**
+       * @description Short summary shown on the student's topic page
+       * @example Algebraik ifoda sonlar, harflar va amal belgilaridan tuziladi. Uning qiymatini topish uchun harflar o'rniga sonlar qo'yiladi.
+       */
+      summary?: string | null
     }
     Topic: {
       id: number
@@ -2668,6 +2790,7 @@ export interface components {
       title: string
       isExamTopic: boolean | null
       keyIdeas: string[] | null
+      summary: string | null
     }
     UpdateTopicDto: {
       /**
@@ -2691,6 +2814,11 @@ export interface components {
        *     ]
        */
       keyIdeas?: string[] | null
+      /**
+       * @description Short summary shown on the student's topic page
+       * @example Algebraik ifoda sonlar, harflar va amal belgilaridan tuziladi. Uning qiymatini topish uchun harflar o'rniga sonlar qo'yiladi.
+       */
+      summary?: string | null
     }
     CreateTextbookChunkDto: {
       /**
@@ -2707,6 +2835,15 @@ export interface components {
       position?: number | null
       /** @example To add fractions with the same denominator, add the numerators... */
       content: string
+      /**
+       * @description Page of each paragraph of content (paragraphs are separated by a blank line)
+       * @example [
+       *       13,
+       *       13,
+       *       14
+       *     ]
+       */
+      paragraphPages?: number[] | null
     }
     TextbookChunk: {
       id: number
@@ -2715,6 +2852,7 @@ export interface components {
       page: number | null
       position: number | null
       content: string
+      paragraphPages: Record<string, never>[] | null
     }
     UpdateTextbookChunkDto: {
       /**
@@ -2731,6 +2869,15 @@ export interface components {
       position?: number | null
       /** @example To add fractions with the same denominator, add the numerators... */
       content?: string
+      /**
+       * @description Page of each paragraph of content (paragraphs are separated by a blank line)
+       * @example [
+       *       13,
+       *       13,
+       *       14
+       *     ]
+       */
+      paragraphPages?: number[] | null
     }
     CreateLessonDto: {
       /**
@@ -3009,6 +3156,8 @@ export interface components {
       sourceChunk: components['schemas']['TextbookChunk'] | null
       variantOfId: number | null
       variantOf: components['schemas']['Question'] | null
+      /** Format: date-time */
+      confirmationUnavailableAt: string | null
       approvedBy: number | null
       approver: components['schemas']['User'] | null
       /** @enum {string} */
@@ -4189,6 +4338,11 @@ export interface components {
        */
       status: 'locked' | 'available' | 'done' | 'overdue'
       attempt: components['schemas']['AttemptSummaryDto'] | null
+      /**
+       * @description Questions in the attempt once started; before that, 10 for a lesson quiz (fewer if the topic has fewer approved questions) or 5 for practice
+       * @example 10
+       */
+      questionCount: number
     }
     TodayLessonDto: {
       /** @example 8 */
@@ -4261,6 +4415,13 @@ export interface components {
       hintsUsed: number
       /** @example 3 */
       hintsAvailable: number
+      /**
+       * @description Hint texts already revealed (hintsUsed of them), so a resumed quiz shows them
+       * @example [
+       *       "Qaysi amal birinchi bajariladi?"
+       *     ]
+       */
+      hints: string[]
     }
     AttemptViewDto: {
       /** @example 31 */
@@ -4280,6 +4441,54 @@ export interface components {
        */
       startedAt: string
       questions: components['schemas']['AttemptQuestionDto'][]
+    }
+    SubjectRefDto: {
+      /** @example 8 */
+      id: number
+      /** @example Algebra */
+      name: string
+    }
+    AttemptHistoryItemDto: {
+      /**
+       * @description Attempt id for quizzes (use with /me/attempts/:id/review), checkpoint id for checkpoints
+       * @example 35
+       */
+      id: number
+      /**
+       * @example lesson_quiz
+       * @enum {string}
+       */
+      kind: 'lesson_quiz' | 'practice' | 'checkpoint'
+      /**
+       * @description null for checkpoints
+       * @example 15
+       */
+      quizId: number | null
+      topic: components['schemas']['TopicRefDto'] | null
+      subject: components['schemas']['SubjectRefDto'] | null
+      /** Format: date-time */
+      startedAt: string | null
+      /**
+       * Format: date-time
+       * @description null while open
+       */
+      finishedAt: string | null
+      /**
+       * @description Quiz score, or for a checkpoint the share of key ideas covered
+       * @example 60
+       */
+      scorePercent: number | null
+      /**
+       * @description Quizzes: passed at 80% or more; checkpoints: the judged result; null while open
+       * @example not_yet
+       * @enum {string|null}
+       */
+      result: 'passed' | 'not_yet' | null
+      /**
+       * @description Submitted quizzes: wrong answers not yet fixed by a confirmation question; checkpoints: 0; null while open
+       * @example 3
+       */
+      openMistakes: number | null
     }
     AnswerDto: {
       /**
@@ -4441,12 +4650,27 @@ export interface components {
        * @example 14
        */
       page: number | null
+      /**
+       * @description The textbook paragraph the question was written from (ids as in GET /me/topics/:id); page is that paragraph's page
+       * @example 11-2
+       */
+      paragraphId: string | null
       /** @example false */
       fixed: boolean
-      /** @description Same skill, new numbers; answer it with POST .../confirm/:questionId. null if none could be made yet */
+      /**
+       * @description ready: answer `confirmation`; none: no question tests the same skill, skip to explain more; pending: the AI was unavailable, open the review again later
+       * @example ready
+       * @enum {string}
+       */
+      confirmationStatus: 'ready' | 'none' | 'pending'
+      /** @description Same skill (new numbers, or an approved pool question testing that skill); answer it with POST .../confirm/:questionId. null unless confirmationStatus is ready */
       confirmation: components['schemas']['ConfirmationQuestionDto'] | null
     }
     ReviewDto: {
+      /** @example 8 */
+      topicId: number | null
+      /** @example Ko'phadlarni qo'shish va ayirish */
+      topicTitle: string | null
       /** @example 14 */
       attemptId: number
       /** @example 15 */
@@ -4534,12 +4758,12 @@ export interface components {
     }
     ChatMessageDto: {
       /**
-       * @description Required unless an action is given
+       * @description Required unless an action is given; at most 1000 characters
        * @example Nega qavs oldida minus bo'lsa ishoralar o'zgaradi?
        */
       text?: string
       /**
-       * @description A passage the student highlighted in the textbook
+       * @description A passage the student highlighted in the textbook; at most 2000 characters
        * @example Qavs oldida minus ishorasi tursa, qavs ichidagi har bir hadning ishorasi qarama-qarshisiga o'zgaradi.
        */
       selectedText?: string
@@ -4626,6 +4850,72 @@ export interface components {
        * @example 3
        */
       openMistakes: number
+    }
+    ChapterRefDto: {
+      /** @example 6 */
+      id: number
+      /** @example Algebraik ifodalar */
+      title: string | null
+      /**
+       * @description Chapter number in the textbook
+       * @example 1
+       */
+      position: number | null
+    }
+    ParagraphDto: {
+      /**
+       * @description <chunkId>-<paragraph number in the chunk>
+       * @example 10-2
+       */
+      id: string
+      /**
+       * @description Textbook chunk; chat sources refer to it by chunkId
+       * @example 10
+       */
+      chunkId: number
+      /** @example 13 */
+      page: number | null
+      /**
+       * @description 1, 2, 3, … across the topic
+       * @example 2
+       */
+      position: number
+      /**
+       * @description Markdown-like text: may start with a '### ' heading line
+       * @example O'xshash hadlarni ixchamlash uchun ularning koeffitsiyentlari qo'shiladi, harfiy qism esa o'zgarmaydi.
+       */
+      content: string
+    }
+    TopicDetailDto: {
+      /** @example 8 */
+      topicId: number
+      /** @example Ko'phadlarni qo'shish va ayirish */
+      title: string
+      subject: components['schemas']['SubjectRefDto']
+      chapter: components['schemas']['ChapterRefDto']
+      /**
+       * @description Topic position in the chapter
+       * @example 3
+       */
+      position: number | null
+      /**
+       * @example in_progress
+       * @enum {string}
+       */
+      status: 'not_started' | 'in_progress' | 'needs_practice' | 'needs_help' | 'mastered'
+      /**
+       * @description Information only (docs/mastery-rules.md)
+       * @example true
+       */
+      unlocked: boolean
+      /** @description 2-3 sentences in simple Uzbek; null until content:load writes it */
+      summary: string | null
+      keyIdeas: string[]
+      paragraphs: components['schemas']['ParagraphDto'][]
+      /** @example 7 */
+      prevTopicId: number | null
+      /** @example 9 */
+      nextTopicId: number | null
     }
     SardorLineDto: {
       /** @example Menimcha, uch a kvadrat bilan ikki a kvadratni qo'shsak, besh a to'rtinchi daraja bo'ladi. To'g'rimi? Menga tushuntirib ber. */
@@ -4757,13 +5047,35 @@ export interface components {
        */
       openCheckpointId: number | null
     }
+    StudentSubjectDto: {
+      /** @example 8 */
+      id: number
+      /** @example Algebra */
+      name: string
+      /**
+       * @description Topics of the subject's textbook(s) at the class grade
+       * @example 6
+       */
+      topicsTotal: number
+      /** @example 1 */
+      topicsMastered: number
+    }
     MasteryTopicDto: {
       /** @example 6 */
       topicId: number
       /** @example Algebraik ifoda va uning qiymati */
       title: string
+      /** @example 6 */
+      chapterId: number
+      /**
+       * @description Chapter number in the textbook
+       * @example 1
+       */
+      chapterPosition: number | null
       /** @example Algebraik ifodalar */
       chapter: string | null
+      /** @example 8 */
+      subjectId: number
       /** @example Algebra */
       subject: string
       /**
@@ -4811,6 +5123,25 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  HealthController_check: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['HealthDto']
+        }
+      }
+    }
+  }
   AuthController_login: {
     parameters: {
       query?: never
@@ -18343,6 +18674,140 @@ export interface operations {
       }
     }
   }
+  MeController_attemptHistory: {
+    parameters: {
+      query?: {
+        limit?: number
+        /** @description Only this topic */
+        topicId?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AttemptHistoryItemDto'][]
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeController_attempt: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AttemptViewDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
   MeController_answer: {
     parameters: {
       query?: never
@@ -18410,6 +18875,13 @@ export interface operations {
         content: {
           'application/json': components['schemas']['ErrorResponseDto']
         }
+      }
+      /** @description More than 30 requests per 1 min for this user. Retry-After gives the seconds to wait; the message is in Uzbek. */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
     }
   }
@@ -18681,6 +19153,13 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponseDto']
         }
       }
+      /** @description More than 30 requests per 1 min for this user. Retry-After gives the seconds to wait; the message is in Uzbek. */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
     }
   }
   MeController_createChatSession: {
@@ -18885,6 +19364,13 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponseDto']
         }
       }
+      /** @description More than 20 requests per 1 min for this user. Retry-After gives the seconds to wait; the message is in Uzbek. */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
     }
   }
   MeController_weakTopics: {
@@ -18902,6 +19388,72 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['WeakTopicDto'][]
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeController_topic: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TopicDetailDto']
         }
       }
       /** @description Validation failed or a referenced record is invalid */
@@ -19015,6 +19567,13 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponseDto']
         }
       }
+      /** @description More than 10 requests per 1 h for this user. Retry-After gives the seconds to wait; the message is in Uzbek. */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
     }
   }
   MeController_startCheckpoint: {
@@ -19081,6 +19640,13 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponseDto']
         }
       }
+      /** @description More than 10 requests per 1 min for this user. Retry-After gives the seconds to wait; the message is in Uzbek. */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
     }
   }
   MeController_answerCheckpoint: {
@@ -19092,7 +19658,7 @@ export interface operations {
       }
       cookie?: never
     }
-    /** @description Either a recording (multipart field `audio`: webm, ogg, m4a, mp4, mp3 or wav, max 25 MB) or JSON `{ text }`. */
+    /** @description Either a recording (multipart field `audio`: webm, ogg, m4a, mp4, mp3 or wav; at most 5 MB and 90 seconds) or JSON `{ text }` (at most 2000 characters). */
     requestBody: {
       content: {
         'multipart/form-data': {
@@ -19161,6 +19727,13 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponseDto']
         }
       }
+      /** @description More than 10 requests per 1 min for this user. Retry-After gives the seconds to wait; the message is in Uzbek. */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
     }
   }
   MeController_checkpointStatus: {
@@ -19180,6 +19753,70 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['CheckpointStatusDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeController_subjects: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['StudentSubjectDto'][]
         }
       }
       /** @description Validation failed or a referenced record is invalid */

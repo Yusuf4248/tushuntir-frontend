@@ -1,4 +1,8 @@
-/** Short names for the generated OpenAPI types (`npm run api:types` refreshes schema.d.ts). */
+/**
+ * Short names for the generated OpenAPI types (`npm run api:types` refreshes schema.d.ts).
+ * Fields added late (questionCount, hints, topicId, paragraphId, GET /me/attempts/:id) are read
+ * with fallbacks in the features, so an older backend that omits them still works.
+ */
 import type { components } from './schema'
 
 type Schemas = components['schemas']
@@ -19,6 +23,20 @@ export type MasteryList = Schemas['MasteryListDto']
 export type MasteryTopic = Schemas['MasteryTopicDto']
 export type MasteryStatus = MasteryTopic['status']
 export type FinishLessonResponse = Schemas['FinishLessonResponseDto']
+export type StudentSubject = Schemas['StudentSubjectDto']
+export type TopicDetail = Schemas['TopicDetailDto']
+
+export type AttemptQuestion = Schemas['AttemptQuestionDto']
+export type AttemptView = Schemas['AttemptViewDto']
+export type AnswerResult = Schemas['AnswerResultDto']
+export type HintResult = Schemas['HintDto']
+export type SubmitResult = Schemas['SubmitResultDto']
+export type SubmittedQuestion = Schemas['SubmittedQuestionDto']
+
+export type Mistake = Schemas['MistakeDto']
+export type Review = Schemas['ReviewDto']
+export type ConfirmResult = Schemas['ConfirmResultDto']
+export type AttemptHistoryItem = Schemas['AttemptHistoryItemDto']
 
 /** What the API sends on an error. `message` is a string, or a list for validation errors. */
 export type ApiErrorBody = {

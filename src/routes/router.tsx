@@ -7,7 +7,10 @@ import { SelfStudyPage } from '@/features/chat/self-study-page'
 import { CheckpointPlaceholderPage } from '@/features/checkpoint/checkpoint-placeholder-page'
 import { HomePage } from '@/features/home/home-page'
 import { ProfilePage } from '@/features/profile/profile-page'
+import { AttemptPage } from '@/features/quiz/attempt-page'
+import { PracticeStartPage } from '@/features/quiz/practice-start-page'
 import { QuizPlaceholderPage } from '@/features/quiz/quiz-placeholder-page'
+import { QuizStartPage } from '@/features/quiz/quiz-start-page'
 import { TopicPage } from '@/features/topics/topic-page'
 import { TopicsPage } from '@/features/topics/topics-page'
 
@@ -35,9 +38,12 @@ export const router = createBrowserRouter([
           {
             element: <FullScreenLayout />,
             children: [
-              { path: 'quiz/:quizId', element: <QuizPlaceholderPage kind="quiz" /> },
+              { path: 'quiz/:quizId', element: <QuizStartPage /> },
+              { path: 'practice/:topicId', element: <PracticeStartPage /> },
+              { path: 'attempts/:attemptId', element: <AttemptPage /> },
+              { path: 'attempts/:attemptId/result', element: <QuizPlaceholderPage kind="quiz" /> },
+              { path: 'attempts/:attemptId/review', element: <QuizPlaceholderPage kind="quiz" /> },
               { path: 'topics/:topicId/quiz', element: <QuizPlaceholderPage kind="quiz" /> },
-              { path: 'practice/:topicId', element: <QuizPlaceholderPage kind="practice" /> },
               { path: 'checkpoint/:topicId', element: <CheckpointPlaceholderPage /> },
             ],
           },
