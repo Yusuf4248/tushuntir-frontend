@@ -1,8 +1,15 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, Navigate } from 'react-router'
+
+import { LoginPage } from '@/features/auth/login-page'
+
+import { RequireStudent } from './require-student'
+import { TempHome } from './temp-home'
 
 export const router = createBrowserRouter([
+  { path: '/login', element: <LoginPage /> },
   {
-    path: '/',
-    element: <main className="p-4">Tushuntir</main>,
+    element: <RequireStudent />,
+    children: [{ index: true, element: <TempHome /> }],
   },
+  { path: '*', element: <Navigate to="/" replace /> },
 ])
