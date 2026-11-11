@@ -5,7 +5,7 @@ import { FullScreenLayout } from '@/components/layout/full-screen-layout'
 import { LoginPage } from '@/features/auth/login-page'
 import { ChatPage } from '@/features/chat/chat-page'
 import { SelfStudyPage } from '@/features/chat/self-study-page'
-import { CheckpointPlaceholderPage } from '@/features/checkpoint/checkpoint-placeholder-page'
+import { CheckpointPage } from '@/features/checkpoint/checkpoint-page'
 import { HomePage } from '@/features/home/home-page'
 import { ProfilePage } from '@/features/profile/profile-page'
 import { AttemptPage } from '@/features/quiz/attempt-page'
@@ -46,7 +46,7 @@ export const router = createBrowserRouter([
               { path: 'attempts/:attemptId', element: <AttemptPage /> },
               { path: 'attempts/:attemptId/result', element: <ResultPage /> },
               { path: 'attempts/:attemptId/review', element: <ReviewPage /> },
-              { path: 'checkpoint/:topicId', element: <CheckpointPlaceholderPage /> },
+              { path: 'checkpoint/:topicId', element: <CheckpointPage /> },
             ],
           },
         ],

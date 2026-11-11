@@ -23,6 +23,7 @@ export function messageForStatus(status: number): string {
   if (status === 403) return t.errors.forbidden
   if (status === 404) return t.errors.notFound
   if (status === 409) return t.errors.conflict
+  if (status === 413) return t.errors.tooLarge
   if (status === 429) return t.errors.tooManyRequests
   if (status === 503) return t.errors.aiBusy
   if (status >= 500) return t.errors.server

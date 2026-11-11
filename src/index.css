@@ -218,3 +218,10 @@
     }
   }
 }
+
+@keyframes confetti-fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0.6;
+  }
+}

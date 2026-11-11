@@ -5074,6 +5074,15 @@ export interface components {
        * @example null
        */
       openCheckpointId: number | null
+      /**
+       * @description Latest judged try: Sardor's thanks when passed, the short explanation when not yet; null before any judged try
+       * @example Rahmat, tushuntirganing uchun! Endi tushundim: o'xshash hadlarni qo'shganda faqat koeffitsiyentlar qo'shiladi.
+       */
+      lastFeedback: string | null
+      /** @description Latest judged try: key ideas the student covered; null before any judged try */
+      lastMatchedIdeas: string[] | null
+      /** @description Latest judged try: key ideas still missing; null before any judged try */
+      lastMissingIdeas: string[] | null
     }
     StudentSubjectDto: {
       /** @example 8 */

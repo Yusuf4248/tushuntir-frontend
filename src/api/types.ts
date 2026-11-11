@@ -46,6 +46,11 @@ export type ChatReply = Schemas['ChatReplyDto']
 export type ChatExchange = Schemas['ChatExchangeDto']
 export type ChatSource = Schemas['ChatSourceDto']
 
+export type CheckpointStatus = Schemas['CheckpointStatusDto']
+export type Checkpoint = Schemas['CheckpointDto']
+export type SardorLine = Schemas['SardorLineDto']
+export type CheckpointAnswerResult = Schemas['CheckpointAnswerResultDto']
+
 /** What the API sends on an error. `message` is a string, or a list for validation errors. */
 export type ApiErrorBody = {
   statusCode?: number

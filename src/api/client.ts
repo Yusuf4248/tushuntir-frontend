@@ -32,7 +32,9 @@ function failAuth(): never {
 
 async function send(path: string, { method = 'GET', body, signal, auth = true }: RequestOptions) {
   const headers: Record<string, string> = { Accept: 'application/json' }
-  if (body !== undefined) headers['Content-Type'] = 'application/json'
+  const isForm = body instanceof FormData
+  // FormData sets its own multipart Content-Type with the boundary.
+  if (body !== undefined && !isForm) headers['Content-Type'] = 'application/json'
   const access = tokens.getAccess()
   if (auth && access) headers.Authorization = `Bearer ${access}`
 
@@ -40,7 +42,7 @@ async function send(path: string, { method = 'GET', body, signal, auth = true }:
     return await fetch(`${env.apiUrl}${path}`, {
       method,
       headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
       signal,
     })
   } catch (error) {
