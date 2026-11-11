@@ -3,7 +3,7 @@ import { createBrowserRouter, Navigate } from 'react-router'
 import { AppLayout } from '@/components/layout/app-layout'
 import { FullScreenLayout } from '@/components/layout/full-screen-layout'
 import { LoginPage } from '@/features/auth/login-page'
-import { ChatPlaceholderPage } from '@/features/chat/chat-placeholder-page'
+import { ChatPage } from '@/features/chat/chat-page'
 import { SelfStudyPage } from '@/features/chat/self-study-page'
 import { CheckpointPlaceholderPage } from '@/features/checkpoint/checkpoint-placeholder-page'
 import { HomePage } from '@/features/home/home-page'
@@ -37,6 +37,7 @@ export const router = createBrowserRouter([
               { path: 'profile', element: <ProfilePage /> },
             ],
           },
+          { path: 'chat/:topicId', element: <ChatPage /> },
           {
             element: <FullScreenLayout />,
             children: [
@@ -46,7 +47,6 @@ export const router = createBrowserRouter([
               { path: 'attempts/:attemptId/result', element: <ResultPage /> },
               { path: 'attempts/:attemptId/review', element: <ReviewPage /> },
               { path: 'checkpoint/:topicId', element: <CheckpointPlaceholderPage /> },
-              { path: 'chat/:topicId', element: <ChatPlaceholderPage /> },
             ],
           },
         ],

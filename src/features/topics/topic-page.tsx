@@ -1,10 +1,10 @@
 import { CheckCircle2, ChevronLeft, ChevronRight, Lock, SearchX } from 'lucide-react'
-import { useEffect, useRef } from 'react'
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router'
 
 import { ApiError, errorMessage } from '@/api/errors'
 import { useMastery, useTopic } from '@/api/me'
-import type { TopicDetail } from '@/api/types'
+import type { ChatSource, TopicDetail } from '@/api/types'
 import { PageHeader } from '@/components/layout/page-header'
 import { MathText } from '@/components/math-text'
 import { StatusChip } from '@/components/status-chip'
@@ -12,7 +12,11 @@ import { EmptyState, ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton, SkeletonCard } from '@/components/ui/skeleton'
+import type { AskRequest } from '@/features/chat/ask-actions'
+import { ChatPanel, type PendingAsk } from '@/features/chat/chat-panel'
+import { ChatSheet } from '@/features/chat/chat-sheet'
 import { t } from '@/lib/strings.uz'
+import { DESKTOP_QUERY, useMediaQuery } from '@/lib/use-media-query'
 import { paths } from '@/routes/paths'
 
 import { AskableTextbook } from './askable-textbook'
@@ -55,8 +59,41 @@ export function TopicPage() {
 
 function TopicView({ topic }: { topic: TopicDetail }) {
   const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
   const { highlightedId, focus } = useTextbookFocus(topic.paragraphs)
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const [ask, setAsk] = useState<PendingAsk | null>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  function askAi(request: AskRequest) {
+    setAsk({ request, nonce: Date.now() })
+    if (!isDesktop) setSheetOpen(true)
+  }
+
+  function openChat() {
+    if (isDesktop) panelRef.current?.querySelector('textarea')?.focus()
+    else setSheetOpen(true)
+  }
+
+  // A source chip scrolls the textbook to that page; on phones once the sheet has closed.
+  const pendingSource = useRef<ChatSource | null>(null)
+  function showSource(source: ChatSource) {
+    if (isDesktop) {
+      focus({ page: source.page, chunkId: source.chunkId })
+      return
+    }
+    pendingSource.current = source
+    setSheetOpen(false)
+  }
+  function afterSheetClosed(): boolean {
+    const source = pendingSource.current
+    pendingSource.current = null
+    if (!source) return false
+    focus({ page: source.page, chunkId: source.chunkId })
+    return true
+  }
+
+  const clearAsk = useCallback(() => setAsk(null), [])
 
   // From the mistake review: ?paragraph=ID (or ?page=N) scrolls there and highlights it once.
   const paragraphParam = searchParams.get('paragraph')
@@ -88,7 +125,7 @@ function TopicView({ topic }: { topic: TopicDetail }) {
         )}
 
         <div className="mt-5">
-          <TopicActions topicId={topic.topicId} />
+          <TopicActions topicId={topic.topicId} onOpenChat={openChat} />
         </div>
 
         {topic.summary && (
@@ -124,13 +161,44 @@ function TopicView({ topic }: { topic: TopicDetail }) {
             <AskableTextbook
               paragraphs={topic.paragraphs}
               highlightedId={highlightedId}
-              onAsk={(ask) => void navigate(paths.chat(topic.topicId), { state: { ask } })}
+              onAsk={askAi}
             />
           )}
         </section>
 
         <TopicPager prevId={topic.prevTopicId} nextId={topic.nextTopicId} />
       </article>
+
+      {/* One chat at a time: a side panel on desktop, a bottom sheet on phones. */}
+      {isDesktop ? (
+        <aside className="hidden lg:block">
+          <div
+            ref={panelRef}
+            className="sticky top-8 h-[calc(100dvh-4rem)] overflow-hidden rounded-2xl border shadow-card"
+          >
+            <ChatPanel
+              className="h-full"
+              topicId={topic.topicId}
+              topicTitle={topic.title}
+              ask={ask}
+              onAskHandled={clearAsk}
+              onSourceClick={showSource}
+            />
+          </div>
+        </aside>
+      ) : (
+        <ChatSheet open={sheetOpen} onOpenChange={setSheetOpen} onClosed={afterSheetClosed}>
+          <ChatPanel
+            className="min-h-0 flex-1"
+            topicId={topic.topicId}
+            topicTitle={topic.title}
+            ask={ask}
+            onAskHandled={clearAsk}
+            onSourceClick={showSource}
+            onClose={() => setSheetOpen(false)}
+          />
+        </ChatSheet>
+      )}
     </div>
   )
 }

@@ -40,6 +40,11 @@ export type AttemptHistoryItem = Schemas['AttemptHistoryItemDto']
 
 export type ChatMessageBody = Schemas['ChatMessageDto']
 export type ChatAction = NonNullable<ChatMessageBody['action']>
+export type ChatSession = Schemas['ChatSessionDto']
+export type ChatTurn = Schemas['ChatTurnDto']
+export type ChatReply = Schemas['ChatReplyDto']
+export type ChatExchange = Schemas['ChatExchangeDto']
+export type ChatSource = Schemas['ChatSourceDto']
 
 /** What the API sends on an error. `message` is a string, or a list for validation errors. */
 export type ApiErrorBody = {

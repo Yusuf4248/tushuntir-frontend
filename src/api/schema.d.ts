@@ -1848,7 +1848,11 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    get?: never
+    /**
+     * The student's latest chat session for a topic, with its messages
+     * @description Own study sessions only; 404 when the student has no session for the topic yet (then start one).
+     */
+    get: operations['MeController_latestChatSession']
     put?: never
     /** Start a self-study chat about a topic */
     post: operations['MeController_createChatSession']
@@ -4074,6 +4078,7 @@ export interface components {
       session: components['schemas']['AiSession']
       role: string | null
       content: string
+      replyMeta: Record<string, never> | null
       /** Format: date-time */
       createdAt: string
     }
@@ -4726,6 +4731,12 @@ export interface components {
        */
       topicId: number
     }
+    ChatSourceDto: {
+      /** @example 14 */
+      page: number | null
+      /** @example 17 */
+      chunkId: number
+    }
     ChatTurnDto: {
       /** @example 41 */
       id: number
@@ -4741,6 +4752,29 @@ export interface components {
        * @example 2026-11-10T06:40:00.000Z
        */
       createdAt: string
+      /** @description Assistant turns: textbook pages the answer is based on. null for student turns (and replies saved before these details were stored) */
+      sources: components['schemas']['ChatSourceDto'][] | null
+      /**
+       * @description Assistant turns only
+       * @example true
+       */
+      covered: boolean | null
+      /**
+       * @description Assistant turns only
+       * @example true
+       */
+      onTopic: boolean | null
+      /**
+       * @example uz
+       * @enum {string|null}
+       */
+      language: 'uz' | 'ru' | null
+      /**
+       * @description Assistant turns only: open_quiz when the question was not answered
+       * @example null
+       * @enum {string|null}
+       */
+      refused: 'open_quiz' | null
     }
     ChatSessionDto: {
       /** @example 12 */
@@ -4772,12 +4806,6 @@ export interface components {
        * @enum {string}
        */
       action?: 'explain_simple' | 'real_life_example' | 'in_russian' | 'quiz_me'
-    }
-    ChatSourceDto: {
-      /** @example 14 */
-      page: number | null
-      /** @example 17 */
-      chunkId: number
     }
     ChatReplyDto: {
       /** @example 41 */
@@ -19159,6 +19187,73 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  MeController_latestChatSession: {
+    parameters: {
+      query: {
+        /** @description Topic of the session */
+        topicId: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ChatSessionDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
       }
     }
   }
