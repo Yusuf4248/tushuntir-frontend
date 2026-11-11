@@ -82,6 +82,7 @@ const uz = {
     learnWithAi: "AI bilan o'rganish",
     readTextbook: "Darslikni o'qish",
     practice: 'Mashq qilish',
+    checkpoint: 'Tushuntir checkpoint',
     openMistakes: (n: number) => `${n} ta xato tuzatilmagan`,
     suggestedQuestion: (subSkill: string) =>
       `Men shu joyda adashdim: "${subSkill}" Buni sodda qilib tushuntirib bera olasizmi?`,
@@ -167,6 +168,8 @@ const uz = {
     notFound: 'Mavzu topilmadi',
     notFoundHint: "Bu mavzu sizning darsliklaringizda yo'q.",
     backToTopics: "Mavzular ro'yxatiga",
+    needsHelp:
+      "Bu mavzuda bir necha urinish muvaffaqiyatsiz bo'ldi — ustozingizga xabar berildi. Yana urinib ko'rishingiz mumkin.",
     topicLocked:
       "Oldingi mavzu hali o'zlashtirilmagan, lekin bu mavzuni hozir ham o'rganishingiz mumkin.",
     quiz: 'Quiz',

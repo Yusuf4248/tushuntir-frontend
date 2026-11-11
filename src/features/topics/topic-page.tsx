@@ -1,4 +1,4 @@
-import { CheckCircle2, ChevronLeft, ChevronRight, Lock, SearchX } from 'lucide-react'
+import { CheckCircle2, ChevronLeft, ChevronRight, LifeBuoy, Lock, SearchX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 
@@ -117,6 +117,15 @@ function TopicView({ topic }: { topic: TopicDetail }) {
           <StatusChip status={topic.status} />
           {!topic.unlocked && <StatusChip status="locked" />}
         </div>
+        {topic.status === 'needs_help' && (
+          <p
+            role="status"
+            className="mt-3 flex items-start gap-2 rounded-xl bg-danger-soft/60 px-4 py-3 text-sm text-danger"
+          >
+            <LifeBuoy className="mt-0.5 size-4 shrink-0" aria-hidden />
+            {t.topics.needsHelp}
+          </p>
+        )}
         {!topic.unlocked && (
           <p className="mt-3 text-sm text-muted-foreground">
             <Lock className="mr-1.5 inline size-4 align-[-2px]" aria-hidden />

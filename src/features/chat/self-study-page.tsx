@@ -1,4 +1,12 @@
-import { BookOpen, ChevronRight, Dumbbell, Library, Sparkles, SmilePlus } from 'lucide-react'
+import {
+  BookOpen,
+  ChevronRight,
+  Dumbbell,
+  Library,
+  MessageCircleMore,
+  Sparkles,
+  SmilePlus,
+} from 'lucide-react'
 import { Link } from 'react-router'
 
 import { errorMessage } from '@/api/errors'
@@ -116,6 +124,12 @@ function WeakTopicCard({ topic }: { topic: WeakTopic }) {
             <Link to={paths.practice(topic.topicId)}>
               <Dumbbell aria-hidden />
               {t.selfStudy.practice}
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="sm" className="col-span-2">
+            <Link to={paths.checkpoint(topic.topicId)}>
+              <MessageCircleMore aria-hidden />
+              {t.selfStudy.checkpoint}
             </Link>
           </Button>
         </div>
