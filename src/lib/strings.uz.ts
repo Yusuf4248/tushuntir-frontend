@@ -74,7 +74,22 @@ const uz = {
   },
   selfStudy: {
     title: "Mustaqil ta'lim",
+    subtitle: 'Qiynalayotgan mavzularingizni AI yordamchi bilan mustahkamlang.',
     description: "Istalgan mavzu bo'yicha savol bering — yordamchi darslikka tayanib tushuntiradi.",
+    weakTitle: 'Mustahkamlash kerak',
+    whatWentWrong: 'Qayerda adashdingiz',
+    learnWithAi: "AI bilan o'rganish",
+    readTextbook: "Darslikni o'qish",
+    practice: 'Mashq qilish',
+    openMistakes: (n: number) => `${n} ta xato tuzatilmagan`,
+    suggestedQuestion: (subSkill: string) =>
+      `Men shu joyda adashdim: "${subSkill}" Buni sodda qilib tushuntirib bera olasizmi?`,
+    suggestedTopicQuestion: (title: string) =>
+      `"${title}" mavzusini sodda qilib tushuntirib bera olasizmi?`,
+    emptyTitle: "Hozircha zaif mavzu yo'q",
+    emptyHint: 'Quiz va mashqlardan keyin qiynalgan mavzularingiz shu yerda chiqadi.',
+    toTopics: 'Darsliklar',
+    allTopics: 'Barcha mavzular',
   },
   profile: {
     title: 'Profil',

@@ -13,7 +13,9 @@ export const paths = {
   quiz: (quizId: number) => `/quiz/${quizId}`,
   practice: (topicId: number) => `/practice/${topicId}`,
   checkpoint: (topicId: number) => `/checkpoint/${topicId}`,
-  chat: (topicId: number) => `/chat/${topicId}`,
+  /** `question` is put in the chat input as a suggestion (not sent). */
+  chat: (topicId: number, question?: string) =>
+    question ? `/chat/${topicId}?q=${encodeURIComponent(question)}` : `/chat/${topicId}`,
   attempt: (attemptId: number) => `/attempts/${attemptId}`,
   attemptResult: (attemptId: number) => `/attempts/${attemptId}/result`,
   attemptReview: (attemptId: number) => `/attempts/${attemptId}/review`,
