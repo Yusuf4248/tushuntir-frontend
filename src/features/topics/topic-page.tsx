@@ -1,191 +1,183 @@
-import { ChevronRight, Dumbbell, ListChecks, Lock, MessageCircleMore, SearchX } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
-import { Link, useParams } from 'react-router'
+import { CheckCircle2, ChevronLeft, ChevronRight, Lock, SearchX } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router'
 
-import { errorMessage } from '@/api/errors'
-import { useMastery, useQuizzes } from '@/api/me'
-import type { QuizList } from '@/api/types'
+import { ApiError, errorMessage } from '@/api/errors'
+import { useMastery, useTopic } from '@/api/me'
+import type { TopicDetail } from '@/api/types'
 import { PageHeader } from '@/components/layout/page-header'
+import { MathText } from '@/components/math-text'
 import { StatusChip } from '@/components/status-chip'
 import { EmptyState, ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Skeleton, SkeletonCard } from '@/components/ui/skeleton'
 import { t } from '@/lib/strings.uz'
-import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
-/** Placeholder until the textbook endpoint exists: title, status and the three actions. */
+import { Textbook } from './textbook'
+import { TopicActions } from './topic-actions'
+import { useTextbookFocus } from './use-textbook-focus'
+
 export function TopicPage() {
   const topicId = Number(useParams().topicId)
-  const mastery = useMastery()
-  const quizzes = useQuizzes()
+  const topic = useTopic(topicId)
 
-  if (mastery.isPending) {
-    return (
-      <div aria-hidden>
-        <Skeleton className="mb-5 h-8 w-3/4" />
-        <SkeletonCard lines={2} />
-      </div>
-    )
-  }
-
-  if (mastery.isError) {
+  if (topic.isPending) return <TopicSkeleton />
+  if (topic.isError) {
+    const notFound = topic.error instanceof ApiError && topic.error.status === 404
     return (
       <>
-        <PageHeader title={t.topics.title} backTo={paths.topics} />
-        <ErrorState
-          message={errorMessage(mastery.error)}
-          onRetry={() => void mastery.refetch()}
-          retrying={mastery.isFetching}
-        />
-      </>
-    )
-  }
-
-  const topic = mastery.data.topics.find((item) => item.topicId === topicId)
-  if (!topic) {
-    return (
-      <>
-        <PageHeader title={t.topics.notFound} backTo={paths.topics} />
-        <EmptyState
-          icon={SearchX}
-          title={t.topics.notFound}
-          description={t.topics.notFoundHint}
-          action={
-            <Button asChild variant="outline" size="sm">
-              <Link to={paths.topics}>{t.topics.backToTopics}</Link>
-            </Button>
-          }
-        />
-      </>
-    )
-  }
-
-  return (
-    <>
-      <PageHeader
-        title={topic.title}
-        subtitle={[topic.subject, topic.chapter].filter(Boolean).join(' · ')}
-        backTo={paths.topics}
-      />
-
-      <div className="flex flex-wrap items-center gap-2">
-        <StatusChip status={topic.status} />
-        {!topic.unlocked && <StatusChip status="locked" />}
-      </div>
-      {!topic.unlocked && (
-        <p className="mt-3 text-sm text-muted-foreground">
-          <Lock className="mr-1.5 inline size-4 align-[-2px]" aria-hidden />
-          {t.topics.topicLocked}
-        </p>
-      )}
-
-      <div className="mt-6 flex flex-col gap-3">
-        <QuizAction topicId={topic.topicId} quizzes={quizzes.data} />
-        <ActionLink
-          to={paths.practice(topic.topicId)}
-          icon={Dumbbell}
-          title={t.topics.practice}
-          hint={t.topics.practiceHint}
-        />
-        <ActionLink
-          to={paths.checkpoint(topic.topicId)}
-          icon={MessageCircleMore}
-          title={t.topics.explain}
-          hint={t.topics.explainHint}
-        />
-      </div>
-    </>
-  )
-}
-
-/** The topic's open lesson quiz; else its submitted one's result; else a disabled card. */
-function QuizAction({ topicId, quizzes }: { topicId: number; quizzes: QuizList | undefined }) {
-  const open = quizzes?.available.find((q) => q.topic?.id === topicId)
-  if (open) {
-    return (
-      <ActionLink
-        to={paths.quiz(open.quizId)}
-        icon={ListChecks}
-        title={t.topics.quiz}
-        hint={t.topics.quizHint}
-        primary
-      />
-    )
-  }
-  const done = quizzes?.done.find((q) => q.topic?.id === topicId && q.attempt)
-  if (done?.attempt) {
-    return (
-      <ActionLink
-        to={paths.attemptResult(done.attempt.id)}
-        icon={ListChecks}
-        title={t.topics.quiz}
-        hint={t.topics.quizDone}
-      />
-    )
-  }
-  return <ActionLink icon={ListChecks} title={t.topics.quiz} hint={t.topics.quizUnavailable} />
-}
-
-type ActionLinkProps = {
-  /** Without `to` the card is shown disabled. */
-  to?: string
-  icon: LucideIcon
-  title: string
-  hint: string
-  primary?: boolean
-}
-
-function ActionLink({ to, icon: Icon, title, hint, primary }: ActionLinkProps) {
-  const body = (
-    <>
-      <span
-        className={cn(
-          'grid size-11 shrink-0 place-items-center rounded-xl',
-          primary ? 'bg-primary-foreground/15' : 'bg-primary-soft text-primary-soft-foreground',
-          !to && 'bg-muted text-muted-foreground',
+        <PageHeader title={notFound ? t.topics.notFound : t.topics.title} backTo={paths.topics} />
+        {notFound ? (
+          <EmptyState
+            icon={SearchX}
+            title={t.topics.notFound}
+            description={t.topics.notFoundHint}
+            action={
+              <Button asChild variant="outline" size="sm">
+                <Link to={paths.topics}>{t.topics.backToTopics}</Link>
+              </Button>
+            }
+          />
+        ) : (
+          <ErrorState
+            message={errorMessage(topic.error)}
+            onRetry={() => void topic.refetch()}
+            retrying={topic.isFetching}
+          />
         )}
-      >
-        <Icon className="size-6" aria-hidden />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-lg font-semibold">{title}</span>
-        <span
-          className={cn(
-            'block text-sm',
-            primary ? 'text-primary-foreground/85' : 'text-muted-foreground',
-          )}
-        >
-          {hint}
-        </span>
-      </span>
-      {to && <ChevronRight className="size-5 shrink-0 opacity-70" aria-hidden />}
-    </>
-  )
-  const base = 'flex min-h-16 items-center gap-4 rounded-xl border p-4 transition-colors'
-
-  if (!to) {
-    return (
-      <div
-        aria-disabled="true"
-        className={cn(base, 'border-dashed bg-card/60 text-muted-foreground')}
-      >
-        {body}
-      </div>
+      </>
     )
   }
+  return <TopicView key={topicId} topic={topic.data} />
+}
+
+function TopicView({ topic }: { topic: TopicDetail }) {
+  const [searchParams] = useSearchParams()
+  const { highlightedId, focus } = useTextbookFocus(topic.paragraphs)
+
+  // From the mistake review: ?paragraph=ID (or ?page=N) scrolls there and highlights it once.
+  const paragraphParam = searchParams.get('paragraph')
+  const pageParam = Number(searchParams.get('page'))
+  const focusedFor = useRef<string | null>(null)
+  useEffect(() => {
+    const key = `${paragraphParam ?? ''}|${pageParam || ''}`
+    if (key === '|' || focusedFor.current === key) return
+    focusedFor.current = key
+    focus({ paragraphId: paragraphParam, page: pageParam > 0 ? pageParam : null })
+  }, [paragraphParam, pageParam, focus])
+
+  const subtitle = [topic.subject.name, topic.chapter.title].filter(Boolean).join(' · ')
+
   return (
-    <Link
-      to={to}
-      className={cn(
-        base,
-        'shadow-card',
-        primary
-          ? 'border-transparent bg-primary text-primary-foreground hover:bg-primary-hover'
-          : 'bg-card hover:bg-muted',
+    <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)] lg:gap-10">
+      <article className="min-w-0">
+        <PageHeader title={topic.title} subtitle={subtitle} backTo={paths.topics} />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <StatusChip status={topic.status} />
+          {!topic.unlocked && <StatusChip status="locked" />}
+        </div>
+        {!topic.unlocked && (
+          <p className="mt-3 text-sm text-muted-foreground">
+            <Lock className="mr-1.5 inline size-4 align-[-2px]" aria-hidden />
+            {t.topics.topicLocked}
+          </p>
+        )}
+
+        <div className="mt-5">
+          <TopicActions topicId={topic.topicId} />
+        </div>
+
+        {topic.summary && (
+          <Card className="mt-6">
+            <h2 className="mb-2 text-lg font-semibold">{t.topicPage.summary}</h2>
+            <MathText text={topic.summary} className="block leading-relaxed" />
+          </Card>
+        )}
+
+        {topic.keyIdeas.length > 0 && (
+          <section className="mt-6" aria-labelledby="key-ideas">
+            <h2 id="key-ideas" className="mb-3 text-lg font-semibold">
+              {t.topicPage.keyIdeas}
+            </h2>
+            <ul className="flex flex-col gap-2.5">
+              {topic.keyIdeas.map((idea) => (
+                <li key={idea} className="flex items-start gap-2.5">
+                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden />
+                  <MathText text={idea} className="leading-relaxed" />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <section className="mt-8" aria-labelledby="textbook-text">
+          <h2 id="textbook-text" className="mb-3 text-lg font-semibold">
+            {t.topicPage.textbook}
+          </h2>
+          {topic.paragraphs.length === 0 ? (
+            <p className="text-muted-foreground">{t.topicPage.noText}</p>
+          ) : (
+            <Textbook paragraphs={topic.paragraphs} highlightedId={highlightedId} />
+          )}
+        </section>
+
+        <TopicPager prevId={topic.prevTopicId} nextId={topic.nextTopicId} />
+      </article>
+    </div>
+  )
+}
+
+function TopicPager({ prevId, nextId }: { prevId: number | null; nextId: number | null }) {
+  const mastery = useMastery()
+  const titleOf = (id: number) => mastery.data?.topics.find((m) => m.topicId === id)?.title
+  if (prevId === null && nextId === null) return null
+
+  return (
+    <nav className="mt-10 grid grid-cols-2 gap-3 border-t pt-5" aria-label={t.topics.title}>
+      {prevId !== null ? (
+        <Link
+          to={paths.topic(prevId)}
+          className="flex min-h-16 items-center gap-2 rounded-xl border bg-card p-3 shadow-card hover:bg-muted"
+        >
+          <ChevronLeft className="size-5 shrink-0 text-muted-foreground" aria-hidden />
+          <span className="min-w-0">
+            <span className="block text-xs text-muted-foreground">{t.topicPage.prevTopic}</span>
+            <span className="line-clamp-2 text-sm font-medium">{titleOf(prevId) ?? ''}</span>
+          </span>
+        </Link>
+      ) : (
+        <span />
       )}
-    >
-      {body}
-    </Link>
+      {nextId !== null && (
+        <Link
+          to={paths.topic(nextId)}
+          className="flex min-h-16 items-center justify-end gap-2 rounded-xl border bg-card p-3 text-right shadow-card hover:bg-muted"
+        >
+          <span className="min-w-0">
+            <span className="block text-xs text-muted-foreground">{t.topicPage.nextTopic}</span>
+            <span className="line-clamp-2 text-sm font-medium">{titleOf(nextId) ?? ''}</span>
+          </span>
+          <ChevronRight className="size-5 shrink-0 text-muted-foreground" aria-hidden />
+        </Link>
+      )}
+    </nav>
+  )
+}
+
+function TopicSkeleton() {
+  return (
+    <div aria-hidden>
+      <Skeleton className="mb-2 h-8 w-3/4" />
+      <Skeleton className="mb-5 h-4 w-1/2" />
+      <SkeletonCard lines={3} />
+      <div className="mt-6 flex flex-col gap-2">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className="h-4 w-full" />
+        ))}
+      </div>
+    </div>
   )
 }

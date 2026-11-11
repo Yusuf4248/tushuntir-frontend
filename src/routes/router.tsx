@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
             children: [
               { index: true, element: <HomePage /> },
               { path: 'topics', element: <TopicsPage /> },
-              { path: 'topics/:topicId', element: <TopicPage /> },
+              { path: 'topics/:topicId', element: <TopicPage />, handle: { wide: true } },
               { path: 'self-study', element: <SelfStudyPage /> },
               { path: 'profile', element: <ProfilePage /> },
             ],
