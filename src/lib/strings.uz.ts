@@ -217,6 +217,25 @@ const uz = {
     misconceptionTitle: 'Tanlagan javobingiz haqida',
     hintsUsed: (used: number, total: number) => `${used}/${total} yordam`,
   },
+  result: {
+    title: 'Natija',
+    score: (correct: number, total: number) => `${correct}/${total}`,
+    percent: (p: number) => `${p}%`,
+    scoreLabel: (correct: number, total: number, p: number) =>
+      `${total} ta savoldan ${correct} tasi to'g'ri, ${p}%`,
+    notYet: "Hali emas — xatolarni birga ko'rib chiqamiz",
+    great: "Zo'r! Endi Tushuntir checkpoint",
+    hintsUsed: (n: number) => `${n} ta yordam ishlatildi`,
+    questions: 'Savollar',
+    correct: "To'g'ri",
+    wrong: "Noto'g'ri",
+    unanswered: 'Javob berilmagan',
+    reviewMistakes: "Xatolarni ko'rib chiqish",
+    checkpoint: 'Tushuntir checkpoint',
+    toHome: 'Bosh sahifaga',
+    notSubmitted: 'Bu urinish hali topshirilmagan',
+    continue: 'Davom ettirish',
+  },
 }
 
 type Widen<T> = T extends (...args: infer A) => infer R

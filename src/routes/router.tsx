@@ -11,6 +11,7 @@ import { AttemptPage } from '@/features/quiz/attempt-page'
 import { PracticeStartPage } from '@/features/quiz/practice-start-page'
 import { QuizPlaceholderPage } from '@/features/quiz/quiz-placeholder-page'
 import { QuizStartPage } from '@/features/quiz/quiz-start-page'
+import { ResultPage } from '@/features/quiz/result-page'
 import { TopicPage } from '@/features/topics/topic-page'
 import { TopicsPage } from '@/features/topics/topics-page'
 
@@ -41,7 +42,7 @@ export const router = createBrowserRouter([
               { path: 'quiz/:quizId', element: <QuizStartPage /> },
               { path: 'practice/:topicId', element: <PracticeStartPage /> },
               { path: 'attempts/:attemptId', element: <AttemptPage /> },
-              { path: 'attempts/:attemptId/result', element: <QuizPlaceholderPage kind="quiz" /> },
+              { path: 'attempts/:attemptId/result', element: <ResultPage /> },
               { path: 'attempts/:attemptId/review', element: <QuizPlaceholderPage kind="quiz" /> },
               { path: 'topics/:topicId/quiz', element: <QuizPlaceholderPage kind="quiz" /> },
               { path: 'checkpoint/:topicId', element: <CheckpointPlaceholderPage /> },
