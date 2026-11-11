@@ -6,8 +6,18 @@ import { MathText } from '@/components/math-text'
 import { Input, Label } from '@/components/ui/input'
 import { t } from '@/lib/strings.uz'
 
+/** A quiz question or a review's confirmation question. */
+type AnswerInputQuestion = {
+  questionId: number
+  type: AttemptQuestion['type']
+  prompt: string
+  options: string[] | null
+}
+
 type AnswerInputProps = {
-  question: AttemptQuestion
+  question: AnswerInputQuestion
+  /** id of the visible question text, used as the options' accessible name */
+  promptId: string
   value: string
   onChoose: (option: string) => void
   onType: (text: string) => void
@@ -16,7 +26,14 @@ type AnswerInputProps = {
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
 
-export function AnswerInput({ question, value, onChoose, onType, onTypeDone }: AnswerInputProps) {
+export function AnswerInput({
+  question,
+  promptId,
+  value,
+  onChoose,
+  onType,
+  onTypeDone,
+}: AnswerInputProps) {
   const id = useId()
 
   if (question.type === 'short_answer' || !question.options?.length) {
@@ -42,8 +59,7 @@ export function AnswerInput({ question, value, onChoose, onType, onTypeDone }: A
   }
 
   return (
-    <fieldset>
-      <legend className="sr-only">{question.prompt}</legend>
+    <div role="radiogroup" aria-labelledby={promptId}>
       <div className="flex flex-col gap-3">
         {question.options.map((option, i) => {
           const checked = value === option
@@ -75,6 +91,6 @@ export function AnswerInput({ question, value, onChoose, onType, onTypeDone }: A
           )
         })}
       </div>
-    </fieldset>
+    </div>
   )
 }

@@ -2,8 +2,14 @@
 export const paths = {
   home: '/',
   topics: '/topics',
-  topic: (topicId: number, page?: number | null) =>
-    page ? `/topics/${topicId}?page=${page}` : `/topics/${topicId}`,
+  /** `page` / `paragraph` ask the topic page to scroll to and highlight that text. */
+  topic: (topicId: number, at?: { page?: number | null; paragraph?: string | null }) => {
+    const query = new URLSearchParams()
+    if (at?.page) query.set('page', String(at.page))
+    if (at?.paragraph) query.set('paragraph', at.paragraph)
+    const qs = query.toString()
+    return `/topics/${topicId}${qs ? `?${qs}` : ''}`
+  },
   topicQuiz: (topicId: number) => `/topics/${topicId}/quiz`,
   quiz: (quizId: number) => `/quiz/${quizId}`,
   practice: (topicId: number) => `/practice/${topicId}`,

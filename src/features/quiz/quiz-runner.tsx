@@ -226,13 +226,17 @@ export function QuizRunner({ view }: { view: AttemptView }) {
             onRetry={() => void saver.flush(question.questionId)}
           />
         </div>
-        <h1 className="mb-5 text-xl leading-snug font-semibold">
+        <h1
+          id={`prompt-${question.questionId}`}
+          className="mb-5 text-xl leading-snug font-semibold"
+        >
           <MathText text={question.prompt} />
         </h1>
 
         <AnswerInput
           key={question.questionId}
           question={question}
+          promptId={`prompt-${question.questionId}`}
           value={value}
           onChoose={(option) => setAnswer(option, 0)}
           onType={(text) => setAnswer(text, SHORT_ANSWER_DEBOUNCE_MS)}
