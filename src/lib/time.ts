@@ -29,12 +29,12 @@ export function clockInZone(iso: string, timeZone: string): string {
   }).format(new Date(iso))
 }
 
-function parseDate(date: string): { y: number; m: number; d: number } {
+export function parseDate(date: string): { y: number; m: number; d: number } {
   const [y = 1970, m = 1, d = 1] = date.split('-').map(Number)
   return { y, m, d }
 }
 
-function addDays(date: string, days: number): string {
+export function addDays(date: string, days: number): string {
   const { y, m, d } = parseDate(date)
   return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10)
 }

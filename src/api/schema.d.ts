@@ -24,6 +24,46 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/files/signed/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * A private file through a signed link (no login)
+     * @description The links in API responses (e.g. homework submission files) look like this and work directly in <img> or <a>. They expire at the end of the next full hour; 403 after that: fetch the response again for a new link.
+     */
+    get: operations['FilesController_signed']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/files/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * A private file for the logged-in user
+     * @description Homework submission files: the student who submitted it, a teacher of that class, an admin of that school or a super admin. 404 for anyone else.
+     */
+    get: operations['FilesController_download']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/auth/login': {
     parameters: {
       query?: never
@@ -2150,6 +2190,26 @@ export interface paths {
      * @description Creates my submission or updates it until the teacher checks it (409 after that; a returned one can be sent again). Sent text replaces the text; sent files replace all previous files, otherwise they are kept. After the deadline the submission is marked late. Returns the homework with my submission.
      */
     post: operations['MeSchoolController_submitHomework']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/terms': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Terms of the student's academic year
+     * @description In order. isCurrent marks the term containing today, or during a break the last one that started (the default term of /me/grades).
+     */
+    get: operations['MeSchoolController_terms']
+    put?: never
+    post?: never
     delete?: never
     options?: never
     head?: never
@@ -5392,6 +5452,16 @@ export interface components {
        * @example false
        */
       hasHomework: boolean
+      /**
+       * @description The lesson's AI quiz (POST /me/quizzes/:id/start); null when none
+       * @example 87
+       */
+      quizId: number | null
+      /**
+       * @description The lesson's written homework (GET /me/homework/:id); the first one if several; null when none
+       * @example null
+       */
+      homeworkId: number | null
     }
     TimetableDayDto: {
       /** @example 2026-11-16 */
@@ -5490,8 +5560,8 @@ export interface components {
        */
       id: number
       /**
-       * @description Relative to the API origin
-       * @example /uploads/3f1c0b9e-5a7d-4c21-b8e6-f0a9d2c4e7b1.pdf
+       * @description Relative to the API origin. The teacher's files: a public /uploads link. My submission files: a signed link that works directly in <img> / <a> and expires at the end of the next full hour (403 after that: fetch the homework again for a new link).
+       * @example /api/files/signed/31?expires=1795003200&sig=Zm9vYmFy
        */
       url: string
       /** @example ish.pdf */
@@ -5568,6 +5638,11 @@ export interface components {
       startsOn: string | null
       /** @example 2026-12-27 */
       endsOn: string | null
+      /**
+       * @description The term containing today, or during a break the last one that started (the default term of /me/grades)
+       * @example true
+       */
+      isCurrent: boolean
     }
     GradeDto: {
       /** @example 120 */
@@ -5605,7 +5680,10 @@ export interface components {
       count: number
     }
     GradesDto: {
+      /** @description The term shown */
       term: components['schemas']['TermDto'] | null
+      /** @description All terms of the academic year, for a term picker */
+      terms: components['schemas']['TermDto'][]
       /** @description Newest first */
       grades: components['schemas']['GradeDto'][]
       /** @description Per subject, over the grades listed */
@@ -5671,6 +5749,137 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['HealthDto']
+        }
+      }
+    }
+  }
+  FilesController_signed: {
+    parameters: {
+      query: {
+        expires: string
+        sig: string
+      }
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description The file */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Invalid or expired link */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  FilesController_download: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description The file */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
         }
       }
     }
@@ -20883,6 +21092,70 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  MeSchoolController_terms: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TermDto'][]
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
       }
     }
   }
