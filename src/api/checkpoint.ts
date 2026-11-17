@@ -1,4 +1,4 @@
-import { env } from '@/lib/env'
+import { apiFileUrl } from '@/lib/api-url'
 
 import { apiRequest } from './client'
 import type { Checkpoint, CheckpointAnswerResult, CheckpointStatus } from './types'
@@ -36,11 +36,4 @@ export function answerCheckpoint(
 }
 
 /** audioUrl values are relative to the API's origin (e.g. /uploads/tts/….mp3). */
-export function absoluteAudioUrl(audioUrl: string | null | undefined): string | null {
-  if (!audioUrl) return null
-  try {
-    return new URL(audioUrl, new URL(env.apiUrl).origin).toString()
-  } catch {
-    return null
-  }
-}
+export const absoluteAudioUrl = apiFileUrl

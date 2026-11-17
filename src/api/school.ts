@@ -1,6 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { apiRequest } from './client'
+import { meKeys } from './me'
+import { notificationKeys } from './notifications'
 import type {
   Attendance,
   Grades,
@@ -70,6 +72,30 @@ export function useHomework(id: number) {
     queryKey: schoolKeys.homework(id),
     queryFn: ({ signal }) => apiRequest<HomeworkDetail>(`/me/homework/${id}`, { signal }),
     enabled: Number.isInteger(id) && id > 0,
+    // Submission file links are signed and expire hourly; keep them fresh while the page is open.
+    refetchInterval: 20 * 60_000,
+  })
+}
+
+/** Text replaces the saved text; files (if any) replace all saved files. */
+export function useSubmitHomework(id: number) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ text, files }: { text?: string; files: File[] }) => {
+      const form = new FormData()
+      if (text !== undefined) form.append('text', text)
+      for (const file of files) form.append('files', file, file.name)
+      return apiRequest<HomeworkDetail>(`/me/homework/${id}/submission`, {
+        method: 'POST',
+        body: form,
+      })
+    },
+    onSuccess: (detail) => {
+      queryClient.setQueryData(schoolKeys.homework(id), detail)
+      void queryClient.invalidateQueries({ queryKey: schoolKeys.homeworkList() })
+      void queryClient.invalidateQueries({ queryKey: notificationKeys.all })
+      void queryClient.invalidateQueries({ queryKey: meKeys.all })
+    },
   })
 }
 
