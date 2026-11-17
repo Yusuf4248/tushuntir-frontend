@@ -192,6 +192,15 @@ const uz = {
     open: 'Ochish',
     lessonDate: (date: string) => `Dars: ${date}`,
   },
+  notifications: {
+    title: 'Bildirishnomalar',
+    markAll: "Hammasini o'qilgan deb belgilash",
+    empty: "Bildirishnomalar yo'q",
+    emptyHint: 'Yangi baho, uy vazifasi yoki ochilgan quiz haqida shu yerda xabar beramiz.',
+    unread: "o'qilmagan",
+    unreadCount: (n: number) => `${n} ta o'qilmagan`,
+    allRead: "Hammasi o'qilgan",
+  },
   nav: {
     label: 'Asosiy menyu',
     home: 'Bosh sahifa',
