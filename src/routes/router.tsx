@@ -19,6 +19,7 @@ const quiz = () => import('@/features/quiz/routes')
 const chat = () => import('@/features/chat/chat-page')
 const checkpoint = () => import('@/features/checkpoint/checkpoint-page')
 const topic = () => import('@/features/topics/topic-page')
+const school = () => import('@/features/school/routes')
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,30 @@ export const router = createBrowserRouter([
               },
               { path: 'self-study', element: <SelfStudyPage /> },
               { path: 'profile', element: <ProfilePage /> },
+              {
+                path: 'timetable',
+                lazy: async () => ({ Component: (await school()).TimetablePage }),
+              },
+              {
+                path: 'attendance',
+                lazy: async () => ({ Component: (await school()).AttendancePage }),
+              },
+              {
+                path: 'grades',
+                lazy: async () => ({ Component: (await school()).GradesPage }),
+              },
+              {
+                path: 'homework',
+                lazy: async () => ({ Component: (await school()).HomeworkListPage }),
+              },
+              {
+                path: 'homework/:homeworkId',
+                lazy: async () => ({ Component: (await school()).HomeworkPage }),
+              },
+              {
+                path: 'notifications',
+                lazy: async () => ({ Component: (await school()).NotificationsPage }),
+              },
             ],
           },
           {

@@ -5,6 +5,7 @@ import { errorMessage } from '@/api/errors'
 import { useMastery } from '@/api/me'
 import type { MasteryTopic } from '@/api/types'
 import { PageHeader } from '@/components/layout/page-header'
+import { NotificationBell } from '@/components/notification-bell'
 import { StatusChip } from '@/components/status-chip'
 import { EmptyState, ErrorState } from '@/components/states'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -18,7 +19,7 @@ export function TopicsPage() {
 
   return (
     <>
-      <PageHeader title={t.topics.title} />
+      <PageHeader title={t.topics.title} actions={<NotificationBell />} />
 
       {mastery.isPending ? (
         <TopicsSkeleton />

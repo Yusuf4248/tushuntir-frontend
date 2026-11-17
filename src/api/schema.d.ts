@@ -2059,6 +2059,194 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/me/timetable': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The class timetable of a week (Monday to Saturday)
+     * @description Lessons per day with time, subject, teacher, room, topic and status (upcoming / in_progress / finished), plus whether the lesson has an AI quiz or written homework. Default: this week. A slot without a lesson record (future weeks) has lessonId null; days outside a term (school breaks) are empty.
+     */
+    get: operations['MeSchoolController_timetable']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/attendance': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The student's attendance of a month
+     * @description Records (date, period, subject, lesson, status present / absent / late / excused, note), oldest first, and a summary. percent = (present + late) / (all records - excused) * 100. Default: this month.
+     */
+    get: operations['MeSchoolController_attendance']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/homework': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Written homework of the student's class
+     * @description Newest due date first. Lesson quizzes are not here (see /me/quizzes). status per item: new / overdue (not submitted, before / after the deadline), submitted, late (submitted after the deadline), checked, returned.
+     */
+    get: operations['MeSchoolController_homeworkList']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/homework/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** One homework: description, the teacher's files and my submission */
+    get: operations['MeSchoolController_homeworkDetail']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/homework/{id}/submission': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Submit or update my homework
+     * @description Creates my submission or updates it until the teacher checks it (409 after that; a returned one can be sent again). Sent text replaces the text; sent files replace all previous files, otherwise they are kept. After the deadline the submission is marked late. Returns the homework with my submission.
+     */
+    post: operations['MeSchoolController_submitHomework']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/grades': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The student's grades of a term with per-subject averages
+     * @description Grades (date, subject, kind, value 2-5, comment, teacher), newest first, filtered by subjectId; termId defaults to the term containing today (or the last one started). averages: per subject, two decimals.
+     */
+    get: operations['MeSchoolController_grades']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/notifications': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The student's notifications, newest first
+     * @description Reading this (or the unread count) first adds what is missing: a new grade (last 7 days), homework checked or returned, written homework due tomorrow and not submitted, a lesson quiz that unlocked (last 7 days, still open). Checkpoint passed is added when it happens. data links to the item (homeworkId, quizId, gradeId, topicId, …). limit 1-100, default 50.
+     */
+    get: operations['MeSchoolController_notificationList']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/notifications/unread-count': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** How many notifications are unread */
+    get: operations['MeSchoolController_unreadCount']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/me/notifications/{id}/read': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /** Mark one notification read (own only, else 404) */
+    patch: operations['MeSchoolController_markRead']
+    trace?: never
+  }
+  '/api/me/notifications/read-all': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Mark all my notifications read */
+    post: operations['MeSchoolController_readAll']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -4214,7 +4402,17 @@ export interface components {
        * @example absence
        * @enum {string|null}
        */
-      type?: 'grade' | 'homework_due' | 'absence' | 'weekly_progress' | 'flag' | 'needs_help' | null
+      type?:
+        | 'grade'
+        | 'homework_due'
+        | 'absence'
+        | 'weekly_progress'
+        | 'flag'
+        | 'needs_help'
+        | 'homework_checked'
+        | 'quiz_unlocked'
+        | 'checkpoint_passed'
+        | null
       /** @example Absent today */
       title?: string | null
       /** @example Ali was absent from Mathematics (period 2). */
@@ -4229,6 +4427,7 @@ export interface components {
       type: string | null
       title: string | null
       body: string | null
+      data: Record<string, never> | null
       /** Format: date-time */
       readAt: string | null
       /** Format: date-time */
@@ -4244,7 +4443,17 @@ export interface components {
        * @example absence
        * @enum {string|null}
        */
-      type?: 'grade' | 'homework_due' | 'absence' | 'weekly_progress' | 'flag' | 'needs_help' | null
+      type?:
+        | 'grade'
+        | 'homework_due'
+        | 'absence'
+        | 'weekly_progress'
+        | 'flag'
+        | 'needs_help'
+        | 'homework_checked'
+        | 'quiz_unlocked'
+        | 'checkpoint_passed'
+        | null
       /** @example Absent today */
       title?: string | null
       /** @example Ali was absent from Mathematics (period 2). */
@@ -5150,6 +5359,293 @@ export interface components {
       /** @example mastered: passed the Tushuntir checkpoint; needs_help: 3+ failed checkpoint tries since the last pass; not_started: no quiz yet; in_progress: latest quiz >= 80%; needs_practice: latest quiz < 80%. unlocked: the first topic of a textbook, a mastered topic, or the topic before it is mastered (information only, nothing is blocked) */
       rule: string
       topics: components['schemas']['MasteryTopicDto'][]
+    }
+    TimetableLessonDto: {
+      /**
+       * @description null for a timetable slot that has no lesson record that week (e.g. a future week)
+       * @example 60
+       */
+      lessonId: number | null
+      /** @example 2 */
+      period: number | null
+      /** @example 08:55 */
+      startsAt: string | null
+      /** @example 09:40 */
+      endsAt: string | null
+      /**
+       * @example finished
+       * @enum {string}
+       */
+      status: 'upcoming' | 'in_progress' | 'finished'
+      subject: components['schemas']['RefDto']
+      teacher: components['schemas']['TeacherRefDto']
+      /** @example 201-xona */
+      room: string | null
+      topic: components['schemas']['TopicRefDto'] | null
+      /**
+       * @description The lesson has an AI quiz
+       * @example true
+       */
+      hasQuiz: boolean
+      /**
+       * @description The lesson has written homework
+       * @example false
+       */
+      hasHomework: boolean
+    }
+    TimetableDayDto: {
+      /** @example 2026-11-16 */
+      date: string
+      /**
+       * @description 1 = Monday … 6 = Saturday
+       * @example 1
+       */
+      weekday: number
+      lessons: components['schemas']['TimetableLessonDto'][]
+    }
+    TimetableDto: {
+      /** @example 2026-11-16 */
+      weekStart: string
+      /** @example 2026-11-21 */
+      weekEnd: string
+      /** @example Asia/Tashkent */
+      timezone: string
+      class: components['schemas']['ClassRefDto'] | null
+      days: components['schemas']['TimetableDayDto'][]
+    }
+    AttendanceRecordDto: {
+      /** @example 2026-11-10 */
+      date: string
+      /** @example 2 */
+      period: number | null
+      subject: components['schemas']['RefDto']
+      /** @example 41 */
+      lessonId: number
+      /**
+       * @example present
+       * @enum {string}
+       */
+      status: 'present' | 'absent' | 'late' | 'excused'
+      /** @example null */
+      note: string | null
+    }
+    AttendanceSummaryDto: {
+      /** @example 40 */
+      present: number
+      /** @example 2 */
+      absent: number
+      /** @example 1 */
+      late: number
+      /** @example 1 */
+      excused: number
+      /**
+       * @description (present + late) / (all records - excused) * 100, two decimals; null when there is nothing to count
+       * @example 95.35
+       */
+      percent: number | null
+    }
+    AttendanceDto: {
+      /** @example 2026-11 */
+      month: string
+      /** @description Oldest first */
+      records: components['schemas']['AttendanceRecordDto'][]
+      summary: components['schemas']['AttendanceSummaryDto']
+    }
+    HomeworkItemDto: {
+      /** @example 12 */
+      id: number
+      /** @example Mashqlar 45-48 */
+      title: string
+      subject: components['schemas']['RefDto']
+      /** @example 61 */
+      lessonId: number
+      /** @example 2026-11-16 */
+      lessonDate: string
+      /**
+       * Format: date-time
+       * @example 2026-11-18T17:00:00.000Z
+       */
+      dueAt: string | null
+      /**
+       * @description new / overdue: not submitted, before / after the deadline (overdue can still be submitted, it is then late); submitted; late: submitted after the deadline; checked / returned by the teacher (returned can be resubmitted)
+       * @example new
+       * @enum {string}
+       */
+      status: 'new' | 'overdue' | 'submitted' | 'late' | 'checked' | 'returned'
+      /**
+       * @description 0-100 once checked
+       * @example null
+       */
+      score: number | null
+      /**
+       * @description The teacher attached files
+       * @example false
+       */
+      hasAttachments: boolean
+    }
+    FileDto: {
+      /**
+       * @description media_files id
+       * @example 31
+       */
+      id: number
+      /**
+       * @description Relative to the API origin
+       * @example /uploads/3f1c0b9e-5a7d-4c21-b8e6-f0a9d2c4e7b1.pdf
+       */
+      url: string
+      /** @example ish.pdf */
+      originalName: string | null
+      /** @example application/pdf */
+      mimeType: string | null
+      /** @example 182044 */
+      sizeBytes: number | null
+    }
+    MySubmissionDto: {
+      /** @example 7 */
+      id: number
+      /** @example 1) 2a + 6  2) 3x^2 - x */
+      text: string | null
+      files: components['schemas']['FileDto'][]
+      /**
+       * @example checked
+       * @enum {string}
+       */
+      status: 'submitted' | 'late' | 'checked' | 'returned'
+      /** @example 90 */
+      score: number | null
+      /** @example Yaxshi! 3-misolda ishorani tekshiring. */
+      feedback: string | null
+      /** Format: date-time */
+      submittedAt: string | null
+      /** Format: date-time */
+      checkedAt: string | null
+    }
+    HomeworkDetailDto: {
+      /** @example 12 */
+      id: number
+      /** @example Mashqlar 45-48 */
+      title: string
+      subject: components['schemas']['RefDto']
+      /** @example 61 */
+      lessonId: number
+      /** @example 2026-11-16 */
+      lessonDate: string
+      /**
+       * Format: date-time
+       * @example 2026-11-18T17:00:00.000Z
+       */
+      dueAt: string | null
+      /**
+       * @description new / overdue: not submitted, before / after the deadline (overdue can still be submitted, it is then late); submitted; late: submitted after the deadline; checked / returned by the teacher (returned can be resubmitted)
+       * @example new
+       * @enum {string}
+       */
+      status: 'new' | 'overdue' | 'submitted' | 'late' | 'checked' | 'returned'
+      /**
+       * @description 0-100 once checked
+       * @example null
+       */
+      score: number | null
+      /**
+       * @description The teacher attached files
+       * @example false
+       */
+      hasAttachments: boolean
+      /** @example Darslikdagi 45-48 mashqlarni bajaring. */
+      description: string | null
+      teacher: components['schemas']['TeacherRefDto'] | null
+      /** @description The teacher's files */
+      attachments: components['schemas']['FileDto'][]
+      submission: components['schemas']['MySubmissionDto'] | null
+    }
+    TermDto: {
+      /** @example 9 */
+      id: number
+      /** @example 2-chorak */
+      name: string
+      /** @example 2026-11-09 */
+      startsOn: string | null
+      /** @example 2026-12-27 */
+      endsOn: string | null
+    }
+    GradeDto: {
+      /** @example 120 */
+      id: number
+      /**
+       * @description Lesson date, else the day the grade was given
+       * @example 2026-11-10
+       */
+      date: string
+      subject: components['schemas']['RefDto']
+      /**
+       * @description classwork, homework, quiz, exam, term
+       * @example classwork
+       */
+      kind: string | null
+      /**
+       * @description 2-5
+       * @example 5
+       */
+      value: number | null
+      /** @example Faol qatnashdi */
+      comment: string | null
+      teacher: components['schemas']['TeacherRefDto']
+      /** @example 61 */
+      lessonId: number | null
+    }
+    SubjectAverageDto: {
+      subject: components['schemas']['RefDto']
+      /**
+       * @description Two decimals
+       * @example 4.5
+       */
+      average: number | null
+      /** @example 8 */
+      count: number
+    }
+    GradesDto: {
+      term: components['schemas']['TermDto'] | null
+      /** @description Newest first */
+      grades: components['schemas']['GradeDto'][]
+      /** @description Per subject, over the grades listed */
+      averages: components['schemas']['SubjectAverageDto'][]
+    }
+    NotificationDto: {
+      /** @example 31 */
+      id: number
+      /**
+       * @description grade, homework_checked, homework_due, quiz_unlocked, checkpoint_passed (and the older types)
+       * @example homework_checked
+       */
+      type: string | null
+      /** @example Uy vazifasi tekshirildi: Insho */
+      title: string | null
+      /** @example Ball: 90. Yaxshi! 3-gapni qayta ko'rib chiq. */
+      body: string | null
+      /**
+       * @description What it is about, for links: homeworkId, quizId, gradeId, subjectId, topicId, lessonId
+       * @example {
+       *       "homeworkId": 12,
+       *       "submissionId": 7
+       *     }
+       */
+      data: Record<string, never> | null
+      /** Format: date-time */
+      readAt: string | null
+      /** Format: date-time */
+      createdAt: string
+    }
+    UnreadCountDto: {
+      /** @example 3 */
+      count: number
+    }
+    ReadAllDto: {
+      /**
+       * @description How many were marked read
+       * @example 3
+       */
+      updated: number
     }
   }
   responses: never
@@ -18116,7 +18612,16 @@ export interface operations {
         /** @description Filter by user */
         userId?: number
         type?:
-          'grade' | 'homework_due' | 'absence' | 'weekly_progress' | 'flag' | 'needs_help' | null
+          | 'grade'
+          | 'homework_due'
+          | 'absence'
+          | 'weekly_progress'
+          | 'flag'
+          | 'needs_help'
+          | 'homework_checked'
+          | 'quiz_unlocked'
+          | 'checkpoint_passed'
+          | null
       }
       header?: never
       path?: never
@@ -19985,6 +20490,683 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['MasteryListDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeSchoolController_timetable: {
+    parameters: {
+      query?: {
+        /** @description Any date of the week (YYYY-MM-DD); the week runs Monday to Saturday. Default: this week (school time zone) */
+        weekStart?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TimetableDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeSchoolController_attendance: {
+    parameters: {
+      query?: {
+        /** @description YYYY-MM; default: this month (school time zone) */
+        month?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AttendanceDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeSchoolController_homeworkList: {
+    parameters: {
+      query?: {
+        status?: 'new' | 'overdue' | 'submitted' | 'late' | 'checked' | 'returned'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['HomeworkItemDto'][]
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeSchoolController_homeworkDetail: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['HomeworkDetailDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeSchoolController_submitHomework: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    /** @description text and/or up to 3 files (field files: jpg, png, webp, gif or pdf; 10 MB each; no SVG). */
+    requestBody: {
+      content: {
+        'multipart/form-data': {
+          text?: string
+          files?: string[]
+        }
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['HomeworkDetailDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description More than 20 requests per 1 h for this user. Retry-After gives the seconds to wait; the message is in Uzbek. */
+      429: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  MeSchoolController_grades: {
+    parameters: {
+      query?: {
+        subjectId?: number
+        /** @description A term of the student's academic year; default: the term containing today (or the last one started) */
+        termId?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GradesDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeSchoolController_notificationList: {
+    parameters: {
+      query?: {
+        /** @description Only unread ones */
+        unreadOnly?: boolean
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['NotificationDto'][]
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeSchoolController_unreadCount: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UnreadCountDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeSchoolController_markRead: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['NotificationDto']
+        }
+      }
+      /** @description Validation failed or a referenced record is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Missing or invalid access token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Role not allowed */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Record or referenced record not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+      /** @description Duplicate value, or the record is still referenced */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponseDto']
+        }
+      }
+    }
+  }
+  MeSchoolController_readAll: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ReadAllDto']
         }
       }
       /** @description Validation failed or a referenced record is invalid */

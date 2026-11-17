@@ -20,6 +20,12 @@ export const paths = {
   attemptResult: (attemptId: number) => `/attempts/${attemptId}/result`,
   attemptReview: (attemptId: number) => `/attempts/${attemptId}/review`,
   selfStudy: '/self-study',
+  timetable: '/timetable',
+  attendance: '/attendance',
+  grades: '/grades',
+  homework: '/homework',
+  homeworkItem: (id: number) => `/homework/${id}`,
+  notifications: '/notifications',
   profile: '/profile',
   login: '/login',
 } as const

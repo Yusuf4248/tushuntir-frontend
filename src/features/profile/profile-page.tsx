@@ -16,6 +16,7 @@ import { errorMessage } from '@/api/errors'
 import { useRecentAttempts, useSubjects, useToday } from '@/api/me'
 import type { AttemptHistoryItem } from '@/api/types'
 import { PageHeader } from '@/components/layout/page-header'
+import { NotificationBell } from '@/components/notification-bell'
 import { EmptyState, ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -39,7 +40,7 @@ export function ProfilePage() {
 
   return (
     <>
-      <PageHeader title={t.profile.title} />
+      <PageHeader title={t.profile.title} actions={<NotificationBell />} />
 
       <Card className="flex items-center gap-4">
         <span

@@ -58,6 +58,15 @@ const uz = {
     otherAccount: 'Boshqa hisob bilan kirish',
     logout: 'Chiqish',
   },
+  school: {
+    title: 'Maktab',
+    timetable: 'Dars jadvali',
+    attendance: 'Davomat',
+    grades: 'Baholar',
+    homework: 'Uy vazifalari',
+    notifications: 'Bildirishnomalar',
+    bell: (n: number) => (n > 0 ? `Bildirishnomalar: ${n} ta o'qilmagan` : 'Bildirishnomalar'),
+  },
   nav: {
     label: 'Asosiy menyu',
     home: 'Bosh sahifa',

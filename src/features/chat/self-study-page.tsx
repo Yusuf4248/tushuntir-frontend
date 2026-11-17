@@ -13,6 +13,7 @@ import { errorMessage } from '@/api/errors'
 import { useMastery, useWeakTopics } from '@/api/me'
 import type { WeakTopic } from '@/api/types'
 import { PageHeader } from '@/components/layout/page-header'
+import { NotificationBell } from '@/components/notification-bell'
 import { MathText } from '@/components/math-text'
 import { StatusChip } from '@/components/status-chip'
 import { EmptyState, ErrorState } from '@/components/states'
@@ -27,7 +28,11 @@ export function SelfStudyPage() {
 
   return (
     <>
-      <PageHeader title={t.selfStudy.title} subtitle={t.selfStudy.subtitle} />
+      <PageHeader
+        title={t.selfStudy.title}
+        subtitle={t.selfStudy.subtitle}
+        actions={<NotificationBell />}
+      />
 
       <section aria-labelledby="weak-title">
         <h2 id="weak-title" className="mb-3 text-lg font-semibold">
