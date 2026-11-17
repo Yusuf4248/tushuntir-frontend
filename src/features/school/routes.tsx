@@ -1,12 +1,10 @@
 /** The school screens, loaded together as one chunk. */
+export { AttendancePage } from './attendance-page'
 export { TimetablePage } from './timetable-page'
 import { t } from '@/lib/strings.uz'
 
 import { SchoolPlaceholder } from './placeholder-page'
 
-export function AttendancePage() {
-  return <SchoolPlaceholder title={t.school.attendance} />
-}
 export function GradesPage() {
   return <SchoolPlaceholder title={t.school.grades} />
 }
