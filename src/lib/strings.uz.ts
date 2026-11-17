@@ -332,6 +332,13 @@ const uz = {
     checkpointReady:
       "Quizdan yaxshi o'tdingiz! Endi mavzuni Sardorga tushuntirib, uni o'zlashtiring.",
     checkpointButton: 'Tushuntir checkpoint',
+    dueToday: 'Bugun topshirish kerak',
+    dueTodayNone: "Bugunga vazifa yo'q",
+    dueCount: (n: number) => `${n} ta`,
+    latestGrade: 'Oxirgi baho',
+    noGrade: "Hali baho yo'q",
+    attendance: 'Davomat',
+    attendanceMonth: 'shu oy',
   },
   topics: {
     title: 'Darsliklar',

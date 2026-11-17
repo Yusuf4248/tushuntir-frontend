@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { schoolItems } from '@/components/layout/nav-items'
 import { t } from '@/lib/strings.uz'
 
+import { SchoolSummary } from './school-summary'
 import { Section } from './section'
 
 /** "Maktab": timetable, attendance, grades and homework, reachable from Home. */
@@ -24,6 +25,7 @@ export function SchoolShortcuts() {
           </li>
         ))}
       </ul>
+      <SchoolSummary />
     </Section>
   )
 }
