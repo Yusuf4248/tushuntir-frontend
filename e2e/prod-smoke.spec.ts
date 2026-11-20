@@ -89,6 +89,8 @@ function watch(page: Page) {
   })
   page.on('requestfailed', (req) => {
     if (!req.url().startsWith(PROD.api)) return
+    // Requests the app cancels itself (navigation, React StrictMode remounts in dev) are not failures.
+    if (/ERR_ABORTED|NS_BINDING_ABORTED/.test(req.failure()?.errorText ?? '')) return
     requests.push({
       step: currentStep,
       method: req.method(),
@@ -105,6 +107,8 @@ async function newBrowser(wav: string): Promise<{ browser: Browser; page: Page }
       '--use-fake-ui-for-media-stream',
       '--use-fake-device-for-media-stream',
       `--use-file-for-fake-audio-capture=${join(FIXTURES, wav)}`,
+      // Running the app on localhost against the production API: its CORS only allows its own domain.
+      ...(process.env.E2E_DISABLE_WEB_SECURITY ? ['--disable-web-security'] : []),
     ],
   })
   const context = await browser.newContext({
@@ -114,6 +118,9 @@ async function newBrowser(wav: string): Promise<{ browser: Browser; page: Page }
     timezoneId: 'Asia/Tashkent',
     permissions: ['microphone'],
   })
+  // These browsers are launched by hand, so Playwright's config timeouts do not apply: set them here
+  // so a missing element fails its step instead of hanging the whole run.
+  context.setDefaultTimeout(30_000)
   const page = await context.newPage()
   watch(page)
   return { browser, page }
@@ -316,10 +323,13 @@ test('production smoke: login → AI loop → school screens', async () => {
 
     const loggedIn = await step(page, 'Login', async () => {
       await login(page)
-      deployedBundle =
-        (await page.locator('script[src*="/assets/index-"]').getAttribute('src'))
-          ?.split('/')
-          .pop() ?? '?'
+      // A production build has /assets/index-*.js; the Vite dev server does not.
+      const src = await page
+        .locator('script[src*="/assets/index-"]')
+        .first()
+        .getAttribute('src', { timeout: 2_000 })
+        .catch(() => null)
+      deployedBundle = src?.split('/').pop() ?? `dev server (${PROD.app})`
     })
 
     let quizId: number | null = null
