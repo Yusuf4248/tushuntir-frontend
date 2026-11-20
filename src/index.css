@@ -205,6 +205,8 @@
 @layer base {
   html {
     font-size: 16px;
+    /* Keep focused fields clear of the sticky quiz footer and the phone tab bar. */
+    scroll-padding-bottom: 6rem;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
   }

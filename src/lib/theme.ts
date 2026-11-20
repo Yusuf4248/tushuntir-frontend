@@ -22,7 +22,7 @@ export function applyTheme(choice: ThemeChoice): void {
     (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute('content', dark ? '#0b1220' : '#0f766e')
+    ?.setAttribute('content', dark ? '#0e1526' : '#f6f8fb')
 }
 
 export function setTheme(choice: ThemeChoice): void {

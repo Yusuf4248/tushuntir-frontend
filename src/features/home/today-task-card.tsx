@@ -97,7 +97,12 @@ export function TodayTaskCard() {
         </div>
       )}
 
-      <Button asChild size="lg" block className="mt-5 bg-card text-foreground hover:bg-sardor-soft">
+      <Button
+        asChild
+        size="lg"
+        block
+        className="mt-5 bg-card text-foreground hover:bg-sardor-soft focus-visible:outline-primary-foreground"
+      >
         <Link to={paths.quiz(quiz.quizId)}>
           {resume ? t.home.resume : t.home.start}
           <ArrowRight aria-hidden />
