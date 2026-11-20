@@ -9,7 +9,7 @@ import { Section } from './section'
 /** "Maktab": timetable, attendance, grades and homework, reachable from Home. */
 export function SchoolShortcuts() {
   return (
-    <Section title={t.school.title}>
+    <Section title={t.school.title} className="lg:mt-0">
       <ul className="grid grid-cols-4 gap-2">
         {schoolItems.map(({ to, label, icon: Icon }) => (
           <li key={to}>

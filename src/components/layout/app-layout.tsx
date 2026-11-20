@@ -2,7 +2,7 @@ import { Bell } from 'lucide-react'
 import { NavLink, Outlet, useLocation, useMatches } from 'react-router'
 
 import { useUnreadCount } from '@/api/notifications'
-import { Logo } from '@/components/logo'
+import { Wordmark } from '@/components/logo'
 import { t } from '@/lib/strings.uz'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
@@ -40,8 +40,9 @@ function SideLink({ to, label, icon: Icon, end, badge }: NavItem & { badge?: num
 
 /** Tabbed screens: bottom tab bar on phones, left sidebar from md up. */
 export function AppLayout() {
-  const wide = useWideLayout()
   const { pathname } = useLocation()
+  // Home lays out two columns on desktop.
+  const wide = useWideLayout() || pathname === '/'
   const unread = useUnreadCount().data ?? 0
   // The school screens open from Home, so on phones the Home tab stays highlighted.
   const inHomeTab = homeTabPaths.some((p) => pathname === p || pathname.startsWith(`${p}/`))
@@ -49,10 +50,7 @@ export function AppLayout() {
   return (
     <div className="min-h-dvh md:flex">
       <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col overflow-y-auto border-r bg-card px-3 py-5 md:flex">
-        <div className="mb-6 flex items-center gap-2.5 px-3">
-          <Logo />
-          <span className="text-lg font-bold">{t.app.name}</span>
-        </div>
+        <Wordmark className="mb-6 px-3" />
         <nav aria-label={t.nav.label} className="flex flex-col gap-6">
           <ul className="flex flex-col gap-1">
             {navItems.map((item) => (

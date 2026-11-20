@@ -334,6 +334,7 @@ const uz = {
     nextStep: 'Keyingi qadam',
     checkpointReady:
       "Quizdan yaxshi o'tdingiz! Endi mavzuni Sardorga tushuntirib, uni o'zlashtiring.",
+    sardorAsks: 'Men bu mavzuni chalkashtirib yubordim. Tushuntirib bera olasizmi?',
     checkpointButton: 'Tushuntir checkpoint',
     dueToday: 'Bugun topshirish kerak',
     dueTodayNone: "Bugunga vazifa yo'q",

@@ -61,7 +61,7 @@ function MasteryCard({ mastered, total }: { mastered: number; total: number }) {
           <Trophy className="size-6" aria-hidden />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-2xl leading-none font-bold tabular-nums">
+          <p className="font-display text-3xl leading-none font-semibold tabular-nums">
             {mastered}
             <span className="text-base font-medium text-muted-foreground"> / {total}</span>
           </p>

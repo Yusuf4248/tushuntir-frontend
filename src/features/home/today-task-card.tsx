@@ -5,7 +5,6 @@ import { errorMessage } from '@/api/errors'
 import { useQuizzes, useToday } from '@/api/me'
 import { ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
-import { Chip } from '@/components/ui/chip'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { paths } from '@/routes/paths'
 import { t } from '@/lib/strings.uz'
@@ -38,7 +37,7 @@ export function TodayTaskCard() {
       (lesson) => lesson.quiz?.status === 'locked' && lesson.endsAt,
     )
     return (
-      <div className="flex items-start gap-4 rounded-xl border bg-card p-4 shadow-card sm:p-5">
+      <div className="flex items-start gap-4 rounded-2xl border-2 border-dashed border-input bg-katak p-4 sm:p-5">
         <span className="grid size-12 shrink-0 place-items-center rounded-full bg-primary-soft text-primary-soft-foreground">
           <PartyPopper className="size-6" aria-hidden />
         </span>
@@ -60,30 +59,45 @@ export function TodayTaskCard() {
   const resume = hasOpenAttempt(quiz)
 
   return (
-    <article className="rounded-xl border border-primary/25 bg-primary-soft p-4 sm:p-5">
-      <p className="flex items-center gap-2 text-sm font-semibold text-primary-soft-foreground">
+    <article
+      className="relative overflow-hidden rounded-2xl border-2 border-ink bg-primary p-5 text-primary-foreground shadow-card"
+      style={{
+        backgroundImage:
+          'linear-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.09) 1px, transparent 1px)',
+        backgroundSize: '22px 22px',
+      }}
+    >
+      <p className="flex items-center gap-2 text-sm font-semibold text-primary-foreground/85">
         <BookOpenCheck className="size-4" aria-hidden />
         {t.home.todayTask}
+        <span aria-hidden>·</span>
+        {quiz.subject.name}
       </p>
-      <h2 className="mt-2 text-xl leading-snug font-bold">
+      <h2 className="mt-2 text-xl leading-snug font-bold break-words">
         {quiz.topic?.title ?? quiz.title ?? quiz.subject.name}
       </h2>
-      <p className="mt-1 text-muted-foreground">{quiz.subject.name}</p>
 
       {quiz.dueAt && msLeft !== null && (
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <Chip tone={urgent ? 'warning' : 'neutral'} icon={Clock} className="bg-card">
+        <div className="mt-4 flex flex-wrap items-end gap-x-3 gap-y-1">
+          <p
+            className={
+              urgent
+                ? 'rounded-lg bg-sardor px-2.5 py-1 font-display text-lg font-semibold text-ink'
+                : 'font-display text-lg font-semibold'
+            }
+          >
+            <Clock className="mr-1.5 inline size-4 align-[-2px]" aria-hidden />
             {timeLeft(msLeft)}
-          </Chip>
-          <span className="text-sm text-muted-foreground">
+          </p>
+          <p className="text-sm text-primary-foreground/85">
             {t.time.until(
               relativeDayTime(quiz.dueAt, today.data?.date ?? '', timeZone).toLowerCase(),
             )}
-          </span>
+          </p>
         </div>
       )}
 
-      <Button asChild size="lg" block className="mt-4">
+      <Button asChild size="lg" block className="mt-5 bg-card text-foreground hover:bg-sardor-soft">
         <Link to={paths.quiz(quiz.quizId)}>
           {resume ? t.home.resume : t.home.start}
           <ArrowRight aria-hidden />

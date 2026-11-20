@@ -78,7 +78,12 @@ function SummaryCard({
         {loading ? (
           <Skeleton className="mt-2 h-7 w-12" />
         ) : (
-          <span className={cn('mt-1 text-2xl leading-tight font-bold tabular-nums', tone)}>
+          <span
+            className={cn(
+              'mt-1 font-display text-xl leading-tight font-semibold tabular-nums',
+              tone,
+            )}
+          >
             {value}
           </span>
         )}

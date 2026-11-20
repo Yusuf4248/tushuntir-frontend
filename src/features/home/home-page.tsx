@@ -27,19 +27,28 @@ export function HomePage() {
     <>
       <header className="mb-5 flex items-start gap-2">
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl leading-tight font-bold">{t.home.greeting(user.firstName)}</h1>
+          <h1 className="font-display text-[1.625rem] leading-tight font-semibold tracking-tight break-words">
+            {t.home.greeting(user.firstName)}
+          </h1>
           <p className="mt-1 min-h-6 text-muted-foreground">{subtitle}</p>
         </div>
         <NotificationBell className="-mr-2" />
       </header>
 
-      <TodayTaskCard />
-      <CheckpointCard />
-      <SchoolShortcuts />
-      <LessonsSection />
-      <DeadlinesSection />
-      <WeakTopicsSection />
-      <MasterySummary />
+      {/* Phone: one column. Desktop: the AI work on the left, school and progress on the right. */}
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:gap-x-10">
+        <div className="min-w-0">
+          <TodayTaskCard />
+          <CheckpointCard />
+          <LessonsSection />
+          <DeadlinesSection />
+        </div>
+        <div className="min-w-0 lg:sticky lg:top-8">
+          <SchoolShortcuts />
+          <WeakTopicsSection />
+          <MasterySummary />
+        </div>
+      </div>
     </>
   )
 }

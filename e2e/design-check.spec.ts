@@ -39,6 +39,8 @@ async function audit(page: Page, name: string, width: number) {
         style.textOverflow === 'ellipsis' ||
         style.overflowX === 'hidden'
       if (!clips || el.children.length > 2) continue
+      // Screen-reader-only text is clipped on purpose.
+      if (el.classList.contains('sr-only') || el.getBoundingClientRect().width <= 1) continue
       const text = el.innerText.trim()
       if (!text) continue
       // Cut horizontally (truncate) or vertically (line-clamp) without a tooltip to read the rest.

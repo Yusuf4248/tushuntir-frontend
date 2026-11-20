@@ -44,7 +44,7 @@ export function LessonsSection() {
           description={t.home.noLessonsHint}
         />
       ) : (
-        <ol className="overflow-hidden rounded-xl border bg-card shadow-card">
+        <ol className="rounded-xl border bg-card py-2 shadow-card">
           {today.data.lessons.map((lesson) => (
             <LessonRow key={lesson.lessonId} lesson={lesson} />
           ))}
@@ -75,13 +75,25 @@ function LessonRow({ lesson }: { lesson: TodayLesson }) {
   return (
     <li
       className={cn(
-        'flex gap-4 border-b p-4 last:border-b-0',
-        lesson.status === 'in_progress' && 'bg-info-soft/40',
+        'relative flex gap-3 px-4 py-3',
+        lesson.status === 'in_progress' && 'mx-2 rounded-lg bg-primary-soft px-2',
       )}
     >
-      <div className="w-12 shrink-0 text-sm leading-tight tabular-nums">
+      <div className="w-12 shrink-0 pt-0.5 text-sm leading-tight tabular-nums">
         <p className="font-semibold">{lesson.startsAt ?? '—'}</p>
         <p className="text-muted-foreground">{lesson.endsAt ?? ''}</p>
+      </div>
+      {/* Timeline rail: a dot per lesson, filled when finished, ringed while it runs. */}
+      <div aria-hidden className="relative flex w-3 shrink-0 justify-center">
+        <span className="absolute inset-y-[-0.75rem] w-0.5 bg-border" />
+        <span
+          className={cn(
+            'relative mt-1.5 size-3 rounded-full border-2',
+            finished && 'border-primary bg-primary',
+            lesson.status === 'in_progress' && 'border-primary bg-card ring-4 ring-primary/25',
+            lesson.status === 'upcoming' && 'border-input bg-card',
+          )}
+        />
       </div>
 
       <div className="min-w-0 flex-1">
