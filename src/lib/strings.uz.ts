@@ -40,6 +40,9 @@ const uz = {
   auth: {
     title: 'Kirish',
     subtitle: "O'quvchi hisobingizga kiring",
+    sardorHello:
+      "Salom! Men Sardorman. Ba'zi mavzularni chalkashtirib yuboraman — menga tushuntirib berasanmi?",
+    tagline: "Sardorga tushuntir — mavzuni o'zing ham mustahkam o'rganasan.",
     phone: 'Telefon raqami',
     phonePlaceholder: '90 123 45 67',
     phoneInvalid: "Telefon raqamini to'liq kiriting: 9 ta raqam.",
