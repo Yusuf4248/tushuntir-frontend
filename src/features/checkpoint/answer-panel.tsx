@@ -1,5 +1,5 @@
 import { Keyboard, Mic, RotateCcw, Send, Square } from 'lucide-react'
-import { useId, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 
 import type { CheckpointAnswer } from '@/api/checkpoint'
 import { Button } from '@/components/ui/button'
@@ -34,11 +34,17 @@ function clock(seconds: number): string {
 type AnswerPanelProps = {
   onSubmit: (answer: CheckpointAnswer) => void
   submitting: boolean
+  /** Lets Sardor listen: whether the microphone is recording and its 0–1 level. */
+  onVoice?: (voice: { recording: boolean; level: number }) => void
 }
 
 /** Answer by voice (one big microphone button) or, as a backup, by typing. */
-export function AnswerPanel({ onSubmit, submitting }: AnswerPanelProps) {
+export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps) {
   const { state, elapsed, level, start, stop, reset } = useRecorder()
+  const isRecording = state.status === 'recording'
+  useEffect(() => {
+    onVoice?.({ recording: isRecording, level: isRecording ? level : 0 })
+  }, [onVoice, isRecording, level])
   const [mode, setMode] = useState<'voice' | 'text'>(() => (recorderSupported() ? 'voice' : 'text'))
   const [text, setText] = useState('')
   const textId = useId()
@@ -167,7 +173,7 @@ export function AnswerPanel({ onSubmit, submitting }: AnswerPanelProps) {
               aria-pressed={recording}
               aria-label={recording ? t.checkpoint.tapToStop : t.checkpoint.tapToRecord}
               className={cn(
-                'relative grid size-24 cursor-pointer place-items-center rounded-full text-white shadow-lg transition-colors focus-visible:outline-4 disabled:opacity-60',
+                'relative grid size-24 cursor-pointer place-items-center rounded-full text-white sticker transition-[background-color,transform,box-shadow] focus-visible:outline-4 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none disabled:opacity-60',
                 recording ? 'bg-danger hover:brightness-110' : 'bg-primary hover:bg-primary-hover',
               )}
             >

@@ -104,7 +104,7 @@ export function NotYetView({ result, topicId, onRetry, retrying }: NotYetProps) 
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-3">
-        <SardorAvatar />
+        <SardorAvatar mood={notified ? 'worried' : 'confused'} className="size-20" />
         <h2 className="text-xl leading-snug font-bold text-balance">{t.checkpoint.notYetTitle}</h2>
       </div>
       <Heard result={result} />
@@ -147,8 +147,10 @@ export function PassedView({ result }: { result: CheckpointAnswerResult }) {
   return (
     <div className="relative flex flex-col items-center gap-5 text-center">
       <Confetti />
-      <SardorAvatar happy className="size-20 text-4xl" />
-      <div className="w-full rounded-2xl border bg-card p-4 text-left shadow-card">
+      <div className="flex w-full justify-center rounded-2xl border-2 border-ink bg-katak py-6">
+        <SardorAvatar mood="happy" className="size-36" />
+      </div>
+      <div className="w-full rounded-2xl bg-card p-4 text-left sticker">
         <p className="text-lg font-semibold">{t.checkpoint.passedSardor}</p>
         {result.feedback && (
           <MathText
@@ -157,7 +159,7 @@ export function PassedView({ result }: { result: CheckpointAnswerResult }) {
           />
         )}
       </div>
-      <p className="rounded-full bg-success-soft px-5 py-2 text-xl font-bold text-success">
+      <p className="rounded-full bg-success-soft px-5 py-2 font-display text-xl font-semibold text-success">
         {t.checkpoint.passedTitle}
       </p>
       <div className="w-full text-left">

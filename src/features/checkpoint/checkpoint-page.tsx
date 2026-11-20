@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowRight, CircleAlert, RotateCcw } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useParams } from 'react-router'
 
 import {
@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button'
 import { Chip } from '@/components/ui/chip'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { t } from '@/lib/strings.uz'
+import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
 import { AnswerPanel } from './answer-panel'
@@ -71,6 +72,8 @@ export function CheckpointPage() {
   const [result, setResult] = useState<CheckpointAnswerResult | null>(null)
   const [lastAnswer, setLastAnswer] = useState<CheckpointAnswer | null>(null)
   const [panelKey, setPanelKey] = useState(0)
+  const [voice, setVoice] = useState({ recording: false, level: 0 })
+  const onVoice = useCallback((v: { recording: boolean; level: number }) => setVoice(v), [])
 
   function openTry(cp: Checkpoint) {
     setCheckpoint(cp)
@@ -129,7 +132,14 @@ export function CheckpointPage() {
           : 'answering'
 
   return (
-    <div className="flex flex-1 flex-col" data-phase={phase}>
+    <div
+      className={cn(
+        'flex flex-1 flex-col',
+        // Answering on desktop: Sardor left, the answer right.
+        (phase === 'answering' || phase === 'follow_up' || phase === 'judging') && 'lg:max-w-5xl!',
+      )}
+      data-phase={phase}
+    >
       <PageHeader
         title={t.checkpoint.title}
         subtitle={title}
@@ -147,40 +157,49 @@ export function CheckpointPage() {
           retrying={start.isPending}
         />
       ) : checkpoint && line ? (
-        <div className="flex flex-col gap-5">
-          {firstAnswer && <Heard result={firstAnswer} />}
-          <SardorCard key={line.text} line={line} />
-
-          {answer.isPending && <Judging voice={lastAnswer?.kind === 'voice'} />}
-          {answer.isError && !isAlreadyJudged(answer.error) && (
-            <div
-              role="alert"
-              className="flex flex-col gap-3 rounded-xl border border-danger/30 bg-danger-soft/60 p-4"
-            >
-              <p className="flex items-start gap-2 text-sm text-danger">
-                <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
-                {answerErrorMessage(answer.error)}
-              </p>
-              {lastAnswer && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="self-start"
-                  onClick={() => answer.mutate(lastAnswer)}
-                >
-                  <RotateCcw aria-hidden />
-                  {t.checkpoint.resend}
-                </Button>
-              )}
-            </div>
-          )}
-          {/* Stays mounted while judging and after errors, so the recording is never lost. */}
-          <div hidden={answer.isPending}>
-            <AnswerPanel
-              key={panelKey}
-              onSubmit={(a) => answer.mutate(a)}
-              submitting={answer.isPending}
+        <div className="flex flex-col gap-5 lg:grid lg:grid-cols-2 lg:items-start lg:gap-10">
+          <div className="flex flex-col gap-5 lg:sticky lg:top-6">
+            {firstAnswer && <Heard result={firstAnswer} />}
+            <SardorCard
+              key={line.text}
+              line={line}
+              mood={answer.isPending ? 'thinking' : voice.recording ? 'listening' : 'confused'}
+              level={voice.level}
             />
+          </div>
+          <div className="flex flex-col gap-5 lg:pt-2">
+            {answer.isPending && <Judging voice={lastAnswer?.kind === 'voice'} />}
+            {answer.isError && !isAlreadyJudged(answer.error) && (
+              <div
+                role="alert"
+                className="flex flex-col gap-3 rounded-xl border border-danger/30 bg-danger-soft/60 p-4"
+              >
+                <p className="flex items-start gap-2 text-sm text-danger">
+                  <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
+                  {answerErrorMessage(answer.error)}
+                </p>
+                {lastAnswer && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="self-start"
+                    onClick={() => answer.mutate(lastAnswer)}
+                  >
+                    <RotateCcw aria-hidden />
+                    {t.checkpoint.resend}
+                  </Button>
+                )}
+              </div>
+            )}
+            {/* Stays mounted while judging and after errors, so the recording is never lost. */}
+            <div hidden={answer.isPending}>
+              <AnswerPanel
+                key={panelKey}
+                onSubmit={(a) => answer.mutate(a)}
+                submitting={answer.isPending}
+                onVoice={onVoice}
+              />
+            </div>
           </div>
         </div>
       ) : (
@@ -212,7 +231,7 @@ function Intro({ status, loading, error, onReload, onStart, starting, startError
   if (starting) {
     return (
       <div className="flex flex-col items-center gap-4 py-12 text-center" role="status">
-        <SardorAvatar className="size-20 animate-pulse text-4xl motion-reduce:animate-none" />
+        <SardorAvatar mood="thinking" className="size-32" />
         <p className="text-lg font-semibold">{t.checkpoint.thinking}</p>
       </div>
     )
@@ -225,9 +244,9 @@ function Intro({ status, loading, error, onReload, onStart, starting, startError
 
   return (
     <div className="flex flex-1 flex-col gap-5">
-      <div className="flex items-start gap-3">
-        <SardorAvatar />
-        <div className="rounded-2xl rounded-tl-md border bg-card p-4 shadow-card">
+      <div className="flex items-end gap-3 rounded-2xl border-2 border-ink bg-katak p-4">
+        <SardorAvatar className="size-24 shrink-0" />
+        <div className="mb-8 rounded-2xl rounded-bl-sm bg-card p-4 sticker">
           <p className="text-lg leading-snug font-semibold">{t.checkpoint.intro}</p>
           <p className="mt-2 text-sm text-muted-foreground">{t.checkpoint.introHow}</p>
         </div>
