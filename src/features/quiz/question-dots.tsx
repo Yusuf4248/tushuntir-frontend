@@ -39,11 +39,11 @@ export function QuestionDots({ count, current, isAnswered, onSelect }: QuestionD
               >
                 <span
                   className={cn(
-                    'grid size-8 place-items-center rounded-full border-2 text-sm font-semibold tabular-nums transition-colors',
+                    'grid size-8 place-items-center rounded-md border-2 text-sm font-semibold tabular-nums transition-colors',
                     answered
                       ? 'border-primary bg-primary text-primary-foreground'
-                      : 'border-dashed border-input text-muted-foreground',
-                    active && 'ring-2 ring-ring ring-offset-2 ring-offset-background',
+                      : 'border-input bg-card text-muted-foreground',
+                    active && 'border-ink ring-2 ring-ink/25 ring-offset-1 ring-offset-background',
                   )}
                 >
                   {i + 1}

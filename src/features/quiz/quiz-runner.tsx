@@ -186,7 +186,7 @@ export function QuizRunner({ view }: { view: AttemptView }) {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col lg:max-w-none!">
       <header className="flex items-center gap-2">
         <Button asChild variant="ghost" size="icon" className="-ml-2">
           <Link to={paths.home} aria-label={`${t.quiz.exit}. ${t.quiz.exitHint}`}>
@@ -197,7 +197,7 @@ export function QuizRunner({ view }: { view: AttemptView }) {
           <p className="truncate text-sm text-muted-foreground">
             {kind === 'quiz' ? t.quiz.lessonQuiz : t.quiz.practiceQuiz}
           </p>
-          <p className="font-semibold tabular-nums" aria-live="polite">
+          <p className="font-display text-lg font-semibold tabular-nums" aria-live="polite">
             {t.quiz.progress(index + 1, total)}
           </p>
         </div>
@@ -218,51 +218,59 @@ export function QuizRunner({ view }: { view: AttemptView }) {
         <QuestionDots count={total} current={index} isAnswered={isAnswered} onSelect={goTo} />
       </div>
 
-      <main className="mt-4 flex-1">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold text-muted-foreground">
-            {t.quiz.questionLabel(index + 1)}
-          </p>
-          <SaveIndicator
-            status={saver.status[question.questionId]}
-            onRetry={() => void saver.flush(question.questionId)}
+      {/* Phone: question, answers, help. Desktop: question and help left, answers right. */}
+      <main className="mt-4 flex-1 lg:mt-8 lg:grid lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:items-start lg:gap-x-10">
+        <div className="lg:col-start-1 lg:row-start-1">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold text-muted-foreground">
+              {t.quiz.questionLabel(index + 1)}
+            </p>
+            <SaveIndicator
+              status={saver.status[question.questionId]}
+              onRetry={() => void saver.flush(question.questionId)}
+            />
+          </div>
+          {/* The question on a notebook page, with the red margin line. */}
+          <div className="relative mb-5 rounded-xl border bg-card py-5 pr-5 pl-9 shadow-card before:absolute before:inset-y-0 before:left-5 before:w-0.5 before:bg-danger/35">
+            <h1
+              id={`prompt-${question.questionId}`}
+              className="text-xl leading-snug font-semibold break-words lg:text-2xl"
+            >
+              <MathText text={question.prompt} />
+            </h1>
+          </div>
+        </div>
+        <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:pt-9">
+          <AnswerInput
+            key={question.questionId}
+            question={question}
+            promptId={`prompt-${question.questionId}`}
+            value={value}
+            onChoose={(option) => setAnswer(option, 0)}
+            onType={(text) => setAnswer(text, SHORT_ANSWER_DEBOUNCE_MS)}
+            onTypeDone={() => void saver.flush(question.questionId)}
           />
         </div>
-        <h1
-          id={`prompt-${question.questionId}`}
-          className="mb-5 text-xl leading-snug font-semibold"
-        >
-          <MathText text={question.prompt} />
-        </h1>
-
-        <AnswerInput
-          key={question.questionId}
-          question={question}
-          promptId={`prompt-${question.questionId}`}
-          value={value}
-          onChoose={(option) => setAnswer(option, 0)}
-          onType={(text) => setAnswer(text, SHORT_ANSWER_DEBOUNCE_MS)}
-          onTypeDone={() => void saver.flush(question.questionId)}
-        />
-
-        {question.hintsAvailable > 0 && (
-          <Button
-            variant="ghost"
-            className="mt-4 -ml-2 text-primary"
-            onClick={() => setHintOpen(true)}
-          >
-            <Lightbulb aria-hidden />
-            {t.quiz.help}
-            {used > 0 && (
-              <span className="text-sm font-normal text-muted-foreground">
-                · {t.quiz.hintsUsed(used, question.hintsAvailable)}
-              </span>
-            )}
-          </Button>
-        )}
+        <div className="lg:col-start-1 lg:row-start-2">
+          {question.hintsAvailable > 0 && (
+            <Button
+              variant="ghost"
+              className="mt-4 -ml-2 text-primary lg:mt-0"
+              onClick={() => setHintOpen(true)}
+            >
+              <Lightbulb aria-hidden />
+              {t.quiz.help}
+              {used > 0 && (
+                <span className="text-sm font-normal text-muted-foreground">
+                  · {t.quiz.hintsUsed(used, question.hintsAvailable)}
+                </span>
+              )}
+            </Button>
+          )}
+        </div>
       </main>
 
-      <footer className="sticky bottom-0 -mx-4 mt-6 grid grid-cols-2 gap-3 border-t bg-background/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur md:mx-0 md:border-0 md:px-0">
+      <footer className="sticky bottom-0 -mx-4 mt-6 grid grid-cols-2 gap-3 border-t bg-background/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur md:mx-0 md:border-0 md:px-0 lg:ml-auto lg:w-[calc(50%-1.25rem)]">
         <Button variant="outline" disabled={index === 0} onClick={() => goTo(index - 1)}>
           <ArrowLeft aria-hidden />
           {t.quiz.previous}

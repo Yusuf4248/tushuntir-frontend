@@ -42,21 +42,29 @@ export function MistakeCard({ attemptId, mistake, topicId }: MistakeCardProps) {
       <p className="text-sm font-semibold text-muted-foreground">
         {t.quiz.questionLabel(mistake.position)}
       </p>
-      <h2 className="mt-1 text-lg leading-snug font-semibold">
+      <h2 className="mt-1 text-lg leading-snug font-semibold break-words">
         <MathText text={mistake.prompt} />
       </h2>
 
       <dl className="mt-4 flex flex-col gap-2">
-        <div className="rounded-xl bg-danger-soft px-4 py-3">
+        {/* A teacher's red pen: the wrong answer struck through, the right one beside it. */}
+        <div className="rounded-lg border-l-4 border-danger bg-danger-soft px-4 py-3">
           <dt className="flex items-center gap-1.5 text-sm font-semibold text-danger">
             <CircleX className="size-4" aria-hidden />
             {t.review.yourAnswer}
           </dt>
           <dd className="mt-0.5">
-            {mistake.yourAnswer ? <MathText text={mistake.yourAnswer} /> : t.review.noAnswer}
+            {mistake.yourAnswer ? (
+              <MathText
+                text={mistake.yourAnswer}
+                className="line-through decoration-danger decoration-2"
+              />
+            ) : (
+              t.review.noAnswer
+            )}
           </dd>
         </div>
-        <div className="rounded-xl bg-success-soft px-4 py-3">
+        <div className="rounded-lg border-l-4 border-success bg-success-soft px-4 py-3">
           <dt className="flex items-center gap-1.5 text-sm font-semibold text-success">
             <CircleCheck className="size-4" aria-hidden />
             {t.review.correctAnswer}

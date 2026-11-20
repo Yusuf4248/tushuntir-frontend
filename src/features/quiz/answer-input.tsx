@@ -66,7 +66,7 @@ export function AnswerInput({
           return (
             <label
               key={option}
-              className="flex min-h-14 cursor-pointer items-center gap-3 rounded-xl border-2 border-border bg-card px-4 py-3 transition-colors hover:border-input has-checked:border-primary has-checked:bg-primary-soft has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
+              className="flex min-h-14 cursor-pointer items-center gap-3 rounded-lg border-2 border-border bg-card px-4 py-3 transition-colors hover:border-input has-checked:border-primary has-checked:bg-primary-soft has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
             >
               <input
                 type="radio"
@@ -80,8 +80,8 @@ export function AnswerInput({
                 aria-hidden
                 className={
                   checked
-                    ? 'grid size-8 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground'
-                    : 'grid size-8 shrink-0 place-items-center rounded-full bg-muted text-sm font-semibold text-muted-foreground'
+                    ? 'grid size-8 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground'
+                    : 'grid size-8 shrink-0 place-items-center rounded-md border-2 border-input bg-card text-sm font-semibold text-muted-foreground'
                 }
               >
                 {checked ? <Check className="size-4" /> : LETTERS[i]}

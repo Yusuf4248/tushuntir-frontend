@@ -78,8 +78,8 @@ function ResultView({ result }: { result: SubmitResult }) {
   const questions = [...result.questions].sort((a, b) => a.position - b.position)
 
   return (
-    <div className="flex flex-1 flex-col">
-      <header className="mb-2">
+    <div className="flex flex-1 flex-col lg:grid lg:max-w-none! lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:grid-rows-[auto_auto_1fr] lg:items-start lg:gap-x-10">
+      <header className="mb-2 lg:col-start-1">
         <p className="text-sm text-muted-foreground">{t.result.title}</p>
         {topic && <p className="font-semibold">{topic.title}</p>}
       </header>
@@ -91,13 +91,13 @@ function ResultView({ result }: { result: SubmitResult }) {
           result.scorePercent,
         )}
         className={cn(
-          'mt-3 rounded-2xl border p-5 text-center',
-          passed ? 'border-success/30 bg-success-soft' : 'border-warning/30 bg-warning-soft',
+          'mt-3 rounded-2xl border-2 border-ink p-6 text-center lg:col-start-1',
+          passed ? 'bg-success-soft' : 'bg-sardor-soft',
         )}
       >
-        <p className="text-5xl leading-none font-bold tabular-nums" aria-hidden>
+        <p className="font-display text-5xl leading-none font-semibold tabular-nums" aria-hidden>
           {t.result.score(result.correctCount, result.totalQuestions)}
-          <span className="text-2xl font-semibold text-muted-foreground">
+          <span className="text-2xl text-muted-foreground">
             {' · '}
             {t.result.percent(result.scorePercent)}
           </span>
@@ -115,7 +115,10 @@ function ResultView({ result }: { result: SubmitResult }) {
         </p>
       </section>
 
-      <section className="mt-6" aria-labelledby="result-questions">
+      <section
+        className="mt-6 lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:mt-0"
+        aria-labelledby="result-questions"
+      >
         <h2 id="result-questions" className="mb-3 text-lg font-semibold">
           {t.result.questions}
         </h2>
@@ -138,14 +141,14 @@ function ResultView({ result }: { result: SubmitResult }) {
                         : t.result.wrong}
                   </span>
                 </p>
-                <MathText text={q.prompt} className="mt-0.5 line-clamp-2 block" />
+                <MathText text={q.prompt} className="mt-0.5 block break-words" />
               </div>
             </li>
           ))}
         </ol>
       </section>
 
-      <div className="sticky bottom-0 -mx-4 mt-6 flex flex-col gap-3 border-t bg-background/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur md:mx-0 md:border-0 md:px-0">
+      <div className="sticky bottom-0 -mx-4 mt-6 flex flex-col gap-3 border-t bg-background/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur md:mx-0 md:border-0 md:px-0 lg:static lg:col-start-1 lg:bg-transparent lg:backdrop-blur-none">
         {mistakes > 0 ? (
           <Button asChild size="lg" block>
             <Link to={paths.attemptReview(result.attemptId)} state={{ topicId }}>

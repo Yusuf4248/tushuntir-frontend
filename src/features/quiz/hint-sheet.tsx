@@ -61,8 +61,8 @@ export function HintSheet({
       {shown.length > 0 && (
         <ol className="flex flex-col gap-3" aria-live="polite">
           {shown.map(({ level, text }) => (
-            <li key={level} className="rounded-xl border bg-primary-soft/60 p-4">
-              <p className="mb-1 text-sm font-semibold text-primary-soft-foreground">
+            <li key={level} className="rounded-lg border-l-4 border-primary bg-primary-soft/60 p-4">
+              <p className="mb-1 font-display text-xs font-semibold text-primary-soft-foreground">
                 {t.quiz.hintLevel(level)}
               </p>
               <MathText text={text} className="leading-relaxed" />
@@ -72,7 +72,7 @@ export function HintSheet({
       )}
 
       {misconception && (
-        <div className="mt-3 rounded-xl border border-warning/30 bg-warning-soft p-4" role="note">
+        <div className="mt-3 rounded-lg border-l-4 border-warning bg-warning-soft p-4" role="note">
           <p className="mb-1 flex items-center gap-2 text-sm font-semibold text-warning">
             <MessageCircleWarning className="size-4" aria-hidden />
             {t.quiz.misconceptionTitle}

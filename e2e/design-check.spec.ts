@@ -149,7 +149,20 @@ test('design check', async () => {
         const finished = attempts.find(
           (a) => a.kind !== 'checkpoint' && a.finishedAt && (a.scorePercent ?? 100) < 100,
         )
-        const open = attempts.find((a) => a.kind !== 'checkpoint' && !a.finishedAt)
+        let open = attempts.find((a) => a.kind !== 'checkpoint' && !a.finishedAt)
+        // With PRACTICE_START=<topicId>, start one practice quiz (existing questions, no AI) so the
+        // question screen can be checked; later runs reuse it while it stays open.
+        if (!open && process.env.PRACTICE_START) {
+          await page.goto(`${BASE}/practice/${process.env.PRACTICE_START}`)
+          await page.getByRole('button', { name: 'Boshlash' }).click()
+          await page.waitForURL(/\/attempts\/\d+/, { timeout: 60_000 })
+          open = {
+            id: Number(page.url().match(/attempts\/(\d+)/)?.[1]),
+            kind: 'practice',
+            finishedAt: null,
+            scorePercent: null,
+          }
+        }
         if (open) {
           await page.goto(`${BASE}/attempts/${open.id}`)
           await page
