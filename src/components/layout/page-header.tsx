@@ -15,6 +15,8 @@ type PageHeaderProps = {
   /** 'close' shows an X instead of an arrow (full-screen flows). */
   backIcon?: 'back' | 'close'
   actions?: ReactNode
+  /** Unbounded for short page titles; false for content titles (topics, homework) in Inter. */
+  display?: boolean
   className?: string
 }
 
@@ -24,6 +26,7 @@ export function PageHeader({
   backTo,
   backIcon = 'back',
   actions,
+  display = true,
   className,
 }: PageHeaderProps) {
   const navigate = useNavigate()
@@ -47,7 +50,16 @@ export function PageHeader({
         </Button>
       )}
       <div className="min-w-0 flex-1">
-        <h1 className="text-2xl leading-tight font-bold text-balance">{title}</h1>
+        <h1
+          className={cn(
+            'leading-tight text-balance break-words',
+            display
+              ? 'font-display text-[1.375rem] font-semibold tracking-tight'
+              : 'text-2xl font-bold',
+          )}
+        >
+          {title}
+        </h1>
         {subtitle && <p className="mt-0.5 text-muted-foreground">{subtitle}</p>}
       </div>
       {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}

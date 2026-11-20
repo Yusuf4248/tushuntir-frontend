@@ -111,7 +111,7 @@ function TopicView({ topic }: { topic: TopicDetail }) {
   return (
     <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(340px,400px)] lg:gap-10">
       <article className="min-w-0">
-        <PageHeader title={topic.title} subtitle={subtitle} backTo={paths.topics} />
+        <PageHeader title={topic.title} subtitle={subtitle} backTo={paths.topics} display={false} />
 
         <div className="flex flex-wrap items-center gap-2">
           <StatusChip status={topic.status} />

@@ -69,6 +69,7 @@ function HomeworkView({ homework }: { homework: HomeworkDetail }) {
       <div>
         <PageHeader
           title={homework.title}
+          display={false}
           subtitle={homework.subject.name}
           backTo={paths.homework}
           className="mb-3"
