@@ -126,6 +126,16 @@ async function newBrowser(wav: string): Promise<{ browser: Browser; page: Page }
   return { browser, page }
 }
 
+/** Thrown inside a step when its precondition is missing today: the step is reported as skipped. */
+class SkipStep extends Error {}
+
+/** The dashboard's "Bugungi vazifa" hero card and its start link (redesigned dashboard). */
+function todayTaskLink(page: Page) {
+  return page
+    .locator('article', { hasText: 'Bugungi vazifa' })
+    .getByRole('link', { name: /Boshlash|Davom ettirish/ })
+}
+
 async function settle(page: Page, ms = 600) {
   await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => undefined)
   await page.waitForTimeout(ms)
@@ -155,7 +165,7 @@ async function step(
     const note = await fn()
     if (note) result.notes.push(note)
   } catch (error) {
-    result.status = 'fail'
+    result.status = error instanceof SkipStep ? 'skip' : 'fail'
     result.notes.push((error as Error).message.split('\n')[0]!.slice(0, 300))
   }
   result.ms = Date.now() - t0
@@ -338,21 +348,30 @@ test('production smoke: login → AI loop → school screens', async () => {
       'Dashboard (today, deadlines)',
       async () => {
         await expect(page.getByText('Bugungi vazifa').first()).toBeVisible()
-        await expect(page.getByRole('heading', { name: 'Muddatlar' })).toBeVisible()
         await expect(page.getByRole('heading', { name: 'Bugungi darslar' })).toBeVisible()
-        // No open task: in demo mode, end a lesson so its quiz opens.
-        const startLink = page
-          .locator('article')
-          .getByRole('link', { name: /Boshlash|Davom ettirish/ })
-        if (!(await startLink.count())) {
-          const demo = page.getByRole('button', { name: 'Darsni tugatish (demo)' }).first()
-          if (await demo.count()) {
-            await demo.click()
-            await startLink.first().waitFor({ timeout: 20_000 })
-            return 'no open task at first: finished a lesson with the demo button'
-          }
-          return 'no open quiz today ("Hozircha ochiq vazifa yo\'q")'
+        await expect(page.getByRole('heading', { name: 'Muddatlar' })).toBeVisible()
+        const startLink = todayTaskLink(page)
+        if (await startLink.count()) return
+        await expect(page.getByText("Hozircha ochiq vazifa yo'q")).toBeVisible()
+
+        // No open task: in demo mode, finish a lesson that has a topic so its quiz opens.
+        // A lesson without a topic ("Mavzu belgilanmagan") opens no quiz, so it is not clicked.
+        const demoName = 'Darsni tugatish (demo)'
+        const lessons = page.locator('li', { has: page.getByRole('button', { name: demoName }) })
+        const withTopic = lessons.filter({ hasNotText: 'Mavzu belgilanmagan' })
+        if (!(await withTopic.count())) {
+          const total = await lessons.count()
+          return total
+            ? `no open quiz today; none of the ${total} unfinished lesson(s) has a topic, so the demo button was not used`
+            : 'no open quiz today and no unfinished lesson'
         }
+        await withTopic.first().getByRole('button', { name: demoName }).click()
+        await page.getByText('Dars tugatildi').first().waitFor({ timeout: 20_000 })
+        if (!(await page.getByText(/Quiz ochildi/).count())) {
+          return 'no open task at first: finished a lesson with the demo button, but it opened no quiz'
+        }
+        await startLink.first().waitFor({ timeout: 20_000 })
+        return 'no open task at first: finished a lesson with the demo button, its quiz opened'
       },
       { skipIf: !loggedIn && 'login failed' },
     )
@@ -361,13 +380,13 @@ test('production smoke: login → AI loop → school screens', async () => {
       page,
       "Open today's task",
       async () => {
-        const startLink = page
-          .locator('article')
-          .getByRole('link', { name: /Boshlash|Davom ettirish/ })
-          .first()
+        const startLink = todayTaskLink(page).first()
         if (!(await startLink.count())) {
           quizId = topic.quizId
-          if (!quizId) throw new Error('no task on the dashboard and no quiz for the fixture topic')
+          if (!quizId)
+            throw new SkipStep(
+              'no open task today and no lesson quiz for the fixture topic; the quiz step uses a practice quiz',
+            )
           await page.goto(`${PROD.app}/quiz/${quizId}`)
         } else {
           await startLink.click()
@@ -496,7 +515,7 @@ test('production smoke: login → AI loop → school screens', async () => {
         const score = (await page.locator('section').first().innerText()).split('\n')[0]
         const wrong = await page.getByText(/Noto'g'ri|Javob berilmagan/).count()
         if (wrong === 0) throw new Error(`no wrong answer (score ${score})`)
-        return `${usedPractice ? 'practice quiz (lesson quiz already done)' : `lesson quiz ${quizId}`}; ${count} questions, ${wrongOnPurpose} wrong on purpose; result ${score}`
+        return `${usedPractice ? 'practice quiz (lesson quiz already done)' : quizId ? `lesson quiz ${quizId}` : 'practice quiz (no lesson quiz open today)'}; ${count} questions, ${wrongOnPurpose} wrong on purpose; result ${score}`
       },
       { skipIf: !loggedIn && 'login failed' },
     )
