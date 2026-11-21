@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ProgressBar } from '@/components/ui/progress-bar'
 import { SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { paths } from '@/routes/paths'
 
 import { Section } from './section'
@@ -18,11 +18,11 @@ export function MasterySummary() {
 
   return (
     <Section
-      title={t.home.mastery}
+      title={t('home.mastery')}
       action={
         <Button asChild variant="ghost" size="sm" className="-mr-2 text-primary">
           <Link to={paths.topics}>
-            {t.home.allTopics}
+            {t('home.allTopics')}
             <ChevronRight aria-hidden />
           </Link>
         </Button>
@@ -50,7 +50,7 @@ function MasteryCard({ mastered, total }: { mastered: number; total: number }) {
   if (total === 0) {
     return (
       <Card>
-        <p className="text-muted-foreground">{t.home.noMasteryTopics}</p>
+        <p className="text-muted-foreground">{t('home.noMasteryTopics')}</p>
       </Card>
     )
   }
@@ -65,15 +65,17 @@ function MasteryCard({ mastered, total }: { mastered: number; total: number }) {
             {mastered}
             <span className="text-base font-medium text-muted-foreground"> / {total}</span>
           </p>
-          <p className="mt-1 text-sm text-muted-foreground">{t.home.masteredOf(mastered, total)}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t('home.masteredOf', { mastered, total })}
+          </p>
         </div>
       </div>
       <ProgressBar
         className="mt-4"
         value={mastered}
         max={total}
-        label={t.home.mastery}
-        valueText={t.home.masteredOf(mastered, total)}
+        label={t('home.mastery')}
+        valueText={t('home.masteredOf', { mastered, total })}
       />
     </Card>
   )

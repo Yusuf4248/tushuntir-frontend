@@ -18,7 +18,7 @@ import type { ConfirmResult, Mistake, Review } from '@/api/types'
 import { MathText } from '@/components/math-text'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
@@ -37,10 +37,10 @@ export function MistakeCard({ attemptId, mistake, topicId }: MistakeCardProps) {
         'rounded-xl border bg-card p-4 shadow-card sm:p-5',
         mistake.fixed && 'border-success/40',
       )}
-      aria-label={t.quiz.questionLabel(mistake.position)}
+      aria-label={t('quiz.questionLabel', { count: mistake.position })}
     >
       <p className="text-sm font-semibold text-muted-foreground">
-        {t.quiz.questionLabel(mistake.position)}
+        {t('quiz.questionLabel', { count: mistake.position })}
       </p>
       <h2 className="mt-1 text-lg leading-snug font-semibold break-words">
         <MathText text={mistake.prompt} />
@@ -51,7 +51,7 @@ export function MistakeCard({ attemptId, mistake, topicId }: MistakeCardProps) {
         <div className="rounded-lg border-l-4 border-danger bg-danger-soft px-4 py-3">
           <dt className="flex items-center gap-1.5 text-sm font-semibold text-danger">
             <CircleX className="size-4" aria-hidden />
-            {t.review.yourAnswer}
+            {t('review.yourAnswer')}
           </dt>
           <dd className="mt-0.5">
             {mistake.yourAnswer ? (
@@ -60,14 +60,14 @@ export function MistakeCard({ attemptId, mistake, topicId }: MistakeCardProps) {
                 className="line-through decoration-danger decoration-2"
               />
             ) : (
-              t.review.noAnswer
+              t('review.noAnswer')
             )}
           </dd>
         </div>
         <div className="rounded-lg border-l-4 border-success bg-success-soft px-4 py-3">
           <dt className="flex items-center gap-1.5 text-sm font-semibold text-success">
             <CircleCheck className="size-4" aria-hidden />
-            {t.review.correctAnswer}
+            {t('review.correctAnswer')}
           </dt>
           <dd className="mt-0.5">
             <MathText text={mistake.correctAnswer} />
@@ -78,12 +78,14 @@ export function MistakeCard({ attemptId, mistake, topicId }: MistakeCardProps) {
       <div className="mt-4">
         <p className="flex items-center gap-1.5 text-sm font-semibold text-warning">
           <MessageCircleWarning className="size-4" aria-hidden />
-          {t.review.whyWrong}
+          {t('review.whyWrong')}
         </p>
         <MathText text={mistake.misconception} className="mt-1 block leading-relaxed" />
         {mistake.explanation && mistake.explanation !== mistake.misconception && (
           <>
-            <p className="mt-3 text-sm font-semibold text-muted-foreground">{t.review.solution}</p>
+            <p className="mt-3 text-sm font-semibold text-muted-foreground">
+              {t('review.solution')}
+            </p>
             <MathText
               text={mistake.explanation}
               className="mt-1 block leading-relaxed text-muted-foreground"
@@ -101,7 +103,7 @@ export function MistakeCard({ attemptId, mistake, topicId }: MistakeCardProps) {
             })}
           >
             <BookOpen aria-hidden />
-            {mistake.page ? t.review.textbookPage(mistake.page) : t.review.textbook}
+            {mistake.page ? t('review.textbookPage', { page: mistake.page }) : t('review.textbook')}
           </Link>
         </Button>
       )}
@@ -146,7 +148,7 @@ function Confirmation({ attemptId, mistake, topicId }: MistakeCardProps) {
   if (mistake.fixed) {
     return (
       <div className="rounded-xl bg-success-soft px-4 py-3" role="status">
-        <p className="font-semibold text-success">{t.review.fixed}</p>
+        <p className="font-semibold text-success">{t('review.fixed')}</p>
         {lastResult?.explanation && (
           <MathText text={lastResult.explanation} className="mt-1 block text-sm leading-relaxed" />
         )}
@@ -158,12 +160,12 @@ function Confirmation({ attemptId, mistake, topicId }: MistakeCardProps) {
     if (mistake.confirmationStatus === 'none') {
       return (
         <div>
-          <p className="text-sm text-muted-foreground">{t.review.explainMoreHint}</p>
+          <p className="text-sm text-muted-foreground">{t('review.explainMoreHint')}</p>
           {topicId !== null && (
             <Button asChild variant="secondary" className="mt-3">
               <Link to={paths.chat(topicId)}>
                 <MessageCircleQuestion aria-hidden />
-                {t.review.explainMore}
+                {t('review.explainMore')}
               </Link>
             </Button>
           )}
@@ -173,7 +175,7 @@ function Confirmation({ attemptId, mistake, topicId }: MistakeCardProps) {
     return (
       <p className="flex items-center gap-2 text-sm text-muted-foreground" role="status">
         <Loader2 className="size-4 animate-spin" aria-hidden />
-        {t.review.confirmationPending}
+        {t('review.confirmationPending')}
       </p>
     )
   }
@@ -192,14 +194,14 @@ function Confirmation({ attemptId, mistake, topicId }: MistakeCardProps) {
       onSubmit={(e) => {
         e.preventDefault()
         if (!answer.trim()) {
-          toast({ variant: 'info', title: t.review.chooseAnswer })
+          toast({ variant: 'info', title: t('review.chooseAnswer') })
           return
         }
         confirm.mutate()
       }}
     >
-      <p className="text-sm font-semibold text-primary">{t.review.checkTitle}</p>
-      <p className="mt-0.5 text-sm text-muted-foreground">{t.review.checkHint}</p>
+      <p className="text-sm font-semibold text-primary">{t('review.checkTitle')}</p>
+      <p className="mt-0.5 text-sm text-muted-foreground">{t('review.checkHint')}</p>
       <p id={`confirm-${question.questionId}`} className="mt-3 mb-3 font-medium">
         <MathText text={question.prompt} />
       </p>
@@ -219,7 +221,7 @@ function Confirmation({ attemptId, mistake, topicId }: MistakeCardProps) {
         >
           <p className="flex items-center gap-1.5 text-sm font-semibold text-warning">
             <Lightbulb className="size-4" aria-hidden />
-            {t.review.tryAgain}
+            {t('review.tryAgain')}
           </p>
           {(lastResult.hint ?? lastResult.feedback) && (
             <MathText
@@ -231,7 +233,7 @@ function Confirmation({ attemptId, mistake, topicId }: MistakeCardProps) {
       )}
 
       <Button type="submit" className="mt-4" block loading={confirm.isPending}>
-        {t.review.check}
+        {t('review.check')}
       </Button>
     </form>
   )

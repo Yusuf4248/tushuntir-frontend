@@ -15,6 +15,7 @@ import { Link } from 'react-router'
 import { errorMessage } from '@/api/errors'
 import { useRecentAttempts, useSubjects, useToday } from '@/api/me'
 import type { AttemptHistoryItem } from '@/api/types'
+import { LanguageSwitch } from '@/components/language-switch'
 import { PageHeader } from '@/components/layout/page-header'
 import { NotificationBell } from '@/components/notification-bell'
 import { EmptyState, ErrorState } from '@/components/states'
@@ -24,7 +25,7 @@ import { Chip } from '@/components/ui/chip'
 import { ProgressBar } from '@/components/ui/progress-bar'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { useAuth, useStudent } from '@/features/auth/auth-context'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { getTheme, setTheme, type ThemeChoice } from '@/lib/theme'
 import { DEFAULT_TIMEZONE, clockInZone, dateInZone, dayMonth } from '@/lib/time'
 import { cn } from '@/lib/utils'
@@ -40,7 +41,7 @@ export function ProfilePage() {
 
   return (
     <>
-      <PageHeader title={t.profile.title} actions={<NotificationBell />} />
+      <PageHeader title={t('profile.title')} actions={<NotificationBell />} />
 
       <Card className="flex items-center gap-4">
         <span
@@ -54,7 +55,10 @@ export function ProfilePage() {
             {user.firstName} {user.lastName}
           </p>
           <p className="text-muted-foreground">
-            {[className && `${className} ${t.profile.className.toLowerCase()}`, user.school?.name]
+            {[
+              className && `${className} ${t('profile.className').toLowerCase()}`,
+              user.school?.name,
+            ]
               .filter(Boolean)
               .join(' · ')}
           </p>
@@ -67,9 +71,16 @@ export function ProfilePage() {
 
       <section className="mt-8" aria-labelledby="theme-title">
         <h2 id="theme-title" className="mb-3 text-lg font-semibold">
-          {t.profile.theme}
+          {t('profile.theme')}
         </h2>
         <ThemeSwitch />
+      </section>
+
+      <section className="mt-8" aria-labelledby="language-title">
+        <h2 id="language-title" className="mb-3 text-lg font-semibold">
+          {t('language.label')}
+        </h2>
+        <LanguageSwitch />
       </section>
 
       <Button
@@ -83,7 +94,7 @@ export function ProfilePage() {
         }}
       >
         <LogOut aria-hidden />
-        {t.auth.logout}
+        {t('auth.logout')}
       </Button>
     </>
   )
@@ -94,7 +105,7 @@ function SubjectsSection() {
   return (
     <section className="mt-8" aria-labelledby="subjects-title">
       <h2 id="subjects-title" className="mb-3 text-lg font-semibold">
-        {t.profile.subjects}
+        {t('profile.subjects')}
       </h2>
       {subjects.isPending ? (
         <SkeletonCard lines={2} />
@@ -105,7 +116,7 @@ function SubjectsSection() {
           retrying={subjects.isFetching}
         />
       ) : subjects.data.length === 0 ? (
-        <EmptyState title={t.profile.noSubjects} />
+        <EmptyState title={t('profile.noSubjects')} />
       ) : (
         <ul className="overflow-hidden rounded-xl border bg-card shadow-card">
           {subjects.data.map((subject) => (
@@ -124,10 +135,13 @@ function SubjectsSection() {
                   value={subject.topicsMastered}
                   max={subject.topicsTotal}
                   label={subject.name}
-                  valueText={t.profile.masteredOf(subject.topicsMastered, subject.topicsTotal)}
+                  valueText={t('profile.masteredOf', {
+                    mastered: subject.topicsMastered,
+                    total: subject.topicsTotal,
+                  })}
                 />
               ) : (
-                <p className="mt-1 text-sm text-muted-foreground">{t.profile.noTextbook}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t('profile.noTextbook')}</p>
               )}
             </li>
           ))}
@@ -156,7 +170,7 @@ function RecentSection() {
   return (
     <section className="mt-8" aria-labelledby="recent-title">
       <h2 id="recent-title" className="mb-3 text-lg font-semibold">
-        {t.profile.recent}
+        {t('profile.recent')}
       </h2>
       {recent.isPending ? (
         <SkeletonCard lines={3} />
@@ -169,8 +183,8 @@ function RecentSection() {
       ) : recent.data.length === 0 ? (
         <EmptyState
           icon={ClipboardList}
-          title={t.profile.noRecent}
-          description={t.profile.noRecentHint}
+          title={t('profile.noRecent')}
+          description={t('profile.noRecentHint')}
         />
       ) : (
         <ul className="overflow-hidden rounded-xl border bg-card shadow-card">
@@ -188,7 +202,7 @@ function RecentSection() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-muted-foreground">
-                      {t.profile[`kind_${item.kind}`]}
+                      {t(`profile.kind_${item.kind}`)}
                       {when &&
                         ` · ${dayMonth(dateInZone(when, timeZone))}, ${clockInZone(when, timeZone)}`}
                     </p>
@@ -211,18 +225,18 @@ function ResultBadge({ item }: { item: AttemptHistoryItem }) {
     if (item.result === 'passed')
       return (
         <Chip tone="success" className="mt-1.5">
-          {t.profile.passed}
+          {t('profile.passed')}
         </Chip>
       )
     if (item.result === 'not_yet')
       return (
         <Chip tone="warning" className="mt-1.5">
-          {t.profile.notYet}
+          {t('profile.notYet')}
         </Chip>
       )
-    return <Chip className="mt-1.5">{t.profile.inProgress}</Chip>
+    return <Chip className="mt-1.5">{t('profile.inProgress')}</Chip>
   }
-  if (item.scorePercent === null) return <Chip className="mt-1.5">{t.profile.inProgress}</Chip>
+  if (item.scorePercent === null) return <Chip className="mt-1.5">{t('profile.inProgress')}</Chip>
   return (
     <Chip tone={item.scorePercent >= 80 ? 'success' : 'warning'} className="mt-1.5 tabular-nums">
       {item.scorePercent}%
@@ -231,9 +245,27 @@ function ResultBadge({ item }: { item: AttemptHistoryItem }) {
 }
 
 const themes: { value: ThemeChoice; label: string; icon: LucideIcon }[] = [
-  { value: 'light', label: t.profile.themeLight, icon: Sun },
-  { value: 'dark', label: t.profile.themeDark, icon: Moon },
-  { value: 'system', label: t.profile.themeSystem, icon: Monitor },
+  {
+    value: 'light',
+    get label() {
+      return t('profile.themeLight')
+    },
+    icon: Sun,
+  },
+  {
+    value: 'dark',
+    get label() {
+      return t('profile.themeDark')
+    },
+    icon: Moon,
+  },
+  {
+    value: 'system',
+    get label() {
+      return t('profile.themeSystem')
+    },
+    icon: Monitor,
+  },
 ]
 
 function ThemeSwitch() {
@@ -241,7 +273,7 @@ function ThemeSwitch() {
   return (
     <div
       role="radiogroup"
-      aria-label={t.profile.theme}
+      aria-label={t('profile.theme')}
       className="grid grid-cols-3 gap-2 rounded-xl bg-muted p-1"
     >
       {themes.map(({ value, label, icon: Icon }) => (

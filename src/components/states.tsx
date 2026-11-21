@@ -2,7 +2,7 @@ import { CloudOff, Inbox, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 type EmptyStateProps = {
@@ -15,7 +15,7 @@ type EmptyStateProps = {
 
 export function EmptyState({
   icon: Icon = Inbox,
-  title = t.states.emptyTitle,
+  title = t('states.emptyTitle'),
   description,
   action,
   className,
@@ -47,7 +47,7 @@ type ErrorStateProps = {
 
 export function ErrorState({
   message,
-  title = t.states.errorTitle,
+  title = t('states.errorTitle'),
   onRetry,
   retrying,
   className,
@@ -67,7 +67,7 @@ export function ErrorState({
       <p className="max-w-xs text-sm text-muted-foreground">{message}</p>
       {onRetry && (
         <Button variant="outline" size="sm" className="mt-2" onClick={onRetry} loading={retrying}>
-          {t.common.retry}
+          {t('common.retry')}
         </Button>
       )}
     </div>

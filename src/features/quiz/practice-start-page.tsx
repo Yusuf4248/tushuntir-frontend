@@ -7,7 +7,7 @@ import { useTopic } from '@/api/me'
 import { PageHeader } from '@/components/layout/page-header'
 import { ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { paths } from '@/routes/paths'
 
 import { attemptStorage } from './attempt-storage'
@@ -30,7 +30,7 @@ export function PracticeStartPage() {
   if (topic.isError) {
     return (
       <>
-        <PageHeader title={t.quiz.practiceQuiz} backTo={paths.topic(topicId)} backIcon="close" />
+        <PageHeader title={t('quiz.practiceQuiz')} backTo={paths.topic(topicId)} backIcon="close" />
         <ErrorState
           message={errorMessage(topic.error)}
           onRetry={() => void topic.refetch()}
@@ -42,12 +42,12 @@ export function PracticeStartPage() {
 
   return (
     <StartScreen
-      eyebrow={t.quiz.practiceQuiz}
+      eyebrow={t('quiz.practiceQuiz')}
       title={topic.data.title}
       subject={topic.data.subject.name}
       questionCount={PRACTICE_QUESTIONS}
-      note={`${t.quiz.practiceAbout} ${t.quiz.rules}`}
-      actionLabel={t.quiz.start}
+      note={`${t('quiz.practiceAbout')} ${t('quiz.rules')}`}
+      actionLabel={t('quiz.start')}
       onStart={() => start.mutate()}
       starting={start.isPending}
       error={start.isError ? quizErrorMessage(start.error) : null}
@@ -55,7 +55,7 @@ export function PracticeStartPage() {
       secondaryAction={
         openAttemptId !== null && !start.isPending ? (
           <Button asChild variant="outline" size="lg" block>
-            <Link to={paths.attempt(openAttemptId)}>{t.quiz.resume}</Link>
+            <Link to={paths.attempt(openAttemptId)}>{t('quiz.resume')}</Link>
           </Button>
         ) : null
       }

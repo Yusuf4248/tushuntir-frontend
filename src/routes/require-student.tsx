@@ -4,7 +4,7 @@ import { Navigate, Outlet, useLocation } from 'react-router'
 import { Logo } from '@/components/logo'
 import { ErrorState } from '@/components/states'
 import { useAuth } from '@/features/auth/auth-context'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 /** Renders child routes only for a logged-in student. */
 export function RequireStudent() {
@@ -17,7 +17,7 @@ export function RequireStudent() {
         <div className="flex flex-col items-center gap-4">
           <Logo className="size-12" />
           <Loader2 className="size-6 animate-spin text-muted-foreground" aria-hidden />
-          <span className="sr-only">{t.auth.restoring}</span>
+          <span className="sr-only">{t('auth.restoring')}</span>
         </div>
       </div>
     )

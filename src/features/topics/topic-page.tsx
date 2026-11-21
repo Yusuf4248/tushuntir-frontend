@@ -15,7 +15,7 @@ import { Skeleton, SkeletonCard } from '@/components/ui/skeleton'
 import type { AskRequest } from '@/features/chat/ask-actions'
 import { ChatPanel, type PendingAsk } from '@/features/chat/chat-panel'
 import { ChatSheet } from '@/features/chat/chat-sheet'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { DESKTOP_QUERY, useMediaQuery } from '@/lib/use-media-query'
 import { paths } from '@/routes/paths'
 
@@ -32,15 +32,18 @@ export function TopicPage() {
     const notFound = topic.error instanceof ApiError && topic.error.status === 404
     return (
       <>
-        <PageHeader title={notFound ? t.topics.notFound : t.topics.title} backTo={paths.topics} />
+        <PageHeader
+          title={notFound ? t('topics.notFound') : t('topics.title')}
+          backTo={paths.topics}
+        />
         {notFound ? (
           <EmptyState
             icon={SearchX}
-            title={t.topics.notFound}
-            description={t.topics.notFoundHint}
+            title={t('topics.notFound')}
+            description={t('topics.notFoundHint')}
             action={
               <Button asChild variant="outline" size="sm">
-                <Link to={paths.topics}>{t.topics.backToTopics}</Link>
+                <Link to={paths.topics}>{t('topics.backToTopics')}</Link>
               </Button>
             }
           />
@@ -123,13 +126,13 @@ function TopicView({ topic }: { topic: TopicDetail }) {
             className="mt-3 flex items-start gap-2 rounded-xl bg-danger-soft/60 px-4 py-3 text-sm text-danger"
           >
             <LifeBuoy className="mt-0.5 size-4 shrink-0" aria-hidden />
-            {t.topics.needsHelp}
+            {t('topics.needsHelp')}
           </p>
         )}
         {!topic.unlocked && (
           <p className="mt-3 text-sm text-muted-foreground">
             <Lock className="mr-1.5 inline size-4 align-[-2px]" aria-hidden />
-            {t.topics.topicLocked}
+            {t('topics.topicLocked')}
           </p>
         )}
 
@@ -139,7 +142,7 @@ function TopicView({ topic }: { topic: TopicDetail }) {
 
         {topic.summary && (
           <Card className="mt-6">
-            <h2 className="mb-2 text-lg font-semibold">{t.topicPage.summary}</h2>
+            <h2 className="mb-2 text-lg font-semibold">{t('topicPage.summary')}</h2>
             <MathText text={topic.summary} className="block leading-relaxed" />
           </Card>
         )}
@@ -147,7 +150,7 @@ function TopicView({ topic }: { topic: TopicDetail }) {
         {topic.keyIdeas.length > 0 && (
           <section className="mt-6" aria-labelledby="key-ideas">
             <h2 id="key-ideas" className="mb-3 text-lg font-semibold">
-              {t.topicPage.keyIdeas}
+              {t('topicPage.keyIdeas')}
             </h2>
             <ul className="flex flex-col gap-2.5">
               {topic.keyIdeas.map((idea) => (
@@ -162,10 +165,10 @@ function TopicView({ topic }: { topic: TopicDetail }) {
 
         <section className="mt-8" aria-labelledby="textbook-text">
           <h2 id="textbook-text" className="mb-3 text-lg font-semibold">
-            {t.topicPage.textbook}
+            {t('topicPage.textbook')}
           </h2>
           {topic.paragraphs.length === 0 ? (
-            <p className="text-muted-foreground">{t.topicPage.noText}</p>
+            <p className="text-muted-foreground">{t('topicPage.noText')}</p>
           ) : (
             <AskableTextbook
               paragraphs={topic.paragraphs}
@@ -218,7 +221,7 @@ function TopicPager({ prevId, nextId }: { prevId: number | null; nextId: number 
   if (prevId === null && nextId === null) return null
 
   return (
-    <nav className="mt-10 grid grid-cols-2 gap-3 border-t pt-5" aria-label={t.topics.title}>
+    <nav className="mt-10 grid grid-cols-2 gap-3 border-t pt-5" aria-label={t('topics.title')}>
       {prevId !== null ? (
         <Link
           to={paths.topic(prevId)}
@@ -226,7 +229,7 @@ function TopicPager({ prevId, nextId }: { prevId: number | null; nextId: number 
         >
           <ChevronLeft className="size-5 shrink-0 text-muted-foreground" aria-hidden />
           <span className="min-w-0">
-            <span className="block text-xs text-muted-foreground">{t.topicPage.prevTopic}</span>
+            <span className="block text-xs text-muted-foreground">{t('topicPage.prevTopic')}</span>
             <span className="line-clamp-2 text-sm font-medium">{titleOf(prevId) ?? ''}</span>
           </span>
         </Link>
@@ -239,7 +242,7 @@ function TopicPager({ prevId, nextId }: { prevId: number | null; nextId: number 
           className="flex min-h-16 items-center justify-end gap-2 rounded-xl border bg-card p-3 text-right shadow-card hover:bg-muted"
         >
           <span className="min-w-0">
-            <span className="block text-xs text-muted-foreground">{t.topicPage.nextTopic}</span>
+            <span className="block text-xs text-muted-foreground">{t('topicPage.nextTopic')}</span>
             <span className="line-clamp-2 text-sm font-medium">{titleOf(nextId) ?? ''}</span>
           </span>
           <ChevronRight className="size-5 shrink-0 text-muted-foreground" aria-hidden />

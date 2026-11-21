@@ -5,7 +5,7 @@ import type { ChatAction } from '@/api/types'
 import { clampSelection, type AskRequest } from '@/features/chat/ask-actions'
 import { AskMenu, type AnchorRect } from '@/features/chat/ask-menu'
 import { prefersMenuBelow, useTextSelection } from '@/features/chat/use-text-selection'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 import { Textbook } from './textbook'
@@ -75,7 +75,7 @@ export function AskableTextbook({ paragraphs, highlightedId, onAsk }: AskableTex
             )}
           >
             <Sparkles className="size-4" aria-hidden />
-            {t.ask.paragraphButton}
+            {t('ask.paragraphButton')}
           </button>
         )}
       />

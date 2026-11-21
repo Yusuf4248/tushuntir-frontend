@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router'
 
 import { useTopic } from '@/api/me'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { useDocumentTitle } from '@/lib/use-document-title'
 import { paths } from '@/routes/paths'
 
@@ -16,7 +16,7 @@ import { ChatPanel, type PendingAsk } from './chat-panel'
 export function ChatPage() {
   const topicId = Number(useParams().topicId)
   const topic = useTopic(topicId)
-  useDocumentTitle(topic.data ? `${t.chat.title}: ${topic.data.title}` : t.chat.title)
+  useDocumentTitle(topic.data ? `${t('chat.title')}: ${topic.data.title}` : t('chat.title'))
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()

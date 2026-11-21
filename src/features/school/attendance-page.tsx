@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Chip } from '@/components/ui/chip'
 import { Skeleton, SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t, tList } from '@/lib/i18n'
 import { DEFAULT_TIMEZONE, dateInZone, dayMonth } from '@/lib/time'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
@@ -26,7 +26,7 @@ function shiftMonth(month: string, offset: number): string {
 
 function monthTitle(month: string): string {
   const [y, m = 1] = month.split('-').map(Number)
-  return `${t.attendance.monthsTitle[m - 1] ?? ''} ${y}`
+  return `${tList('attendance.monthsTitle')[m - 1] ?? ''} ${y}`
 }
 
 export function AttendancePage() {
@@ -47,14 +47,14 @@ export function AttendancePage() {
 
   return (
     <>
-      <PageHeader title={t.attendance.title} backTo={paths.home} />
+      <PageHeader title={t('attendance.title')} backTo={paths.home} />
 
       <div className="mb-4 flex items-center gap-2">
         <Button
           variant="outline"
           size="icon"
           onClick={() => go(-1)}
-          aria-label={t.attendance.prevMonth}
+          aria-label={t('attendance.prevMonth')}
           disabled={!data}
         >
           <ChevronLeft aria-hidden />
@@ -66,7 +66,7 @@ export function AttendancePage() {
           variant="outline"
           size="icon"
           onClick={() => go(1)}
-          aria-label={t.attendance.nextMonth}
+          aria-label={t('attendance.nextMonth')}
           disabled={!data || data.month >= thisMonth}
         >
           <ChevronRight aria-hidden />
@@ -114,7 +114,7 @@ function AttendanceView({
           <p className="text-4xl leading-none font-bold tabular-nums">
             {summary.percent == null ? '—' : `${Math.round(summary.percent)}%`}
           </p>
-          <p className="mt-1 text-xs text-muted-foreground">{t.attendance.percent}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{t('attendance.percent')}</p>
         </div>
         <ul className="grid flex-1 grid-cols-2 gap-x-3 gap-y-1.5 text-sm">
           {statusOrder.map((status) => {
@@ -130,7 +130,7 @@ function AttendanceView({
         </ul>
       </Card>
       {summary.percent == null && (
-        <p className="text-sm text-muted-foreground">{t.attendance.noPercent}</p>
+        <p className="text-sm text-muted-foreground">{t('attendance.noPercent')}</p>
       )}
 
       <MonthGrid month={data.month} byDate={byDate} today={today} picked={picked} onPick={onPick} />
@@ -141,11 +141,11 @@ function AttendanceView({
 
       <section aria-labelledby="misses-title">
         <h2 id="misses-title" className="mb-3 text-lg font-semibold">
-          {t.attendance.misses}
+          {t('attendance.misses')}
         </h2>
         {misses.length === 0 ? (
           <p className="rounded-xl bg-success-soft px-4 py-3 text-sm text-success">
-            {t.attendance.noMisses}
+            {t('attendance.noMisses')}
           </p>
         ) : (
           <RecordList records={[...misses].reverse()} showDate />
@@ -191,7 +191,7 @@ function MonthGrid({
         className="mb-1 grid grid-cols-7 text-center text-xs font-medium text-muted-foreground"
         aria-hidden
       >
-        {t.attendance.weekdaysMonFirst.map((d) => (
+        {tList('attendance.weekdaysMonFirst').map((d) => (
           <span key={d} className="py-1">
             {d}
           </span>
@@ -241,7 +241,7 @@ function MonthGrid({
 
 function Legend() {
   return (
-    <ul aria-label={t.attendance.legend} className="flex flex-wrap gap-2">
+    <ul aria-label={t('attendance.legend')} className="flex flex-wrap gap-2">
       {(['present', 'absent', 'late', 'excused'] as AttendanceStatus[]).map((status) => {
         const { label, icon, tone, dot } = attendanceStatus[status]
         return (
@@ -260,9 +260,11 @@ function Legend() {
 function DayRecords({ date, records }: { date: string; records: AttendanceRecord[] }) {
   return (
     <section aria-live="polite">
-      <h2 className="mb-3 text-lg font-semibold">{t.attendance.dayTitle(dayMonth(date))}</h2>
+      <h2 className="mb-3 text-lg font-semibold">
+        {t('attendance.dayTitle', { date: dayMonth(date) })}
+      </h2>
       {records.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t.attendance.noRecordsDay}</p>
+        <p className="text-sm text-muted-foreground">{t('attendance.noRecordsDay')}</p>
       ) : (
         <RecordList records={records} />
       )}
@@ -283,13 +285,16 @@ function RecordList({ records, showDate }: { records: AttendanceRecord[]; showDa
             <div className="min-w-0 flex-1">
               <p className="font-medium">{r.subject.name}</p>
               <p className="text-sm text-muted-foreground">
-                {[showDate && dayMonth(r.date), r.period != null && t.attendance.period(r.period)]
+                {[
+                  showDate && dayMonth(r.date),
+                  r.period != null && t('attendance.period', { count: r.period }),
+                ]
                   .filter(Boolean)
                   .join(' · ')}
               </p>
               {r.note && (
                 <p className="mt-1 text-sm">
-                  <span className="text-muted-foreground">{t.attendance.note}: </span>
+                  <span className="text-muted-foreground">{t('attendance.note')}: </span>
                   {r.note}
                 </p>
               )}

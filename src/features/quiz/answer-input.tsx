@@ -4,7 +4,7 @@ import { useId } from 'react'
 import type { AttemptQuestion } from '@/api/types'
 import { MathText } from '@/components/math-text'
 import { Input, Label } from '@/components/ui/input'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 /** A quiz question or a review's confirmation question. */
 type AnswerInputQuestion = {
@@ -39,7 +39,7 @@ export function AnswerInput({
   if (question.type === 'short_answer' || !question.options?.length) {
     return (
       <div className="flex flex-col gap-2">
-        <Label htmlFor={id}>{t.quiz.shortAnswerLabel}</Label>
+        <Label htmlFor={id}>{t('quiz.shortAnswerLabel')}</Label>
         <Input
           id={id}
           value={value}
@@ -47,7 +47,7 @@ export function AnswerInput({
           autoCapitalize="off"
           spellCheck={false}
           enterKeyHint="done"
-          placeholder={t.quiz.shortAnswerPlaceholder}
+          placeholder={t('quiz.shortAnswerPlaceholder')}
           onChange={(e) => onType(e.target.value)}
           onBlur={onTypeDone}
           onKeyDown={(e) => {

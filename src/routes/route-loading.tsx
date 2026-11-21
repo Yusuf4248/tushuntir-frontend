@@ -1,7 +1,7 @@
 import { Loader2 } from 'lucide-react'
 
 import { Logo } from '@/components/logo'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 /** Shown while the first screen's code loads (lazy routes). */
 export function RouteLoading() {
@@ -10,7 +10,7 @@ export function RouteLoading() {
       <div className="flex flex-col items-center gap-4">
         <Logo className="size-12" />
         <Loader2 className="size-6 animate-spin text-muted-foreground" aria-hidden />
-        <span className="sr-only">{t.common.loading}</span>
+        <span className="sr-only">{t('common.loading')}</span>
       </div>
     </div>
   )

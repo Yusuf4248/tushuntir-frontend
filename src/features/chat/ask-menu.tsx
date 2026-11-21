@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import type { ChatAction } from '@/api/types'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 import { askActions } from './ask-actions'
 
@@ -43,7 +43,7 @@ export function AskMenu({ anchor, placement, onChoose }: AskMenuProps) {
     <div
       ref={ref}
       role="toolbar"
-      aria-label={t.ask.menuLabel}
+      aria-label={t('ask.menuLabel')}
       style={{ top: pos?.top ?? -9999, left: pos?.left ?? -9999 }}
       className="fixed z-40 flex max-w-[calc(100vw-1rem)] flex-wrap gap-1 rounded-2xl border bg-card p-1 text-card-foreground shadow-xl data-[shown]:animate-pop-in"
       data-shown={pos ? '' : undefined}

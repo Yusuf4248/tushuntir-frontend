@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
 import { formatBytes } from '@/lib/format'
 import { prepareImage } from '@/lib/image'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 /** Backend limits (MAX_SUBMISSION_FILES, MAX_SUBMISSION_FILE_BYTES, text MaxLength). */
 const MAX_FILES = 3
@@ -49,7 +49,7 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
     setPreparing(true)
     for (const original of Array.from(list)) {
       if (picked.length + added.length >= MAX_FILES) {
-        errors.push(t.homework.tooMany)
+        errors.push(t('homework.tooMany'))
         break
       }
       let file = original
@@ -57,20 +57,20 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
         try {
           file = await prepareImage(original)
         } catch {
-          errors.push(t.homework.unreadableImage(original.name))
+          errors.push(t('homework.unreadableImage', { name: original.name }))
           continue
         }
       } else if (!isPdf(original)) {
-        errors.push(t.homework.badType(original.name))
+        errors.push(t('homework.badType', { name: original.name }))
         continue
       }
       const type = isPdf(file) ? 'application/pdf' : file.type
       if (!ALLOWED.includes(type)) {
-        errors.push(t.homework.badType(original.name))
+        errors.push(t('homework.badType', { name: original.name }))
         continue
       }
       if (file.size > MAX_BYTES) {
-        errors.push(t.homework.tooBig(original.name))
+        errors.push(t('homework.tooBig', { name: original.name }))
         continue
       }
       const preview = type.startsWith('image/') ? URL.createObjectURL(file) : null
@@ -96,7 +96,7 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
   function send() {
     const trimmed = text.trim()
     if (!trimmed && picked.length === 0 && !existing) {
-      setProblems([t.homework.nothingToSend])
+      setProblems([t('homework.nothingToSend')])
       return
     }
     setProblems([])
@@ -104,7 +104,7 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
       { text: trimmed ? trimmed : undefined, files: picked.map((p) => p.file) },
       {
         onSuccess: () => {
-          toast({ variant: 'success', title: t.homework.sent })
+          toast({ variant: 'success', title: t('homework.sent') })
           picked.forEach((p) => p.preview && URL.revokeObjectURL(p.preview))
           setPicked([])
         },
@@ -114,7 +114,7 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
 
   const errorText =
     submit.error instanceof ApiError && submit.error.status === 409
-      ? t.homework.lockedConflict
+      ? t('homework.lockedConflict')
       : submit.error
         ? errorMessage(submit.error)
         : null
@@ -125,11 +125,11 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
       className="rounded-xl border bg-card p-4 shadow-card sm:p-5"
     >
       <h2 id="answer-title" className="mb-3 text-lg font-semibold">
-        {existing ? t.homework.editTitle : t.homework.answerTitle}
+        {existing ? t('homework.editTitle') : t('homework.answerTitle')}
       </h2>
 
       <label htmlFor={textId} className="mb-1.5 block text-sm font-medium">
-        {t.homework.textLabel}
+        {t('homework.textLabel')}
       </label>
       <textarea
         id={textId}
@@ -137,15 +137,15 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
         maxLength={MAX_TEXT}
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder={t.homework.textPlaceholder}
+        placeholder={t('homework.textPlaceholder')}
         className="w-full resize-y rounded-xl border border-input bg-background px-4 py-3 text-base leading-relaxed outline-none focus-visible:border-ring focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring/40"
       />
       <p className="mt-1 text-right text-xs text-muted-foreground tabular-nums">
         {text.length}/{MAX_TEXT}
       </p>
 
-      <p className="mt-3 text-sm font-medium">{t.homework.files}</p>
-      <p className="mb-2 text-xs text-muted-foreground">{t.homework.filesHint}</p>
+      <p className="mt-3 text-sm font-medium">{t('homework.files')}</p>
+      <p className="mb-2 text-xs text-muted-foreground">{t('homework.filesHint')}</p>
 
       {picked.length > 0 && (
         <ul className="mb-3 grid grid-cols-3 gap-2">
@@ -169,7 +169,7 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
               <button
                 type="button"
                 onClick={() => remove(p.key)}
-                aria-label={t.homework.removeFile(p.file.name)}
+                aria-label={t('homework.removeFile', { name: p.file.name })}
                 className="absolute top-1 right-1 grid size-8 cursor-pointer place-items-center rounded-full bg-black/60 text-white"
               >
                 <X className="size-4" aria-hidden />
@@ -188,7 +188,7 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
           onClick={() => camera.current?.click()}
         >
           <Camera aria-hidden />
-          {t.homework.camera}
+          {t('homework.camera')}
         </Button>
         <Button
           type="button"
@@ -198,7 +198,7 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
           onClick={() => gallery.current?.click()}
         >
           <ImagePlus aria-hidden />
-          {t.homework.gallery}
+          {t('homework.gallery')}
         </Button>
         <Button
           type="button"
@@ -208,7 +208,7 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
           onClick={() => pdf.current?.click()}
         >
           <FileText aria-hidden />
-          {t.homework.pdf}
+          {t('homework.pdf')}
         </Button>
       </div>
       {/* Reset the value after each pick so the same file can be chosen again. */}
@@ -249,12 +249,12 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
       {preparing && (
         <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground" role="status">
           <Loader2 className="size-4 animate-spin" aria-hidden />
-          {t.homework.preparing}
+          {t('homework.preparing')}
         </p>
       )}
       {existing && existing.files.length > 0 && (
         <p className="mt-2 text-xs text-muted-foreground">
-          {picked.length > 0 ? t.homework.replaceNote : t.homework.keepFilesNote}
+          {picked.length > 0 ? t('homework.replaceNote') : t('homework.keepFilesNote')}
         </p>
       )}
 
@@ -279,7 +279,7 @@ export function SubmissionForm({ homework }: { homework: HomeworkDetail }) {
         disabled={preparing}
       >
         {!submit.isPending && <Send aria-hidden />}
-        {existing ? t.homework.resend : t.homework.send}
+        {existing ? t('homework.resend') : t('homework.send')}
       </Button>
     </section>
   )

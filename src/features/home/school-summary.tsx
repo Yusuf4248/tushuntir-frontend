@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 
 import { useAttendance, useGrades, useHomeworkList } from '@/api/school'
 import { Skeleton } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { DEFAULT_TIMEZONE, dateInZone } from '@/lib/time'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
@@ -29,25 +29,25 @@ export function SchoolSummary() {
             ? paths.homeworkItem(dueToday[0].id)
             : `${paths.homework}?status=new`
         }
-        label={t.home.dueToday}
+        label={t('home.dueToday')}
         loading={homework.isPending}
-        value={dueToday.length ? t.home.dueCount(dueToday.length) : '0'}
-        sub={dueToday[0]?.title ?? t.home.dueTodayNone}
+        value={dueToday.length ? t('home.dueCount', { count: dueToday.length }) : '0'}
+        sub={dueToday[0]?.title ?? t('home.dueTodayNone')}
         tone={dueToday.length ? 'text-warning' : undefined}
       />
       <SummaryCard
         to={latest ? `${paths.grades}?subject=${latest.subject.id}` : paths.grades}
-        label={t.home.latestGrade}
+        label={t('home.latestGrade')}
         loading={grades.isPending}
         value={latest?.value != null ? String(latest.value) : '—'}
-        sub={latest?.subject.name ?? t.home.noGrade}
+        sub={latest?.subject.name ?? t('home.noGrade')}
       />
       <SummaryCard
         to={paths.attendance}
-        label={t.home.attendance}
+        label={t('home.attendance')}
         loading={attendance.isPending}
         value={percent == null ? '—' : `${Math.round(percent)}%`}
-        sub={t.home.attendanceMonth}
+        sub={t('home.attendanceMonth')}
       />
     </ul>
   )

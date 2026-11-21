@@ -10,7 +10,7 @@ import {
 
 import type { HomeworkStatus } from '@/api/types'
 import { Chip, type ChipTone } from '@/components/ui/chip'
-import { t } from '@/lib/strings.uz'
+import { tOptional } from '@/lib/i18n'
 
 const config: Record<HomeworkStatus, { icon: LucideIcon; tone: ChipTone }> = {
   new: { icon: CircleDot, tone: 'info' },
@@ -25,7 +25,7 @@ export function HomeworkStatusChip({ status }: { status: HomeworkStatus }) {
   const { icon, tone } = config[status]
   return (
     <Chip tone={tone} icon={icon}>
-      {t.homework.status[status]}
+      {tOptional(`homework.status.${status}`) ?? status}
     </Chip>
   )
 }

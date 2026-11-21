@@ -3,7 +3,7 @@ import { useEffect, useId, useState } from 'react'
 
 import type { CheckpointAnswer } from '@/api/checkpoint'
 import { Button } from '@/components/ui/button'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 import { AudioPlayer } from './audio-player'
@@ -19,11 +19,21 @@ const MAX_TEXT = 2000
 const BAR_SHAPE = [0.45, 0.75, 1, 0.85, 0.6, 0.9, 0.5]
 
 const errorText: Record<RecorderError, string> = {
-  denied: t.checkpoint.micDenied,
-  unsupported: t.checkpoint.micUnsupported,
-  no_device: t.checkpoint.micMissing,
-  failed: t.checkpoint.micFailed,
-  too_big: t.checkpoint.tooBig,
+  get denied() {
+    return t('checkpoint.micDenied')
+  },
+  get unsupported() {
+    return t('checkpoint.micUnsupported')
+  },
+  get no_device() {
+    return t('checkpoint.micMissing')
+  },
+  get failed() {
+    return t('checkpoint.micFailed')
+  },
+  get too_big() {
+    return t('checkpoint.tooBig')
+  },
 }
 
 function clock(seconds: number): string {
@@ -58,13 +68,13 @@ export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps)
   if (showText) {
     return (
       <div className="flex flex-col gap-3">
-        {(micError ?? (unsupported ? t.checkpoint.micUnsupported : null)) && (
+        {(micError ?? (unsupported ? t('checkpoint.micUnsupported') : null)) && (
           <p role="alert" className="rounded-xl bg-warning-soft px-4 py-3 text-sm text-warning">
-            {micError ?? t.checkpoint.micUnsupported}
+            {micError ?? t('checkpoint.micUnsupported')}
           </p>
         )}
         <label htmlFor={textId} className="text-sm font-medium">
-          {t.checkpoint.typedLabel}
+          {t('checkpoint.typedLabel')}
         </label>
         <textarea
           id={textId}
@@ -72,7 +82,7 @@ export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps)
           maxLength={MAX_TEXT}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder={t.checkpoint.typedPlaceholder}
+          placeholder={t('checkpoint.typedPlaceholder')}
           className="min-h-32 w-full resize-y rounded-xl border border-input bg-card px-4 py-3 text-base leading-relaxed outline-none focus-visible:border-ring focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring/40"
         />
         <div className="flex items-center justify-between gap-3">
@@ -86,7 +96,7 @@ export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps)
               }}
             >
               <Mic aria-hidden />
-              {t.checkpoint.voiceInstead}
+              {t('checkpoint.voiceInstead')}
             </Button>
           ) : (
             <span />
@@ -103,7 +113,7 @@ export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps)
           onClick={() => onSubmit({ kind: 'text', text: text.trim() })}
         >
           {!submitting && <Send aria-hidden />}
-          {t.checkpoint.send}
+          {t('checkpoint.send')}
         </Button>
       </div>
     )
@@ -117,23 +127,23 @@ export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps)
     <div className="flex flex-col items-center gap-4">
       {state.status === 'recorded' ? (
         <div className="flex w-full flex-col gap-3">
-          <p className="text-sm font-medium">{t.checkpoint.yourRecording}</p>
+          <p className="text-sm font-medium">{t('checkpoint.yourRecording')}</p>
           <div className="rounded-xl border bg-card p-3 shadow-card">
             <AudioPlayer
               src={state.recording.url}
-              label={t.checkpoint.yourRecording}
+              label={t('checkpoint.yourRecording')}
               knownDuration={state.recording.seconds}
             />
           </div>
           {state.autoStopped && (
             <p className="text-sm text-warning" role="status">
-              {t.checkpoint.maxReached}
+              {t('checkpoint.maxReached')}
             </p>
           )}
           <div className="grid grid-cols-2 gap-3">
             <Button variant="outline" size="lg" onClick={reset} disabled={submitting}>
               <RotateCcw aria-hidden />
-              {t.checkpoint.reRecord}
+              {t('checkpoint.reRecord')}
             </Button>
             <Button
               size="lg"
@@ -147,14 +157,14 @@ export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps)
               }
             >
               {!submitting && <Send aria-hidden />}
-              {t.checkpoint.send}
+              {t('checkpoint.send')}
             </Button>
           </div>
         </div>
       ) : (
         <>
           <p className="text-sm font-medium text-muted-foreground" aria-live="polite">
-            {recording ? t.checkpoint.recording : t.checkpoint.yourTurn}
+            {recording ? t('checkpoint.recording') : t('checkpoint.yourTurn')}
           </p>
           <div className="relative grid size-36 place-items-center">
             {/* Level ring: grows with the voice. */}
@@ -171,7 +181,7 @@ export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps)
               onClick={recording ? stop : () => void start()}
               disabled={state.status === 'requesting'}
               aria-pressed={recording}
-              aria-label={recording ? t.checkpoint.tapToStop : t.checkpoint.tapToRecord}
+              aria-label={recording ? t('checkpoint.tapToStop') : t('checkpoint.tapToRecord')}
               className={cn(
                 'relative grid size-24 cursor-pointer place-items-center rounded-full text-white sticker transition-[background-color,transform,box-shadow] focus-visible:outline-4 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none disabled:opacity-60',
                 recording ? 'bg-danger hover:brightness-110' : 'bg-primary hover:bg-primary-hover',
@@ -204,12 +214,12 @@ export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps)
               </p>
               {warn && (
                 <p className="text-sm font-medium text-warning" role="status">
-                  {t.checkpoint.secondsLeft(left)}
+                  {t('checkpoint.secondsLeft', { count: left })}
                 </p>
               )}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">{t.checkpoint.tapToRecord}</p>
+            <p className="text-sm text-muted-foreground">{t('checkpoint.tapToRecord')}</p>
           )}
 
           {state.status === 'error' && state.error === 'too_big' && (
@@ -230,7 +240,7 @@ export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps)
         }}
       >
         <Keyboard aria-hidden />
-        {t.checkpoint.typeInstead}
+        {t('checkpoint.typeInstead')}
       </Button>
     </div>
   )

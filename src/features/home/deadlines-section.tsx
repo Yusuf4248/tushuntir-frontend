@@ -7,7 +7,7 @@ import type { StudentQuiz } from '@/api/types'
 import { EmptyState, ErrorState } from '@/components/states'
 import { Chip } from '@/components/ui/chip'
 import { SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { DEFAULT_TIMEZONE, URGENT_MS, relativeDayTime, useNow } from '@/lib/time'
 import { paths } from '@/routes/paths'
 
@@ -22,7 +22,7 @@ export function DeadlinesSection() {
   const todayDate = today.data?.date ?? ''
 
   return (
-    <Section title={t.home.deadlines}>
+    <Section title={t('home.deadlines')}>
       {quizzes.isPending ? (
         <SkeletonCard lines={3} />
       ) : quizzes.isError ? (
@@ -32,7 +32,7 @@ export function DeadlinesSection() {
           retrying={quizzes.isFetching}
         />
       ) : quizzes.data.available.length + quizzes.data.overdue.length === 0 ? (
-        <EmptyState icon={CalendarCheck} title={t.home.noDeadlines} />
+        <EmptyState icon={CalendarCheck} title={t('home.noDeadlines')} />
       ) : (
         <ul className="overflow-hidden rounded-xl border bg-card shadow-card">
           {byDueSoonest(quizzes.data.available).map((quiz) => (
@@ -68,7 +68,7 @@ function DeadlineRow({ quiz, when, urgent, overdue }: DeadlineRowProps) {
   const body = (
     <>
       <div className="min-w-0 flex-1">
-        <p className="line-clamp-2 font-medium">
+        <p className="font-medium break-words">
           {quiz.topic?.title ?? quiz.title ?? quiz.subject.name}
         </p>
         <p className="mt-0.5 text-sm text-muted-foreground">{quiz.subject.name}</p>
@@ -76,7 +76,7 @@ function DeadlineRow({ quiz, when, urgent, overdue }: DeadlineRowProps) {
       <div className="flex shrink-0 flex-col items-end gap-1.5">
         {overdue ? (
           <Chip tone="danger" icon={AlarmClockOff}>
-            {t.home.overdue}
+            {t('home.overdue')}
           </Chip>
         ) : (
           when && (

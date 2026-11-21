@@ -20,7 +20,7 @@ import { EmptyState, ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { paths } from '@/routes/paths'
 
 export function SelfStudyPage() {
@@ -29,14 +29,14 @@ export function SelfStudyPage() {
   return (
     <>
       <PageHeader
-        title={t.selfStudy.title}
-        subtitle={t.selfStudy.subtitle}
+        title={t('selfStudy.title')}
+        subtitle={t('selfStudy.subtitle')}
         actions={<NotificationBell />}
       />
 
       <section aria-labelledby="weak-title">
         <h2 id="weak-title" className="mb-3 text-lg font-semibold">
-          {t.selfStudy.weakTitle}
+          {t('selfStudy.weakTitle')}
         </h2>
         {weak.isPending ? (
           <div className="flex flex-col gap-3">
@@ -52,13 +52,13 @@ export function SelfStudyPage() {
         ) : weak.data.length === 0 ? (
           <EmptyState
             icon={SmilePlus}
-            title={t.selfStudy.emptyTitle}
-            description={t.selfStudy.emptyHint}
+            title={t('selfStudy.emptyTitle')}
+            description={t('selfStudy.emptyHint')}
             action={
               <Button asChild variant="outline">
                 <Link to={paths.topics}>
                   <Library aria-hidden />
-                  {t.selfStudy.toTopics}
+                  {t('selfStudy.toTopics')}
                 </Link>
               </Button>
             }
@@ -82,8 +82,8 @@ export function SelfStudyPage() {
 function WeakTopicCard({ topic }: { topic: WeakTopic }) {
   const first = topic.subSkills[0]
   const question = first
-    ? t.selfStudy.suggestedQuestion(first)
-    : t.selfStudy.suggestedTopicQuestion(topic.title)
+    ? t('selfStudy.suggestedQuestion', { subSkill: first })
+    : t('selfStudy.suggestedTopicQuestion', { title: topic.title })
 
   return (
     <Card>
@@ -92,7 +92,8 @@ function WeakTopicCard({ topic }: { topic: WeakTopic }) {
           <h3 className="text-lg leading-snug font-semibold">{topic.title}</h3>
           <p className="text-sm text-muted-foreground">
             {topic.subject}
-            {topic.openMistakes > 0 && ` · ${t.selfStudy.openMistakes(topic.openMistakes)}`}
+            {topic.openMistakes > 0 &&
+              ` · ${t('selfStudy.openMistakes', { count: topic.openMistakes })}`}
           </p>
         </div>
         <StatusChip status={topic.status} />
@@ -100,7 +101,9 @@ function WeakTopicCard({ topic }: { topic: WeakTopic }) {
 
       {topic.subSkills.length > 0 && (
         <div className="mt-3 rounded-xl bg-warning-soft/60 px-4 py-3">
-          <p className="mb-1.5 text-sm font-semibold text-warning">{t.selfStudy.whatWentWrong}</p>
+          <p className="mb-1.5 text-sm font-semibold text-warning">
+            {t('selfStudy.whatWentWrong')}
+          </p>
           <ul className="flex list-disc flex-col gap-1 pl-5 text-sm leading-relaxed">
             {topic.subSkills.slice(0, 3).map((skill) => (
               <li key={skill}>
@@ -115,26 +118,26 @@ function WeakTopicCard({ topic }: { topic: WeakTopic }) {
         <Button asChild block>
           <Link to={paths.chat(topic.topicId, question)}>
             <Sparkles aria-hidden />
-            {t.selfStudy.learnWithAi}
+            {t('selfStudy.learnWithAi')}
           </Link>
         </Button>
         <div className="grid grid-cols-2 gap-2">
           <Button asChild variant="outline" size="sm">
             <Link to={paths.topic(topic.topicId)}>
               <BookOpen aria-hidden />
-              {t.selfStudy.readTextbook}
+              {t('selfStudy.readTextbook')}
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm">
             <Link to={paths.practice(topic.topicId)}>
               <Dumbbell aria-hidden />
-              {t.selfStudy.practice}
+              {t('selfStudy.practice')}
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm" className="col-span-2">
             <Link to={paths.checkpoint(topic.topicId)}>
               <MessageCircleMore aria-hidden />
-              {t.selfStudy.checkpoint}
+              {t('selfStudy.checkpoint')}
             </Link>
           </Button>
         </div>
@@ -150,7 +153,7 @@ function AllTopics() {
   return (
     <section className="mt-8" aria-labelledby="all-topics">
       <h2 id="all-topics" className="mb-3 text-lg font-semibold">
-        {t.selfStudy.allTopics}
+        {t('selfStudy.allTopics')}
       </h2>
       <ul className="overflow-hidden rounded-xl border bg-card shadow-card">
         {mastery.data.topics.map((topic) => (

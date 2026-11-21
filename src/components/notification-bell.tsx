@@ -2,7 +2,7 @@ import { Bell } from 'lucide-react'
 import { Link } from 'react-router'
 
 import { useUnreadCount } from '@/api/notifications'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
@@ -13,7 +13,7 @@ export function NotificationBell({ className }: { className?: string }) {
   return (
     <Link
       to={paths.notifications}
-      aria-label={t.school.bell(count)}
+      aria-label={t('school.bell', { count })}
       className={cn(
         'relative grid size-11 shrink-0 place-items-center rounded-full text-foreground transition-colors hover:bg-muted',
         className,

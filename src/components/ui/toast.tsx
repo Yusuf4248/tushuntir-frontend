@@ -2,7 +2,7 @@ import { CircleAlert, CircleCheck, Info, X, type LucideIcon } from 'lucide-react
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 type ToastVariant = 'info' | 'success' | 'error'
@@ -72,7 +72,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={() => dismiss(item.id)}
-                aria-label={t.common.close}
+                aria-label={t('common.close')}
                 className="-my-1 -mr-1 grid size-9 shrink-0 cursor-pointer place-items-center rounded-lg text-muted-foreground hover:bg-muted"
               >
                 <X className="size-4" aria-hidden />

@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 
 import { schoolItems } from '@/components/layout/nav-items'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 import { SchoolSummary } from './school-summary'
 import { Section } from './section'
@@ -9,7 +9,7 @@ import { Section } from './section'
 /** "Maktab": timetable, attendance, grades and homework, reachable from Home. */
 export function SchoolShortcuts() {
   return (
-    <Section title={t.school.title} className="lg:mt-0">
+    <Section title={t('school.title')} className="lg:mt-0">
       <ul className="grid grid-cols-4 gap-2">
         {schoolItems.map(({ to, label, icon: Icon }) => (
           <li key={to}>

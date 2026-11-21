@@ -9,7 +9,7 @@ import { NotificationBell } from '@/components/notification-bell'
 import { StatusChip } from '@/components/status-chip'
 import { EmptyState, ErrorState } from '@/components/states'
 import { Skeleton } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { paths } from '@/routes/paths'
 
 import { groupTopics, type NumberedTopic } from './group-topics'
@@ -19,7 +19,7 @@ export function TopicsPage() {
 
   return (
     <>
-      <PageHeader title={t.topics.title} actions={<NotificationBell />} />
+      <PageHeader title={t('topics.title')} actions={<NotificationBell />} />
 
       {mastery.isPending ? (
         <TopicsSkeleton />
@@ -30,13 +30,13 @@ export function TopicsPage() {
           retrying={mastery.isFetching}
         />
       ) : mastery.data.topics.length === 0 ? (
-        <EmptyState icon={Library} title={t.topics.empty} description={t.topics.emptyHint} />
+        <EmptyState icon={Library} title={t('topics.empty')} description={t('topics.emptyHint')} />
       ) : (
         <>
           {mastery.data.topics.some((topic) => !topic.unlocked) && (
             <p className="mb-5 flex items-start gap-2 rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">
               <Lock className="mt-0.5 size-4 shrink-0" aria-hidden />
-              {t.topics.lockedNote}
+              {t('topics.lockedNote')}
             </p>
           )}
           <TopicGroups topics={mastery.data.topics} />
@@ -51,12 +51,14 @@ function TopicGroups({ topics }: { topics: MasteryTopic[] }) {
     <section key={subject.subject} className="mb-8" aria-label={subject.subject}>
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <h2 className="text-xl font-bold">{subject.subject}</h2>
-        <span className="text-sm text-muted-foreground">{t.topics.count(subject.count)}</span>
+        <span className="text-sm text-muted-foreground">
+          {t('topics.count', { count: subject.count })}
+        </span>
       </div>
       {subject.chapters.map((group, i) => (
         <div key={`${group.chapter ?? ''}-${i}`} className="mb-4">
           <h3 className="mb-2 px-1 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
-            {group.chapter ?? t.topics.noChapter}
+            {group.chapter ?? t('topics.noChapter')}
           </h3>
           <ol className="overflow-hidden rounded-xl border bg-card shadow-card">
             {group.topics.map((topic) => (
@@ -89,7 +91,7 @@ function TopicRow({ topic }: { topic: NumberedTopic }) {
             {!topic.unlocked && (
               <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
                 <Lock className="size-4" aria-hidden />
-                <span className="sr-only">{t.topics.lockedLabel}</span>
+                <span className="sr-only">{t('topics.lockedLabel')}</span>
               </span>
             )}
           </div>

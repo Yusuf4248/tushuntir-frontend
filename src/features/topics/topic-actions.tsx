@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 
 import { useQuizzes } from '@/api/me'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
@@ -18,11 +18,15 @@ export function TopicActions({ topicId, onOpenChat }: TopicActionsProps) {
   const openQuiz = quizzes.data?.available.find((q) => q.topic?.id === topicId)
 
   const chatTile = (
-    <TileBody icon={Sparkles} title={t.topicPage.learnWithAi} hint={t.topicPage.learnWithAiHint} />
+    <TileBody
+      icon={Sparkles}
+      title={t('topicPage.learnWithAi')}
+      hint={t('topicPage.learnWithAiHint')}
+    />
   )
 
   return (
-    <nav aria-label={t.topicPage.actions} className="grid grid-cols-2 gap-3">
+    <nav aria-label={t('topicPage.actions')} className="grid grid-cols-2 gap-3">
       {onOpenChat ? (
         <button type="button" onClick={onOpenChat} className={tileClass(true, 'col-span-2')}>
           {chatTile}
@@ -34,17 +38,17 @@ export function TopicActions({ topicId, onOpenChat }: TopicActionsProps) {
       )}
       {openQuiz && (
         <Link to={paths.quiz(openQuiz.quizId)} className={tileClass(false)}>
-          <TileBody icon={ListChecks} title={t.topicPage.quiz} />
+          <TileBody icon={ListChecks} title={t('topicPage.quiz')} />
         </Link>
       )}
       <Link to={paths.practice(topicId)} className={tileClass(false)}>
-        <TileBody icon={Dumbbell} title={t.topicPage.practice} />
+        <TileBody icon={Dumbbell} title={t('topicPage.practice')} />
       </Link>
       <Link
         to={paths.checkpoint(topicId)}
         className={tileClass(false, openQuiz ? 'col-span-2' : undefined)}
       >
-        <TileBody icon={MessageCircleMore} title={t.topicPage.explain} />
+        <TileBody icon={MessageCircleMore} title={t('topicPage.explain')} />
       </Link>
     </nav>
   )

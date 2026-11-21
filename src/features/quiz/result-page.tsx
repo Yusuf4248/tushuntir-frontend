@@ -17,7 +17,7 @@ import { MathText } from '@/components/math-text'
 import { StatusChip } from '@/components/status-chip'
 import { Button } from '@/components/ui/button'
 import { Chip } from '@/components/ui/chip'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { useDocumentTitle } from '@/lib/use-document-title'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
@@ -38,7 +38,7 @@ class NotSubmitted extends Error {}
 async function loadResult(attemptId: number, signal: AbortSignal): Promise<SubmitResult> {
   const history = await fetchAttemptHistory({ limit: 100 }, signal)
   const item = history.find((h) => h.kind !== 'checkpoint' && h.id === attemptId)
-  if (!item) throw new ApiError(404, t.quiz.attemptLost)
+  if (!item) throw new ApiError(404, t('quiz.attemptLost'))
   if (!item.finishedAt) throw new NotSubmitted()
   return submitAttempt(attemptId)
 }
@@ -60,7 +60,7 @@ export function ResultPage() {
     return (
       <Blocked
         icon={SearchX}
-        title={t.quiz.attemptLost}
+        title={t('quiz.attemptLost')}
         description={quizErrorMessage(result.error)}
       />
     )
@@ -70,7 +70,7 @@ export function ResultPage() {
 
 function ResultView({ result }: { result: SubmitResult }) {
   const mastery = useMastery()
-  useDocumentTitle(t.result.title)
+  useDocumentTitle(t('result.title'))
   const topicId = result.mastery?.topicId ?? null
   const topic = mastery.data?.topics.find((item) => item.topicId === topicId)
   const mistakes = result.totalQuestions - result.correctCount
@@ -80,38 +80,38 @@ function ResultView({ result }: { result: SubmitResult }) {
   return (
     <div className="flex flex-1 flex-col lg:grid lg:max-w-none! lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:grid-rows-[auto_auto_1fr] lg:items-start lg:gap-x-10">
       <header className="mb-2 lg:col-start-1">
-        <p className="text-sm text-muted-foreground">{t.result.title}</p>
+        <p className="text-sm text-muted-foreground">{t('result.title')}</p>
         {topic && <p className="font-semibold">{topic.title}</p>}
       </header>
 
       <section
-        aria-label={t.result.scoreLabel(
-          result.correctCount,
-          result.totalQuestions,
-          result.scorePercent,
-        )}
+        aria-label={t('result.scoreLabel', {
+          correct: result.correctCount,
+          total: result.totalQuestions,
+          p: result.scorePercent,
+        })}
         className={cn(
           'mt-3 rounded-2xl border-2 border-ink p-6 text-center lg:col-start-1',
           passed ? 'bg-success-soft' : 'bg-sardor-soft',
         )}
       >
         <p className="font-display text-5xl leading-none font-semibold tabular-nums" aria-hidden>
-          {t.result.score(result.correctCount, result.totalQuestions)}
+          {t('result.score', { correct: result.correctCount, total: result.totalQuestions })}
           <span className="text-2xl text-muted-foreground">
             {' · '}
-            {t.result.percent(result.scorePercent)}
+            {t('result.percent', { p: result.scorePercent })}
           </span>
         </p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           {result.mastery && <StatusChip status={result.mastery.status} className="bg-card" />}
           {result.hintsUsed > 0 && (
             <Chip icon={Lightbulb} className="bg-card">
-              {t.result.hintsUsed(result.hintsUsed)}
+              {t('result.hintsUsed', { count: result.hintsUsed })}
             </Chip>
           )}
         </div>
         <p className="mt-4 text-lg font-medium text-balance">
-          {passed ? t.result.great : t.result.notYet}
+          {passed ? t('result.great') : t('result.notYet')}
         </p>
       </section>
 
@@ -120,7 +120,7 @@ function ResultView({ result }: { result: SubmitResult }) {
         aria-labelledby="result-questions"
       >
         <h2 id="result-questions" className="mb-3 text-lg font-semibold">
-          {t.result.questions}
+          {t('result.questions')}
         </h2>
         <ol className="overflow-hidden rounded-xl border bg-card shadow-card">
           {questions.map((q) => (
@@ -132,13 +132,13 @@ function ResultView({ result }: { result: SubmitResult }) {
               )}
               <div className="min-w-0 flex-1">
                 <p className="text-sm text-muted-foreground">
-                  {t.quiz.questionLabel(q.position)} ·{' '}
+                  {t('quiz.questionLabel', { count: q.position })} ·{' '}
                   <span className={q.isCorrect ? 'text-success' : 'text-danger'}>
                     {q.isCorrect
-                      ? t.result.correct
+                      ? t('result.correct')
                       : q.yourAnswer === null
-                        ? t.result.unanswered
-                        : t.result.wrong}
+                        ? t('result.unanswered')
+                        : t('result.wrong')}
                   </span>
                 </p>
                 <MathText text={q.prompt} className="mt-0.5 block break-words" />
@@ -152,7 +152,7 @@ function ResultView({ result }: { result: SubmitResult }) {
         {mistakes > 0 ? (
           <Button asChild size="lg" block>
             <Link to={paths.attemptReview(result.attemptId)} state={{ topicId }}>
-              {t.result.reviewMistakes}
+              {t('result.reviewMistakes')}
               <ArrowRight aria-hidden />
             </Link>
           </Button>
@@ -161,13 +161,13 @@ function ResultView({ result }: { result: SubmitResult }) {
             <Button asChild size="lg" block>
               <Link to={paths.checkpoint(topicId)}>
                 <MessageCircleMore aria-hidden />
-                {t.result.checkpoint}
+                {t('result.checkpoint')}
               </Link>
             </Button>
           )
         )}
         <Button asChild variant="outline" block>
-          <Link to={paths.home}>{t.result.toHome}</Link>
+          <Link to={paths.home}>{t('result.toHome')}</Link>
         </Button>
       </div>
     </div>

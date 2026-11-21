@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 import { Button } from '@/components/ui/button'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { useDocumentTitle } from '@/lib/use-document-title'
 import { cn } from '@/lib/utils'
 
@@ -39,7 +39,7 @@ export function PageHeader({
     else if (backTo) void navigate(backTo, { replace: true })
   }
 
-  const label = backIcon === 'close' ? t.placeholder.close : t.common.back
+  const label = backIcon === 'close' ? t('placeholder.close') : t('common.back')
   const Icon = backIcon === 'close' ? X : ArrowLeft
 
   return (

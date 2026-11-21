@@ -7,13 +7,16 @@ import type { Grade, Grades } from '@/api/types'
 import { PageHeader } from '@/components/layout/page-header'
 import { EmptyState, ErrorState } from '@/components/states'
 import { SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { intlLocale, t, tOptional } from '@/lib/i18n'
 import { dayMonth } from '@/lib/time'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
 const formatAverage = (n: number) =>
-  new Intl.NumberFormat('uz-UZ', { maximumFractionDigits: 2, minimumFractionDigits: 0 }).format(n)
+  new Intl.NumberFormat(intlLocale(), {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+  }).format(n)
 
 /** 5 and 4.5+ green, 3.5+ blue, lower amber; the number is always shown with it. */
 function gradeTone(value: number | null): string {
@@ -24,7 +27,7 @@ function gradeTone(value: number | null): string {
 }
 
 const kindLabel = (kind: string | null) =>
-  (kind && t.grades.kinds[kind]) || kind || t.grades.otherKind
+  (kind && tOptional(`grades.kinds.${kind}`)) || kind || t('grades.otherKind')
 
 export function GradesPage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -47,7 +50,7 @@ export function GradesPage() {
   return (
     <>
       <PageHeader
-        title={subject ? t.grades.subjectGrades(subject.name) : t.grades.title}
+        title={subject ? t('grades.subjectGrades', { name: subject.name }) : t('grades.title')}
         subtitle={data?.term?.name}
         backTo={subject ? `${paths.grades}${termParam ? `?term=${termParam}` : ''}` : paths.home}
       />
@@ -55,7 +58,7 @@ export function GradesPage() {
       {data && data.terms.length > 1 && !subject && (
         <div
           role="radiogroup"
-          aria-label={t.grades.terms}
+          aria-label={t('grades.terms')}
           className="-mx-4 mb-4 flex [scrollbar-width:none] gap-2 overflow-x-auto px-4"
         >
           {data.terms.map((term) => {
@@ -103,11 +106,11 @@ export function GradesPage() {
 }
 
 function Averages({ data, onOpen }: { data: Grades; onOpen: (subjectId: number) => void }) {
-  if (data.averages.length === 0) return <EmptyState icon={Star} title={t.grades.noGrades} />
+  if (data.averages.length === 0) return <EmptyState icon={Star} title={t('grades.noGrades')} />
   return (
     <section aria-labelledby="averages-title">
       <h2 id="averages-title" className="mb-3 text-lg font-semibold">
-        {t.grades.averages}
+        {t('grades.averages')}
       </h2>
       <ul className="grid grid-cols-2 gap-3">
         {data.averages.map((a) => (
@@ -131,10 +134,12 @@ function Averages({ data, onOpen }: { data: Grades; onOpen: (subjectId: number) 
                     gradeTone(a.average),
                   )}
                 >
-                  <span className="sr-only">{t.grades.average}: </span>
+                  <span className="sr-only">{t('grades.average')}: </span>
                   {a.average == null ? '—' : formatAverage(a.average)}
                 </span>
-                <span className="text-xs text-muted-foreground">{t.grades.count(a.count)}</span>
+                <span className="text-xs text-muted-foreground">
+                  {t('grades.count', { count: a.count })}
+                </span>
               </span>
             </button>
           </li>
@@ -145,7 +150,7 @@ function Averages({ data, onOpen }: { data: Grades; onOpen: (subjectId: number) 
 }
 
 function SubjectGrades({ grades }: { grades: Grade[] }) {
-  if (grades.length === 0) return <EmptyState icon={Star} title={t.grades.noGrades} />
+  if (grades.length === 0) return <EmptyState icon={Star} title={t('grades.noGrades')} />
   return (
     <ul className="overflow-hidden rounded-xl border bg-card shadow-card">
       {grades.map((g) => (
