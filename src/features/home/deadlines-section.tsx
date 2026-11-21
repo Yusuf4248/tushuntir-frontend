@@ -68,7 +68,7 @@ function DeadlineRow({ quiz, when, urgent, overdue }: DeadlineRowProps) {
   const body = (
     <>
       <div className="min-w-0 flex-1">
-        <p className="line-clamp-2 font-medium">
+        <p className="font-medium break-words">
           {quiz.topic?.title ?? quiz.title ?? quiz.subject.name}
         </p>
         <p className="mt-0.5 text-sm text-muted-foreground">{quiz.subject.name}</p>

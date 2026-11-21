@@ -166,7 +166,7 @@ export function ChatPanel({
               type="button"
               disabled={waiting || !loaded}
               onClick={() => submit(action)}
-              className="min-h-9 shrink-0 cursor-pointer rounded-full border bg-background px-3 text-sm font-medium whitespace-nowrap text-foreground transition-colors hover:bg-muted disabled:cursor-default disabled:opacity-50"
+              className="min-h-9 shrink-0 cursor-pointer rounded-full border bg-background px-3 text-sm font-medium whitespace-nowrap text-foreground transition-colors hover:bg-muted disabled:cursor-default disabled:opacity-50 pointer-coarse:min-h-11"
             >
               {label}
             </button>
@@ -284,7 +284,7 @@ function AssistantBubble({
           {sources.map((source) => {
             const label = source.page ? t.chat.source(source.page) : t.chat.sourceNoPage
             const chip =
-              'inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full border border-primary/30 bg-primary-soft px-3 text-sm font-medium text-primary-soft-foreground hover:brightness-95'
+              'inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full pointer-coarse:min-h-11 border border-primary/30 bg-primary-soft px-3 text-sm font-medium text-primary-soft-foreground hover:brightness-95'
             return (
               <li key={`${source.chunkId}-${source.page}`}>
                 {onSourceClick ? (

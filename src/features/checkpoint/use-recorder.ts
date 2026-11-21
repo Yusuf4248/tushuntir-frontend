@@ -4,7 +4,7 @@ export const MAX_SECONDS = 90
 export const WARN_SECONDS = 75
 export const MAX_BYTES = 5 * 1024 * 1024
 
-export type RecorderError = 'denied' | 'unsupported' | 'no_device' | 'too_big' | 'failed'
+export type RecorderError = 'denied' | 'unsupported' | 'no_device' | 'busy' | 'too_big' | 'failed'
 
 export type Recording = {
   blob: Blob
@@ -21,19 +21,37 @@ type State =
   | { status: 'recorded'; recording: Recording; autoStopped: boolean }
   | { status: 'error'; error: RecorderError }
 
-// Chrome: webm/opus, Safari: mp4 (AAC), Firefox: ogg/opus.
-const CANDIDATES = [
-  'audio/webm;codecs=opus',
-  'audio/webm',
-  'audio/mp4',
-  'audio/ogg;codecs=opus',
-  'audio/ogg',
-]
+/**
+ * Recording formats in order of preference. Safari (every iOS browser runs on it) records AAC in
+ * MP4; newer Safari can also record WebM, but MP4 is its native, best-tested format. Chrome, Edge
+ * and Firefox record Opus in WebM (Firefox falls back to Ogg).
+ */
+const SAFARI_TYPES = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm']
+const OTHER_TYPES = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4']
 
-function extensionFor(mimeType: string): string {
-  if (mimeType.includes('mp4')) return 'm4a'
-  if (mimeType.includes('ogg')) return 'ogg'
-  return 'webm'
+/** The upload's type and file name: the base MIME type (no codecs) and a matching extension. */
+const UPLOAD_FORMATS: Record<string, { type: string; ext: string }> = {
+  'audio/webm': { type: 'audio/webm', ext: 'webm' },
+  'video/webm': { type: 'audio/webm', ext: 'webm' },
+  'audio/mp4': { type: 'audio/mp4', ext: 'm4a' },
+  'video/mp4': { type: 'audio/mp4', ext: 'm4a' },
+  'audio/x-m4a': { type: 'audio/mp4', ext: 'm4a' },
+  'audio/ogg': { type: 'audio/ogg', ext: 'ogg' },
+}
+
+function isSafari(): boolean {
+  // WebKit without Chromium: desktop Safari and every browser on iOS / iPadOS.
+  return (
+    /AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg\//.test(navigator.userAgent)
+  )
+}
+
+function uploadFormat(recorded: string): { type: string; ext: string } {
+  const base = recorded.split(';')[0]!.trim().toLowerCase()
+  return (
+    UPLOAD_FORMATS[base] ??
+    (isSafari() ? UPLOAD_FORMATS['audio/mp4']! : UPLOAD_FORMATS['audio/webm']!)
+  )
 }
 
 export function recorderSupported(): boolean {
@@ -45,13 +63,19 @@ export function recorderSupported(): boolean {
 }
 
 function pickMimeType(): string | undefined {
-  return CANDIDATES.find((type) => MediaRecorder.isTypeSupported?.(type))
+  // Very old Safari has no isTypeSupported: let it use its default (MP4).
+  if (typeof MediaRecorder.isTypeSupported !== 'function') return undefined
+  return (isSafari() ? SAFARI_TYPES : OTHER_TYPES).find((type) =>
+    MediaRecorder.isTypeSupported(type),
+  )
 }
 
 function errorKind(error: unknown): RecorderError {
   const name = error instanceof DOMException ? error.name : ''
   if (name === 'NotAllowedError' || name === 'SecurityError') return 'denied'
   if (name === 'NotFoundError' || name === 'OverconstrainedError') return 'no_device'
+  // The microphone exists but another app (a call, another tab) holds it.
+  if (name === 'NotReadableError' || name === 'AbortError') return 'busy'
   if (name === 'NotSupportedError') return 'unsupported'
   return 'failed'
 }
@@ -131,8 +155,14 @@ export function useRecorder() {
       rec.onstop = () => {
         const seconds = Math.min((Date.now() - startedAt.current) / 1000, MAX_SECONDS)
         cleanupDevices()
-        const type = rec.mimeType || mimeType || 'audio/webm'
+        // What the browser actually recorded, as precisely as it tells us.
+        const recorded = rec.mimeType || chunks[0]?.type || mimeType || ''
+        const { type, ext } = uploadFormat(recorded)
         const blob = new Blob(chunks, { type })
+        if (blob.size === 0) {
+          setState({ status: 'error', error: 'failed' })
+          return
+        }
         if (blob.size > MAX_BYTES) {
           setState({ status: 'error', error: 'too_big' })
           return
@@ -146,7 +176,7 @@ export function useRecorder() {
             blob,
             url,
             mimeType: type,
-            fileName: `javob.${extensionFor(type)}`,
+            fileName: `javob.${ext}`,
             seconds,
           },
         })

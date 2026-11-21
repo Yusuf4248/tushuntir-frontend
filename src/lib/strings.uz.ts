@@ -447,6 +447,8 @@ const uz = {
       'Mikrofonga ruxsat berilmadi. Brauzer sozlamalarida ruxsat bering yoki yozib javob bering.',
     micUnsupported: "Bu brauzer ovoz yozishni qo'llamaydi. Yozib javob bering.",
     micMissing: 'Mikrofon topilmadi. Yozib javob bering.',
+    micBusy:
+      "Mikrofon boshqa ilovada band (masalan, qo'ng'iroqda). Uni yoping va qayta urining yoki yozib javob bering.",
     micFailed: "Ovoz yozishni boshlab bo'lmadi. Yozib javob bering.",
     tooBig: 'Yozuv juda katta (5 MB dan oshdi). Qisqaroq qilib qayta yozing.',
     tooLong: 'Yozuv juda uzun: 90 soniyadan oshmasligi kerak. Qisqaroq qilib qayta yozing.',

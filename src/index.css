@@ -215,6 +215,19 @@
     @apply bg-background font-sans text-foreground antialiased;
     min-height: 100dvh;
     font-feature-settings: 'cv11', 'ss01';
+    /* Landscape iPhone: keep content clear of the notch (viewport-fit=cover). */
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+  }
+
+  /* While a text field is focused on a phone, the keyboard needs the room more than the tab bar. */
+  body:has(
+      :is(
+        input:not([type='checkbox'], [type='radio'], [type='file'], [type='range']),
+        textarea
+      ):focus
+    )
+    [data-tab-bar] {
+    display: none;
   }
 
   * {

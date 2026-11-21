@@ -22,6 +22,7 @@ const errorText: Record<RecorderError, string> = {
   denied: t.checkpoint.micDenied,
   unsupported: t.checkpoint.micUnsupported,
   no_device: t.checkpoint.micMissing,
+  busy: t.checkpoint.micBusy,
   failed: t.checkpoint.micFailed,
   too_big: t.checkpoint.tooBig,
 }
