@@ -272,6 +272,7 @@ const uz = {
     themeLight: "Yorug'",
     themeDark: "Qorong'i",
     themeSystem: 'Tizim',
+    themeButton: (current: string) => `Ko'rinish: ${current}`,
   },
   time: {
     today: 'Bugun',

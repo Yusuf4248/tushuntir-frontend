@@ -82,7 +82,7 @@ export function TodayTaskCard() {
           <p
             className={
               urgent
-                ? 'rounded-lg bg-sardor px-2.5 py-1 font-display text-lg font-semibold text-ink'
+                ? 'rounded-lg bg-sardor px-2.5 py-1 font-display text-lg font-semibold text-on-sardor'
                 : 'font-display text-lg font-semibold'
             }
           >

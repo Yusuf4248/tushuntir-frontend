@@ -11,7 +11,7 @@ type SardorProps = {
   className?: string
 }
 
-const INK = 'var(--ink)'
+const INK = 'var(--sardor-line)'
 const SKIN = '#f3c9a1'
 const HAIR = '#2e2018'
 

@@ -29,7 +29,7 @@ function SideLink({ to, label, icon: Icon, end, badge }: NavItem & { badge?: num
         <Icon className="size-5" aria-hidden />
         <span className="flex-1">{label}</span>
         {badge ? (
-          <span className="grid h-5 min-w-5 place-items-center rounded-full bg-danger px-1 text-xs font-bold text-white tabular-nums">
+          <span className="grid h-5 min-w-5 place-items-center rounded-full bg-danger-solid px-1 text-xs font-bold text-white tabular-nums">
             {badge > 99 ? '99+' : badge}
           </span>
         ) : null}
