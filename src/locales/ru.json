@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "Tushuntir"
+    "name": "Tushuntir",
+    "tagline": "Учись, объясняя"
   },
   "common": {
     "retry": "Повторить",

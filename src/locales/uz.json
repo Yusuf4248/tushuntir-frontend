@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "Tushuntir"
+    "name": "Tushuntir",
+    "tagline": "Tushuntirib o‘rgan"
   },
   "common": {
     "retry": "Qayta urinish",

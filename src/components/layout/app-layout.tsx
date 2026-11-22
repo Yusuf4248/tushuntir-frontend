@@ -50,7 +50,7 @@ export function AppLayout() {
   return (
     <div className="min-h-dvh md:flex">
       <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col overflow-y-auto border-r bg-card px-3 py-5 md:flex">
-        <Wordmark className="mb-6 px-3" />
+        <Wordmark tagline className="mb-6 px-3" />
         <nav aria-label={t('nav.label')} className="flex flex-col gap-6">
           <ul className="flex flex-col gap-1">
             {navItems.map((item) => (

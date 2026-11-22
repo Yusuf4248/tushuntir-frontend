@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 1260">
+  <rect width="2400" height="1260" fill="#f6f8fb"/>
+  <g transform="translate(227 315) scale(0.6667)">
+    <rect x="224" y="238" width="576" height="432" rx="128" fill="#0b6e99"/>
+    <path d="M353 668v116l130-116z" fill="#0b6e99"/>
+    <g fill="none" stroke="#ffffff" stroke-width="37" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M342.5 426v54M406.5 387v133M471.5 414v82"/>
+      <path d="M551 458l60 60 106-135"/>
+    </g>
+  </g>
+  <text x="896" y="662" font-family="Inter, 'Inter Variable', system-ui, sans-serif" font-size="252" font-weight="700" letter-spacing="-2" fill="#16213e">Tushuntir</text>
+  <text x="900" y="800" font-family="Inter, 'Inter Variable', system-ui, sans-serif" font-size="84" font-weight="500" fill="#56657f">Tushuntirib o‘rgan</text>
+</svg>

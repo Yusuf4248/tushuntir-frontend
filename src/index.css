@@ -32,6 +32,11 @@
   /* Sardor is a sticker drawn on paper: his lines, and text on apricot, stay dark in both themes. */
   --sardor-line: #16213e;
   --on-sardor: #16213e;
+  /* The Tushuntir logo (brand artwork colours): tile blue in light, apricot at night. */
+  --logo-bubble: #0b6e99;
+  --logo-ink: #ffffff;
+  --logo-title: #16213e;
+  --logo-tagline: #56657f;
 
   /* The one accent: tile blue */
   --primary: #0b6e99;
@@ -77,6 +82,10 @@
     --input: #64769a;
     --ink: #b4c3da;
     --grid-line: #24324f;
+    --logo-bubble: #f2a541;
+    --logo-ink: #121826;
+    --logo-title: #f2efe8;
+    --logo-tagline: #9aa3b5;
 
     --primary: #5bb8e6;
     --primary-hover: #86cbee;
@@ -118,6 +127,10 @@
   --input: #64769a;
   --ink: #b4c3da;
   --grid-line: #24324f;
+  --logo-bubble: #f2a541;
+  --logo-ink: #121826;
+  --logo-title: #f2efe8;
+  --logo-tagline: #9aa3b5;
 
   --primary: #5bb8e6;
   --primary-hover: #86cbee;

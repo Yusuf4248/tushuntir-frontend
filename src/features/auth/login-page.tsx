@@ -69,7 +69,7 @@ export function LoginPage() {
       {/* Brand: the squared notebook with Sardor asking to be taught. */}
       <section className="relative flex flex-col bg-katak px-4 pt-6 pb-10 lg:min-h-dvh lg:justify-between lg:border-r-2 lg:border-ink lg:px-14 lg:py-12">
         <div className="flex items-center justify-between gap-3">
-          <Wordmark />
+          <Wordmark tagline="sm" />
           <div className="flex items-center gap-1">
             <LanguageSwitch variant="compact" />
             <HelpButton className="-mr-2" />
