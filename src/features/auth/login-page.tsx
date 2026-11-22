@@ -8,6 +8,7 @@ import { Sardor } from '@/components/sardor'
 import { Button } from '@/components/ui/button'
 import { Input, Label } from '@/components/ui/input'
 import { LanguageSwitch } from '@/components/language-switch'
+import { HelpButton } from '@/components/help'
 import { t } from '@/lib/i18n'
 import { useDocumentTitle } from '@/lib/use-document-title'
 
@@ -69,7 +70,10 @@ export function LoginPage() {
       <section className="relative flex flex-col bg-katak px-4 pt-6 pb-10 lg:min-h-dvh lg:justify-between lg:border-r-2 lg:border-ink lg:px-14 lg:py-12">
         <div className="flex items-center justify-between gap-3">
           <Wordmark />
-          <LanguageSwitch variant="compact" />
+          <div className="flex items-center gap-1">
+            <LanguageSwitch variant="compact" />
+            <HelpButton className="-mr-2" />
+          </div>
         </div>
         <div className="mt-6 flex items-end gap-3 lg:mt-0 lg:flex-col lg:items-start lg:gap-6">
           <Sardor mood="confused" className="size-24 lg:order-2 lg:size-56" />

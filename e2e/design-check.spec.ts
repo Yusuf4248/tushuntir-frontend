@@ -334,6 +334,15 @@ for (const theme of THEMES)
           }
         }
 
+        /** Opens the screen's help panel ("?"), checks it like a screen, and closes it. */
+        async function auditHelp(name: string) {
+          await page.getByRole('button', { name: L.help!.button!, exact: true }).first().click()
+          await page.getByRole('dialog').waitFor()
+          await audit(name)
+          await page.keyboard.press('Escape')
+          await page.getByRole('dialog').waitFor({ state: 'hidden' })
+        }
+
         async function login() {
           await page.goto(`${BASE}/login`)
           await page
@@ -360,6 +369,8 @@ for (const theme of THEMES)
         if (SCREENS.includes('dashboard')) {
           at('dashboard')
           await audit('dashboard')
+          at('help-dashboard')
+          await auditHelp('help-dashboard')
           // The longest topic title: list and topic page.
           const longest = [...mastery.topics].sort((a, b) => b.title.length - a.title.length)[0]
           at('topics')
@@ -445,8 +456,12 @@ for (const theme of THEMES)
             })
             .waitFor({ timeout: 20_000 })
           await audit('checkpoint-intro')
+          at('help-checkpoint')
+          await auditHelp('help-checkpoint')
         }
 
+        // Background refetches may still be in the proxy: let them go quietly as the test ends.
+        await context.unrouteAll({ behavior: 'ignoreErrors' })
         console.log(`[${device}${suffix}] screenshots in ${OUT}: ${shots.join(', ')}`)
         if (phoneSized)
           console.log(`[${device}${suffix}] keyboard check: ${keyboardFields} text field(s)`)

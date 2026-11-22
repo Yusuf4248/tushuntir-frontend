@@ -275,6 +275,12 @@
   --animate-sheet-in: sheet-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
   --animate-sheet-out: sheet-out 160ms ease-in;
   --animate-pop-in: pop-in 160ms ease-out;
+  --animate-side-in: side-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-side-out: side-out 160ms ease-in;
+  /* First-visit help hint: a gentle bob and a ring around the "?" (motion-safe only). Three
+     rounds, under 5 s (WCAG 2.2.2), so the "Tushunarli" button then holds still. */
+  --animate-help-bob: help-bob 1.6s ease-in-out 3;
+  --animate-help-ring: help-ring 1.6s ease-out 3;
 
   @keyframes fade-in {
     from {
@@ -300,6 +306,30 @@
     from {
       opacity: 0;
       transform: scale(0.96);
+    }
+  }
+  @keyframes side-in {
+    from {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes side-out {
+    to {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes help-bob {
+    50% {
+      transform: translateY(3px);
+    }
+  }
+  @keyframes help-ring {
+    0% {
+      box-shadow: 0 0 0 0 rgb(244 166 42 / 0.6);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 8px rgb(244 166 42 / 0);
     }
   }
 }

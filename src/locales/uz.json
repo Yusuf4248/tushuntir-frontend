@@ -573,5 +573,107 @@
   },
   "language": {
     "label": "Til"
+  },
+  "help": {
+    "button": "Qo'llanma: bu sahifa qanday ishlaydi",
+    "title": "Qanday ishlaydi",
+    "example": "Misol",
+    "hint": "Qanday ishlashini bilmoqchimisiz? Shu yerni bosing",
+    "gotIt": "Tushunarli",
+    "pages": {
+      "login": {
+        "title": "Kirish",
+        "steps": [
+          "Tushuntir — mavzuni AI sinfdoshingiz Sardorga tushuntirib, o'zingiz mustahkam o'rganadigan ilova.",
+          "Sizga berilgan demo telefon raqami va parol bilan kiring.",
+          "Tilni yuqoridagi UZ / RU / EN tugmalari bilan almashtiring."
+        ],
+        "example": "RU ni bosing — butun ilova rus tilida ochiladi."
+      },
+      "dashboard": {
+        "title": "Bosh sahifa",
+        "steps": [
+          "«Bugungi vazifa» — bugungi dars quizi. «Boshlash»ni bosing.",
+          "Muddatlar: qaysi quizni qachongacha topshirish kerak.",
+          "Mashq kerak bo'lgan mavzular — siz qiynalgan joylar.",
+          "O'zlashtirish — nechta mavzuni o'zlashtirganingiz."
+        ],
+        "example": "«Boshlash»ni bosing, savollarga javob bering — natija shu yerda ko'rinadi."
+      },
+      "quiz": {
+        "title": "Quiz",
+        "steps": [
+          "Savollarga javob bering — javoblar darhol saqlanadi.",
+          "Qiynalsangiz, «Yordam»ni bosing. U 3 bosqichli: turtki, usul, yechimning bir qadami.",
+          "Tugatgach, «Topshirish»ni bosing."
+        ],
+        "example": "Bitta savolga ataylab noto'g'ri javob bering — keyin xatolar tahlilini ko'rasiz."
+      },
+      "review": {
+        "title": "Xatolar tahlili",
+        "steps": [
+          "AI har bir xato uchun javob nega noto'g'ri ekanini tushuntiradi.",
+          "So'ng qisqa tekshiruv savoli beradi: o'sha ko'nikma, yangi sonlar bilan.",
+          "To'g'ri javob bersangiz, xato tuzatilgan hisoblanadi."
+        ],
+        "example": "2(x + 3) ni 2x + 3 deb yozgan bo'lsangiz, AI qavsni ochish qoidasini ko'rsatadi."
+      },
+      "textbook": {
+        "title": "Darsliklar",
+        "steps": [
+          "Mavzuni oching va darslik matnini o'qing.",
+          "Istalgan gapni belgilang va «Tushuntir»ni bosing.",
+          "AI darslikka tayanib javob beradi va manba sahifasini ko'rsatadi."
+        ],
+        "example": "Formulani belgilang va «Nega?» deb so'rang."
+      },
+      "selfStudy": {
+        "title": "Mustaqil ta'lim",
+        "steps": [
+          "Bu yerda qiynalgan mavzularingiz yig'iladi.",
+          "«Mashq qilish» — shu mavzu bo'yicha yangi savollar bilan mashq quizi.",
+          "«AI bilan o'rganish» — tushunmagan joyingizni so'rang."
+        ],
+        "example": "Zaif mavzuda mashq qiling, keyin uni Sardorga tushuntiring."
+      },
+      "checkpoint": {
+        "title": "Tushuntir checkpoint",
+        "steps": [
+          "Asosiy imkoniyat: Sardor — mavzuni noto'g'ri tushungan sinfdoshingiz.",
+          "Unga mavzuni ovoz bilan (yoki yozib) tushuntiring.",
+          "O'tsangiz, keyingi mavzu ochiladi. 3 ta muvaffaqiyatsiz urinishdan keyin ustozingizga xabar boriladi."
+        ],
+        "example": "«Sardor, qavs oldidagi minus faqat birinchisini emas, BARCHA ishoralarni o'zgartiradi.»"
+      },
+      "timetable": {
+        "title": "Dars jadvali",
+        "steps": ["Haftalik jadval: kunni tanlang — darslar, xona va o'qituvchi ko'rinadi."]
+      },
+      "attendance": {
+        "title": "Davomat",
+        "steps": ["Oylik davomat: kalendardagi belgilar — keldi, kechikdi, kelmadi yoki sababli."]
+      },
+      "grades": {
+        "title": "Baholar",
+        "steps": ["Chorak bo'yicha baholar va har bir fandan o'rtacha ball."]
+      },
+      "homework": {
+        "title": "Uy vazifalari",
+        "steps": ["Vazifani oching, javob yozing yoki rasm/PDF biriktirib yuboring."]
+      },
+      "notifications": {
+        "title": "Bildirishnomalar",
+        "steps": ["Yangi baholar, uy vazifalari va ochilgan quizlar haqida xabarlar."]
+      },
+      "profile": {
+        "title": "Profil",
+        "steps": [
+          "Til: O'zbekcha, Русский yoki English.",
+          "Ko'rinish: yorug', qorong'i yoki tizim bo'yicha.",
+          "So'nggi natijalaringiz ham shu yerda."
+        ],
+        "example": "«Qorong'i»ni tanlang — kechqurun ko'zga yengilroq."
+      }
+    }
   }
 }

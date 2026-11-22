@@ -5,6 +5,7 @@ import { weekdayDate } from '@/lib/time'
 import { useDocumentTitle } from '@/lib/use-document-title'
 
 import { NotificationBell } from '@/components/notification-bell'
+import { HelpButton } from '@/components/help'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 import { CheckpointCard } from './checkpoint-card'
@@ -26,17 +27,19 @@ export function HomePage() {
 
   return (
     <>
-      <header className="mb-5 flex items-start gap-2">
-        <div className="min-w-0 flex-1">
-          <h1 className="font-display text-[1.625rem] leading-tight font-semibold tracking-tight break-words">
+      <header className="mb-5">
+        {/* The buttons sit beside the greeting; the date line gets the full width below. */}
+        <div className="flex items-start gap-2">
+          <h1 className="min-w-0 flex-1 font-display text-[1.625rem] leading-tight font-semibold tracking-tight break-words">
             {t('home.greeting', { name: user.firstName })}
           </h1>
-          <p className="mt-1 min-h-6 text-muted-foreground">{subtitle}</p>
+          <div className="-mr-2 flex shrink-0 items-center">
+            <ThemeToggle />
+            <NotificationBell />
+            <HelpButton />
+          </div>
         </div>
-        <div className="-mr-2 flex shrink-0 items-center">
-          <ThemeToggle />
-          <NotificationBell />
-        </div>
+        <p className="mt-1 min-h-6 text-muted-foreground">{subtitle}</p>
       </header>
 
       {/* Phone: one column. Desktop: the AI work on the left, school and progress on the right. */}

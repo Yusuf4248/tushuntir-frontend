@@ -15,6 +15,7 @@ import { useMastery } from '@/api/me'
 import type { SubmitResult } from '@/api/types'
 import { MathText } from '@/components/math-text'
 import { StatusChip } from '@/components/status-chip'
+import { HelpButton } from '@/components/help'
 import { Button } from '@/components/ui/button'
 import { Chip } from '@/components/ui/chip'
 import { t } from '@/lib/i18n'
@@ -79,9 +80,12 @@ function ResultView({ result }: { result: SubmitResult }) {
 
   return (
     <div className="flex flex-1 flex-col lg:grid lg:max-w-none! lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:grid-rows-[auto_auto_1fr] lg:items-start lg:gap-x-10">
-      <header className="mb-2 lg:col-start-1">
-        <p className="text-sm text-muted-foreground">{t('result.title')}</p>
-        {topic && <p className="font-semibold">{topic.title}</p>}
+      <header className="mb-2 flex items-start gap-2 lg:col-start-1">
+        <div className="min-w-0 flex-1">
+          <p className="text-sm text-muted-foreground">{t('result.title')}</p>
+          {topic && <p className="font-semibold">{topic.title}</p>}
+        </div>
+        <HelpButton className="-mr-2" />
       </header>
 
       <section

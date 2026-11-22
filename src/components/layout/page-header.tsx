@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 import { Button } from '@/components/ui/button'
+import { HelpButton } from '@/components/help'
 import { t } from '@/lib/i18n'
 import { useDocumentTitle } from '@/lib/use-document-title'
 import { cn } from '@/lib/utils'
@@ -63,6 +64,7 @@ export function PageHeader({
         {subtitle && <p className="mt-0.5 text-muted-foreground">{subtitle}</p>}
       </div>
       {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+      <HelpButton className="-mr-2" />
     </header>
   )
 }

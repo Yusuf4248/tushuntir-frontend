@@ -1,5 +1,5 @@
 import { BookOpen, Info, RotateCcw, SendHorizontal, Sparkles, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
 
 import { errorMessage } from '@/api/errors'
@@ -62,6 +62,8 @@ type ChatPanelProps = {
   /** On the topic page: scroll the textbook. Elsewhere chips link to the topic page. */
   onSourceClick?: (source: ChatSource) => void
   onClose?: () => void
+  /** Extra button in the header, before the close button. */
+  headerAction?: ReactNode
   className?: string
 }
 
@@ -73,6 +75,7 @@ export function ChatPanel({
   initialDraft = '',
   onSourceClick,
   onClose,
+  headerAction,
   className,
 }: ChatPanelProps) {
   const thread = useChatThread(topicId)
@@ -125,8 +128,9 @@ export function ChatPanel({
         </span>
         <div className="min-w-0 flex-1">
           <h2 className="font-semibold">{t('chat.title')}</h2>
-          {topicTitle && <p className="truncate text-sm text-muted-foreground">{topicTitle}</p>}
+          {topicTitle && <p className="text-sm break-words text-muted-foreground">{topicTitle}</p>}
         </div>
+        {headerAction}
         {onClose && (
           <Button variant="ghost" size="icon" onClick={onClose} aria-label={t('chat.close')}>
             <X className="size-5" aria-hidden />

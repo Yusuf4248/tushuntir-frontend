@@ -585,5 +585,107 @@
   },
   "language": {
     "label": "Language"
+  },
+  "help": {
+    "button": "Help: how this page works",
+    "title": "How it works",
+    "example": "Example",
+    "hint": "Want to see how it works? Tap here",
+    "gotIt": "Got it",
+    "pages": {
+      "login": {
+        "title": "Sign in",
+        "steps": [
+          "Tushuntir is an app where you master a topic by explaining it to Sardor, an AI classmate.",
+          "Sign in with the demo phone number and password you were given.",
+          "Switch the language with the UZ / RU / EN buttons at the top."
+        ],
+        "example": "Tap EN — the whole app switches to English."
+      },
+      "dashboard": {
+        "title": "Home",
+        "steps": [
+          "\"Today's task\" is the quiz for today's lesson. Tap \"Start\".",
+          "Deadlines: which quiz is due, and when.",
+          "Topics to practise: where you struggled.",
+          "Progress: how many topics you have mastered."
+        ],
+        "example": "Tap \"Start\", answer the questions — your result shows up here."
+      },
+      "quiz": {
+        "title": "Quiz",
+        "steps": [
+          "Answer the questions — answers are saved straight away.",
+          "Stuck? Tap \"Hint\". It has 3 levels: a nudge, a method, a worked step.",
+          "When you are done, tap \"Submit\"."
+        ],
+        "example": "Get one question wrong on purpose — then you will see the mistake review."
+      },
+      "review": {
+        "title": "Mistake review",
+        "steps": [
+          "The AI explains why each answer was wrong.",
+          "Then it asks a short check question: the same skill with new numbers.",
+          "Answer it correctly and the mistake counts as fixed."
+        ],
+        "example": "If you expanded 2(x + 3) as 2x + 3, the AI shows the rule for opening brackets."
+      },
+      "textbook": {
+        "title": "Textbooks",
+        "steps": [
+          "Open a topic and read the textbook text.",
+          "Select any sentence and tap \"Explain\".",
+          "The AI answers from the textbook and shows the source page."
+        ],
+        "example": "Select a formula and ask \"Why?\""
+      },
+      "selfStudy": {
+        "title": "Self-study",
+        "steps": [
+          "The topics you find hard are collected here.",
+          "\"Practise\": a quiz with new questions on that topic.",
+          "\"Learn with AI\": ask about anything you did not get."
+        ],
+        "example": "Practise a weak topic, then explain it to Sardor."
+      },
+      "checkpoint": {
+        "title": "Tushuntir checkpoint",
+        "steps": [
+          "The key feature: Sardor is a classmate who got the topic wrong.",
+          "Explain the topic to him by voice (or in writing).",
+          "Pass, and the next topic unlocks. After 3 failed tries, your teacher is notified."
+        ],
+        "example": "\"Sardor, a minus before a bracket changes ALL the signs, not just the first.\""
+      },
+      "timetable": {
+        "title": "Timetable",
+        "steps": ["This week's timetable: pick a day to see lessons, rooms and teachers."]
+      },
+      "attendance": {
+        "title": "Attendance",
+        "steps": ["This month's attendance: the calendar marks present, late, absent or excused."]
+      },
+      "grades": {
+        "title": "Grades",
+        "steps": ["Grades for the term and your average in each subject."]
+      },
+      "homework": {
+        "title": "Homework",
+        "steps": ["Open a task, write your answer or attach a photo or PDF."]
+      },
+      "notifications": {
+        "title": "Notifications",
+        "steps": ["New grades, homework and quizzes that have opened."]
+      },
+      "profile": {
+        "title": "Profile",
+        "steps": [
+          "Language: O'zbekcha, Русский or English.",
+          "Appearance: light, dark or follow the system.",
+          "Your recent results are here too."
+        ],
+        "example": "Pick \"Dark\" — easier on the eyes in the evening."
+      }
+    }
   }
 }

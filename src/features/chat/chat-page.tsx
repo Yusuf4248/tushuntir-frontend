@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router'
 
 import { useTopic } from '@/api/me'
+import { HelpButton } from '@/components/help'
 import { t } from '@/lib/i18n'
 import { useDocumentTitle } from '@/lib/use-document-title'
 import { paths } from '@/routes/paths'
@@ -37,6 +38,7 @@ export function ChatPage() {
         className="flex-1 md:rounded-2xl md:border md:shadow-card"
         topicId={topicId}
         topicTitle={topic.data?.title}
+        headerAction={<HelpButton />}
         ask={ask}
         onAskHandled={() => {
           setAsk(null)

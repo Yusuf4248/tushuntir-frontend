@@ -17,6 +17,7 @@ import { errorMessage } from '@/api/errors'
 import { meKeys } from '@/api/me'
 import type { AttemptView, HintResult } from '@/api/types'
 import { MathText } from '@/components/math-text'
+import { HelpButton } from '@/components/help'
 import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { ProgressBar } from '@/components/ui/progress-bar'
@@ -205,6 +206,7 @@ export function QuizRunner({ view }: { view: AttemptView }) {
           {!submit.isPending && <Send aria-hidden />}
           {t('quiz.submit')}
         </Button>
+        <HelpButton className="-mr-2" />
       </header>
 
       <ProgressBar
