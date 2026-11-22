@@ -2,7 +2,7 @@ import { X } from 'lucide-react'
 import { Dialog } from 'radix-ui'
 import type { ReactNode } from 'react'
 
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 type SheetProps = {
@@ -50,7 +50,7 @@ export function Sheet({
             </div>
             <Dialog.Close
               className="-mr-2 grid size-11 shrink-0 cursor-pointer place-items-center rounded-xl text-muted-foreground hover:bg-muted"
-              aria-label={t.common.close}
+              aria-label={t('common.close')}
             >
               <X className="size-5" aria-hidden />
             </Dialog.Close>

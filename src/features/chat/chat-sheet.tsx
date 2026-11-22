@@ -1,7 +1,7 @@
 import { Dialog } from 'radix-ui'
 import { useRef, type ReactNode } from 'react'
 
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 const CLOSE_DISTANCE = 120
 
@@ -72,8 +72,8 @@ export function ChatSheet({ open, onOpenChange, onClosed, children }: ChatSheetP
           }}
           className="fixed inset-x-0 bottom-0 z-50 flex h-[85dvh] flex-col overflow-hidden rounded-t-2xl border-t bg-card shadow-xl outline-none data-[state=closed]:animate-sheet-out data-[state=open]:animate-sheet-in"
         >
-          <Dialog.Title className="sr-only">{t.chat.title}</Dialog.Title>
-          <p className="sr-only">{t.chat.dragHint}</p>
+          <Dialog.Title className="sr-only">{t('chat.title')}</Dialog.Title>
+          <p className="sr-only">{t('chat.dragHint')}</p>
           <div
             {...dragProps}
             className="flex shrink-0 cursor-grab justify-center pt-2.5 pb-2"

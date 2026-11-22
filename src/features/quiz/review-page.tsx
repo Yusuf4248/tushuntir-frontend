@@ -10,7 +10,7 @@ import { EmptyState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { ProgressBar } from '@/components/ui/progress-bar'
 import { SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { paths } from '@/routes/paths'
 
 import { MistakeCard } from './mistake-card'
@@ -60,7 +60,11 @@ export function ReviewPage() {
   if (review.isPending) return <Preparing />
   if (review.isError) {
     return (
-      <Blocked icon={SearchX} title={t.review.title} description={quizErrorMessage(review.error)} />
+      <Blocked
+        icon={SearchX}
+        title={t('review.title')}
+        description={quizErrorMessage(review.error)}
+      />
     )
   }
 
@@ -72,7 +76,7 @@ export function ReviewPage() {
   return (
     <div className="flex flex-1 flex-col">
       <PageHeader
-        title={t.review.title}
+        title={t('review.title')}
         subtitle={data.topicTitle ?? undefined}
         backTo={paths.attemptResult(attemptId)}
         backIcon="close"
@@ -86,15 +90,15 @@ export function ReviewPage() {
           role="status"
         >
           <Sparkles className="size-4 shrink-0 animate-pulse" aria-hidden />
-          {t.review.stillPreparing}
+          {t('review.stillPreparing')}
         </p>
       )}
 
       {total === 0 ? (
         <EmptyState
           icon={PartyPopper}
-          title={t.review.noMistakes}
-          description={t.review.noMistakesHint}
+          title={t('review.noMistakes')}
+          description={t('review.noMistakesHint')}
         />
       ) : (
         <div className="flex flex-col gap-4">
@@ -116,13 +120,13 @@ export function ReviewPage() {
             <Button asChild size="lg" block>
               <Link to={paths.practice(topicId)}>
                 <Dumbbell aria-hidden />
-                {t.review.practice}
+                {t('review.practice')}
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" block>
               <Link to={paths.checkpoint(topicId)}>
                 <MessageCircleMore aria-hidden />
-                {t.review.checkpoint}
+                {t('review.checkpoint')}
               </Link>
             </Button>
           </>
@@ -135,13 +139,13 @@ export function ReviewPage() {
 function Preparing() {
   return (
     <div className="flex flex-1 flex-col">
-      <PageHeader title={t.review.title} />
+      <PageHeader title={t('review.title')} />
       <div className="flex flex-col items-center gap-3 py-8 text-center" role="status">
         <span className="grid size-16 place-items-center rounded-full bg-primary-soft text-primary-soft-foreground">
           <Sparkles className="size-8 animate-pulse" aria-hidden />
         </span>
-        <p className="text-lg font-semibold">{t.review.preparing}</p>
-        <p className="max-w-xs text-sm text-muted-foreground">{t.review.preparingHint}</p>
+        <p className="text-lg font-semibold">{t('review.preparing')}</p>
+        <p className="max-w-xs text-sm text-muted-foreground">{t('review.preparingHint')}</p>
       </div>
       <div className="flex flex-col gap-4" aria-hidden>
         <SkeletonCard lines={4} />
@@ -168,13 +172,13 @@ function FixedProgress({
         className="mb-1.5 text-sm font-medium tabular-nums"
         aria-live={live ? 'polite' : undefined}
       >
-        {t.review.progress(fixed, total)}
+        {t('review.progress', { fixed, total })}
       </p>
       <ProgressBar
         value={fixed}
         max={total}
-        label={t.review.title}
-        valueText={t.review.progress(fixed, total)}
+        label={t('review.title')}
+        valueText={t('review.progress', { fixed, total })}
       />
     </div>
   )

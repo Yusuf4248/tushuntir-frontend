@@ -1,5 +1,5 @@
 import { ApiError, errorMessage } from '@/api/errors'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 export type QuizProblem = 'deadline' | 'submitted' | 'locked' | 'no_questions' | 'other'
 
@@ -19,13 +19,13 @@ export function quizProblem(error: unknown): QuizProblem {
 export function quizErrorMessage(error: unknown): string {
   switch (quizProblem(error)) {
     case 'deadline':
-      return t.quiz.deadlinePassed
+      return t('quiz.deadlinePassed')
     case 'submitted':
-      return t.quiz.doneTitle
+      return t('quiz.doneTitle')
     case 'locked':
-      return t.quiz.locked
+      return t('quiz.locked')
     case 'no_questions':
-      return t.quiz.noQuestions
+      return t('quiz.noQuestions')
     default:
       return errorMessage(error)
   }

@@ -1,4 +1,4 @@
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 /** The mark: a "T" on a tile-blue square. */
@@ -16,7 +16,7 @@ export function Wordmark({ className }: { className?: string }) {
   return (
     <span className={cn('inline-flex items-center gap-2.5', className)}>
       <Logo />
-      <span className="font-display text-xl font-semibold tracking-tight">{t.app.name}</span>
+      <span className="font-display text-xl font-semibold tracking-tight">{t('app.name')}</span>
     </span>
   )
 }

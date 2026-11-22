@@ -1,7 +1,7 @@
 import { Pause, Play } from 'lucide-react'
 import { useRef, useState } from 'react'
 
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 function clock(seconds: number): string {
@@ -40,7 +40,7 @@ export function AudioPlayer({ src, label, knownDuration, className }: AudioPlaye
       <button
         type="button"
         onClick={toggle}
-        aria-label={`${playing ? t.checkpoint.pause : t.checkpoint.play}: ${label}`}
+        aria-label={`${playing ? t('checkpoint.pause') : t('checkpoint.play')}: ${label}`}
         className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary-hover"
       >
         {playing ? (

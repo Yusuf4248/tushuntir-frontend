@@ -5,7 +5,7 @@ import { useParams } from 'react-router'
 import { attemptKeys, fetchAttempt, startQuiz } from '@/api/attempts'
 import { ApiError } from '@/api/errors'
 import type { AttemptView } from '@/api/types'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 import { attemptStorage } from './attempt-storage'
 import { Blocked, StartSkeleton } from './quiz-start-page'
@@ -44,10 +44,10 @@ export function AttemptPage() {
     return (
       <Blocked
         icon={SearchX}
-        title={t.quiz.attemptLost}
+        title={t('quiz.attemptLost')}
         description={
           attempt.error instanceof ApiError && attempt.error.status === 404
-            ? t.quiz.attemptLostHint
+            ? t('quiz.attemptLostHint')
             : quizErrorMessage(attempt.error)
         }
       />

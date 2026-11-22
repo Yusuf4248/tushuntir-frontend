@@ -10,7 +10,7 @@ import { PageHeader } from '@/components/layout/page-header'
 import { EmptyState, ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { Skeleton, SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { DEFAULT_TIMEZONE, relativeDayTime } from '@/lib/time'
 import { paths } from '@/routes/paths'
 
@@ -29,7 +29,7 @@ export function QuizStartPage() {
   if (quizzes.isError) {
     return (
       <>
-        <PageHeader title={t.quiz.lessonQuiz} backTo={paths.home} backIcon="close" />
+        <PageHeader title={t('quiz.lessonQuiz')} backTo={paths.home} backIcon="close" />
         <ErrorState
           message={errorMessage(quizzes.error)}
           onRetry={() => void quizzes.refetch()}
@@ -46,7 +46,9 @@ export function QuizStartPage() {
     overdue.find((q) => q.quizId === quizId)
 
   if (!quiz) {
-    return <Blocked icon={SearchX} title={t.quiz.notFound} description={t.quiz.notFoundHint} />
+    return (
+      <Blocked icon={SearchX} title={t('quiz.notFound')} description={t('quiz.notFoundHint')} />
+    )
   }
   if (quiz.status === 'done') return <AlreadyDone quiz={quiz} />
   if (quiz.status === 'overdue') return <DeadlinePassed />
@@ -72,18 +74,18 @@ function AvailableQuiz({ quiz }: { quiz: StudentQuiz }) {
 
   return (
     <StartScreen
-      eyebrow={t.quiz.lessonQuiz}
+      eyebrow={t('quiz.lessonQuiz')}
       title={quiz.topic?.title ?? quiz.title ?? quiz.subject.name}
       subject={quiz.subject.name}
       questionCount={quiz.questionCount ?? LESSON_QUIZ_QUESTIONS}
       dueAt={quiz.dueAt}
       dueLabel={
         quiz.dueAt
-          ? t.time.until(relativeDayTime(quiz.dueAt, today.data?.date ?? '', timeZone))
+          ? t('time.until', { when: relativeDayTime(quiz.dueAt, today.data?.date ?? '', timeZone) })
           : null
       }
-      note={t.quiz.rules}
-      actionLabel={resume ? t.quiz.resume : t.quiz.start}
+      note={t('quiz.rules')}
+      actionLabel={resume ? t('quiz.resume') : t('quiz.start')}
       onStart={() => start.mutate()}
       starting={start.isPending}
       error={start.isError ? quizErrorMessage(start.error) : null}
@@ -96,12 +98,12 @@ function AlreadyDone({ quiz }: { quiz: StudentQuiz }) {
   return (
     <Blocked
       icon={CircleCheck}
-      title={t.quiz.doneTitle}
-      description={t.quiz.doneHint}
+      title={t('quiz.doneTitle')}
+      description={t('quiz.doneHint')}
       action={
         quiz.attempt ? (
           <Button asChild>
-            <Link to={paths.attemptResult(quiz.attempt.id)}>{t.quiz.seeResult}</Link>
+            <Link to={paths.attemptResult(quiz.attempt.id)}>{t('quiz.seeResult')}</Link>
           </Button>
         ) : undefined
       }
@@ -113,8 +115,8 @@ export function DeadlinePassed() {
   return (
     <Blocked
       icon={AlarmClockOff}
-      title={t.quiz.deadlineTitle}
-      description={t.quiz.deadlinePassed}
+      title={t('quiz.deadlineTitle')}
+      description={t('quiz.deadlinePassed')}
     />
   )
 }
@@ -129,7 +131,7 @@ type BlockedProps = {
 export function Blocked({ icon, title, description, action }: BlockedProps) {
   return (
     <>
-      <PageHeader title={t.quiz.lessonQuiz} backTo={paths.home} backIcon="close" />
+      <PageHeader title={t('quiz.lessonQuiz')} backTo={paths.home} backIcon="close" />
       <EmptyState
         icon={icon}
         title={title}
@@ -138,7 +140,7 @@ export function Blocked({ icon, title, description, action }: BlockedProps) {
           <div className="flex flex-col items-center gap-2">
             {action}
             <Button asChild variant="outline">
-              <Link to={paths.home}>{t.quiz.toHome}</Link>
+              <Link to={paths.home}>{t('quiz.toHome')}</Link>
             </Button>
           </div>
         }

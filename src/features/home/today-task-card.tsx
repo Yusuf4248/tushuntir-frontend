@@ -7,7 +7,7 @@ import { ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { paths } from '@/routes/paths'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { DEFAULT_TIMEZONE, URGENT_MS, relativeDayTime, timeLeft, useNow } from '@/lib/time'
 
 import { byDueSoonest, hasOpenAttempt } from './quiz-utils'
@@ -42,12 +42,12 @@ export function TodayTaskCard() {
           <PartyPopper className="size-6" aria-hidden />
         </span>
         <div>
-          <p className="text-sm font-medium text-muted-foreground">{t.home.todayTask}</p>
-          <p className="mt-0.5 font-semibold">{t.home.noTask}</p>
+          <p className="text-sm font-medium text-muted-foreground">{t('home.todayTask')}</p>
+          <p className="mt-0.5 font-semibold">{t('home.noTask')}</p>
           <p className="mt-1 text-sm text-muted-foreground">
             {nextLocked?.endsAt
-              ? t.home.nextUnlock(nextLocked.subject.name, nextLocked.endsAt)
-              : t.home.noTaskHint}
+              ? t('home.nextUnlock', { subject: nextLocked.subject.name, time: nextLocked.endsAt })
+              : t('home.noTaskHint')}
           </p>
         </div>
       </div>
@@ -69,7 +69,7 @@ export function TodayTaskCard() {
     >
       <p className="flex items-center gap-2 text-sm font-semibold text-primary-foreground/85">
         <BookOpenCheck className="size-4" aria-hidden />
-        {t.home.todayTask}
+        {t('home.todayTask')}
         <span aria-hidden>·</span>
         {quiz.subject.name}
       </p>
@@ -90,9 +90,9 @@ export function TodayTaskCard() {
             {timeLeft(msLeft)}
           </p>
           <p className="text-sm text-primary-foreground/85">
-            {t.time.until(
-              relativeDayTime(quiz.dueAt, today.data?.date ?? '', timeZone).toLowerCase(),
-            )}
+            {t('time.until', {
+              when: relativeDayTime(quiz.dueAt, today.data?.date ?? '', timeZone).toLowerCase(),
+            })}
           </p>
         </div>
       )}
@@ -104,7 +104,7 @@ export function TodayTaskCard() {
         className="mt-5 bg-card text-foreground hover:bg-sardor-soft focus-visible:outline-primary-foreground"
       >
         <Link to={paths.quiz(quiz.quizId)}>
-          {resume ? t.home.resume : t.home.start}
+          {resume ? t('home.resume') : t('home.start')}
           <ArrowRight aria-hidden />
         </Link>
       </Button>

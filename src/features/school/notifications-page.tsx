@@ -23,7 +23,7 @@ import { PageHeader } from '@/components/layout/page-header'
 import { EmptyState, ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { DEFAULT_TIMEZONE, dateInZone, relativeDayTime } from '@/lib/time'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
@@ -57,12 +57,12 @@ export function NotificationsPage() {
   return (
     <>
       <PageHeader
-        title={t.notifications.title}
+        title={t('notifications.title')}
         subtitle={
           list.data
             ? unread
-              ? t.notifications.unreadCount(unread)
-              : t.notifications.allRead
+              ? t('notifications.unreadCount', { count: unread })
+              : t('notifications.allRead')
             : undefined
         }
         backTo={paths.home}
@@ -77,7 +77,7 @@ export function NotificationsPage() {
           loading={markAll.isPending}
         >
           {!markAll.isPending && <CheckCheck aria-hidden />}
-          {t.notifications.markAll}
+          {t('notifications.markAll')}
         </Button>
       )}
 
@@ -96,8 +96,8 @@ export function NotificationsPage() {
       ) : list.data.length === 0 ? (
         <EmptyState
           icon={BellOff}
-          title={t.notifications.empty}
-          description={t.notifications.emptyHint}
+          title={t('notifications.empty')}
+          description={t('notifications.emptyHint')}
         />
       ) : (
         <ul className="overflow-hidden rounded-xl border bg-card shadow-card">
@@ -127,7 +127,7 @@ export function NotificationsPage() {
                   <span className="min-w-0 flex-1">
                     <span className={cn('block', isUnread ? 'font-semibold' : 'font-medium')}>
                       {n.title}
-                      {isUnread && <span className="sr-only"> ({t.notifications.unread})</span>}
+                      {isUnread && <span className="sr-only"> ({t('notifications.unread')})</span>}
                     </span>
                     {n.body && (
                       <span className="mt-0.5 block text-sm text-muted-foreground">{n.body}</span>

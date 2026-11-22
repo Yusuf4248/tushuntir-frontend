@@ -19,7 +19,7 @@ import { ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { Chip } from '@/components/ui/chip'
 import { SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
@@ -38,11 +38,11 @@ import { SardorAvatar, SardorCard } from './sardor-card'
 function answerErrorMessage(error: unknown): string {
   if (error instanceof ApiError) {
     const server = error.serverMessage?.toLowerCase() ?? ''
-    if (error.status === 413) return t.checkpoint.tooBig
+    if (error.status === 413) return t('checkpoint.tooBig')
     if (error.status === 400 && (server.includes('uzun') || server.includes('90')))
-      return t.checkpoint.tooLong
+      return t('checkpoint.tooLong')
     if (error.status === 400 && (server.includes('unsupported') || server.includes('could not')))
-      return t.checkpoint.unreadable
+      return t('checkpoint.unreadable')
   }
   return errorMessage(error)
 }
@@ -141,7 +141,7 @@ export function CheckpointPage() {
       data-phase={phase}
     >
       <PageHeader
-        title={t.checkpoint.title}
+        title={t('checkpoint.title')}
         subtitle={title}
         backTo={paths.topic(topicId)}
         backIcon="close"
@@ -186,7 +186,7 @@ export function CheckpointPage() {
                     onClick={() => answer.mutate(lastAnswer)}
                   >
                     <RotateCcw aria-hidden />
-                    {t.checkpoint.resend}
+                    {t('checkpoint.resend')}
                   </Button>
                 )}
               </div>
@@ -232,7 +232,7 @@ function Intro({ status, loading, error, onReload, onStart, starting, startError
     return (
       <div className="flex flex-col items-center gap-4 py-12 text-center" role="status">
         <SardorAvatar mood="thinking" className="size-32" />
-        <p className="text-lg font-semibold">{t.checkpoint.thinking}</p>
+        <p className="text-lg font-semibold">{t('checkpoint.thinking')}</p>
       </div>
     )
   }
@@ -247,8 +247,8 @@ function Intro({ status, loading, error, onReload, onStart, starting, startError
       <div className="flex items-end gap-3 rounded-2xl border-2 border-ink bg-katak p-4">
         <SardorAvatar className="size-24 shrink-0" />
         <div className="mb-8 rounded-2xl rounded-bl-sm bg-card p-4 sticker">
-          <p className="text-lg leading-snug font-semibold">{t.checkpoint.intro}</p>
-          <p className="mt-2 text-sm text-muted-foreground">{t.checkpoint.introHow}</p>
+          <p className="text-lg leading-snug font-semibold">{t('checkpoint.intro')}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{t('checkpoint.introHow')}</p>
         </div>
       </div>
 
@@ -260,22 +260,22 @@ function Intro({ status, loading, error, onReload, onStart, starting, startError
         status && (
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center gap-2">
-              <Chip>{t.checkpoint.tries(status.tries)}</Chip>
+              <Chip>{t('checkpoint.tries', { count: status.tries })}</Chip>
               {status.lastResult && (
                 <Chip tone={status.lastResult === 'passed' ? 'success' : 'warning'}>
-                  {t.checkpoint.lastTry}:{' '}
+                  {t('checkpoint.lastTry')}:{' '}
                   {status.lastResult === 'passed'
-                    ? t.checkpoint.lastPassed
-                    : t.checkpoint.lastNotYet}
+                    ? t('checkpoint.lastPassed')
+                    : t('checkpoint.lastNotYet')}
                 </Chip>
               )}
             </div>
             {status.mastered && (
-              <p className="text-sm text-muted-foreground">{t.checkpoint.alreadyMastered}</p>
+              <p className="text-sm text-muted-foreground">{t('checkpoint.alreadyMastered')}</p>
             )}
             {hasLast && (
               <div className="rounded-xl border bg-card p-4 shadow-card">
-                <p className="mb-2 text-sm font-semibold">{t.checkpoint.lastTry}</p>
+                <p className="mb-2 text-sm font-semibold">{t('checkpoint.lastTry')}</p>
                 {status.lastFeedback && (
                   <MathText text={status.lastFeedback} className="mb-3 block leading-relaxed" />
                 )}
@@ -294,7 +294,7 @@ function Intro({ status, loading, error, onReload, onStart, starting, startError
         {startError !== null && <ErrorState message={errorMessage(startError)} onRetry={onStart} />}
         {startError === null && (
           <Button size="lg" block onClick={onStart} disabled={loading}>
-            {status?.openCheckpointId ? t.checkpoint.resume : t.checkpoint.start}
+            {status?.openCheckpointId ? t('checkpoint.resume') : t('checkpoint.start')}
             <ArrowRight aria-hidden />
           </Button>
         )}

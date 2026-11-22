@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/toast'
 import { env } from '@/lib/env'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 import { LessonStatusChip } from './lesson-status-chip'
@@ -18,7 +18,7 @@ export function LessonsSection() {
   const today = useToday()
 
   return (
-    <Section title={t.home.lessons}>
+    <Section title={t('home.lessons')}>
       {today.isPending ? (
         <div className="overflow-hidden rounded-xl border bg-card shadow-card" aria-hidden>
           {[0, 1, 2].map((i) => (
@@ -40,8 +40,8 @@ export function LessonsSection() {
       ) : today.data.lessons.length === 0 ? (
         <EmptyState
           icon={CalendarOff}
-          title={t.home.noLessons}
-          description={t.home.noLessonsHint}
+          title={t('home.noLessons')}
+          description={t('home.noLessonsHint')}
         />
       ) : (
         <ol className="rounded-xl border bg-card py-2 shadow-card">
@@ -63,8 +63,8 @@ function LessonRow({ lesson }: { lesson: TodayLesson }) {
       onSuccess: (res) =>
         toast({
           variant: 'success',
-          title: t.home.lessonFinished,
-          description: res.quiz ? t.home.quizUnlocked : undefined,
+          title: t('home.lessonFinished'),
+          description: res.quiz ? t('home.quizUnlocked') : undefined,
         }),
       onError: (error) => toast({ variant: 'error', title: errorMessage(error) }),
     })
@@ -104,7 +104,7 @@ function LessonRow({ lesson }: { lesson: TodayLesson }) {
           <LessonStatusChip status={lesson.status} />
         </div>
         <p className="mt-0.5 text-sm text-muted-foreground">
-          {lesson.topic?.title ?? t.home.noTopic}
+          {lesson.topic?.title ?? t('home.noTopic')}
         </p>
 
         {env.demoMode && !finished && (
@@ -116,7 +116,7 @@ function LessonRow({ lesson }: { lesson: TodayLesson }) {
             onClick={onFinish}
           >
             {!finish.isPending && <FlagTriangleRight aria-hidden />}
-            {t.home.finishLessonDemo}
+            {t('home.finishLessonDemo')}
           </Button>
         )}
       </div>

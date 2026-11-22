@@ -14,7 +14,7 @@ import { Link } from 'react-router'
 import type { CheckpointAnswerResult } from '@/api/types'
 import { MathText } from '@/components/math-text'
 import { Button } from '@/components/ui/button'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { paths } from '@/routes/paths'
 
 import { SardorAvatar } from './sardor-card'
@@ -24,7 +24,7 @@ export function Heard({ result }: { result: Pick<CheckpointAnswerResult, 'mode' 
   return (
     <div className="rounded-xl bg-muted px-4 py-3">
       <p className="text-sm font-semibold text-muted-foreground">
-        {result.mode === 'voice' ? t.checkpoint.heard : t.checkpoint.youWrote}
+        {result.mode === 'voice' ? t('checkpoint.heard') : t('checkpoint.youWrote')}
       </p>
       <p className="mt-1 leading-relaxed">“{result.transcript}”</p>
     </div>
@@ -43,12 +43,12 @@ export function IdeaLists({
   return (
     <div className="flex flex-col gap-4">
       {matched.length > 0 && (
-        <IdeaList title={t.checkpoint.covered} ideas={matched} kind="matched" />
+        <IdeaList title={t('checkpoint.covered')} ideas={matched} kind="matched" />
       )}
       {missing.length > 0 && (
-        <IdeaList title={t.checkpoint.missing} ideas={missing} kind="missing" />
+        <IdeaList title={t('checkpoint.missing')} ideas={missing} kind="missing" />
       )}
-      {wrong.length > 0 && <IdeaList title={t.checkpoint.wrong} ideas={wrong} kind="wrong" />}
+      {wrong.length > 0 && <IdeaList title={t('checkpoint.wrong')} ideas={wrong} kind="wrong" />}
     </div>
   )
 }
@@ -87,7 +87,7 @@ export function TeacherNotified() {
       className="flex items-start gap-2 rounded-xl border border-info/30 bg-info-soft px-4 py-3 text-sm text-info"
     >
       <BellRing className="mt-0.5 size-4 shrink-0" aria-hidden />
-      {t.checkpoint.teacherNotified}
+      {t('checkpoint.teacherNotified')}
     </p>
   )
 }
@@ -105,7 +105,9 @@ export function NotYetView({ result, topicId, onRetry, retrying }: NotYetProps) 
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-3">
         <SardorAvatar mood={notified ? 'worried' : 'confused'} className="size-20" />
-        <h2 className="text-xl leading-snug font-bold text-balance">{t.checkpoint.notYetTitle}</h2>
+        <h2 className="text-xl leading-snug font-bold text-balance">
+          {t('checkpoint.notYetTitle')}
+        </h2>
       </div>
       <Heard result={result} />
       {result.feedback && (
@@ -122,19 +124,19 @@ export function NotYetView({ result, topicId, onRetry, retrying }: NotYetProps) 
       <div className="flex flex-col gap-3">
         <Button size="lg" block onClick={onRetry} loading={retrying}>
           {!retrying && <RotateCcw aria-hidden />}
-          {t.checkpoint.retry}
+          {t('checkpoint.retry')}
         </Button>
         <div className="grid grid-cols-2 gap-3">
           <Button asChild variant="outline">
             <Link to={paths.chat(topicId)}>
               <Sparkles aria-hidden />
-              {t.checkpoint.learnWithAi}
+              {t('checkpoint.learnWithAi')}
             </Link>
           </Button>
           <Button asChild variant="outline">
             <Link to={paths.topic(topicId)}>
               <BookOpen aria-hidden />
-              {t.checkpoint.readTextbook}
+              {t('checkpoint.readTextbook')}
             </Link>
           </Button>
         </div>
@@ -151,7 +153,7 @@ export function PassedView({ result }: { result: CheckpointAnswerResult }) {
         <SardorAvatar mood="happy" className="size-36" />
       </div>
       <div className="w-full rounded-2xl bg-card p-4 text-left sticker">
-        <p className="text-lg font-semibold">{t.checkpoint.passedSardor}</p>
+        <p className="text-lg font-semibold">{t('checkpoint.passedSardor')}</p>
         {result.feedback && (
           <MathText
             text={result.feedback}
@@ -160,7 +162,7 @@ export function PassedView({ result }: { result: CheckpointAnswerResult }) {
         )}
       </div>
       <p className="rounded-full bg-success-soft px-5 py-2 font-display text-xl font-semibold text-success">
-        {t.checkpoint.passedTitle}
+        {t('checkpoint.passedTitle')}
       </p>
       <div className="w-full text-left">
         <Heard result={result} />
@@ -173,16 +175,18 @@ export function PassedView({ result }: { result: CheckpointAnswerResult }) {
       <div className="flex w-full flex-col gap-3">
         {result.nextTopic && (
           <>
-            <p className="font-medium">{t.checkpoint.nextUnlocked(result.nextTopic.title)}</p>
+            <p className="font-medium">
+              {t('checkpoint.nextUnlocked', { title: result.nextTopic.title })}
+            </p>
             <Button asChild size="lg" block>
-              <Link to={paths.topic(result.nextTopic.topicId)}>{t.checkpoint.toNextTopic}</Link>
+              <Link to={paths.topic(result.nextTopic.topicId)}>{t('checkpoint.toNextTopic')}</Link>
             </Button>
           </>
         )}
         <Button asChild variant="outline" size="lg" block>
           <Link to={paths.home}>
             <Home aria-hidden />
-            {t.checkpoint.toHome}
+            {t('checkpoint.toHome')}
           </Link>
         </Button>
       </div>
@@ -239,7 +243,7 @@ export function Judging({ voice }: { voice: boolean }) {
         ))}
       </div>
       <p className="text-lg font-semibold">
-        {checking ? t.checkpoint.checking : t.checkpoint.listening}
+        {checking ? t('checkpoint.checking') : t('checkpoint.listening')}
       </p>
     </div>
   )

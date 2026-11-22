@@ -20,7 +20,7 @@ import { Button } from '@/components/ui/button'
 import { Chip } from '@/components/ui/chip'
 import { Skeleton, SkeletonCard } from '@/components/ui/skeleton'
 import { LessonStatusChip } from '@/features/home/lesson-status-chip'
-import { t } from '@/lib/strings.uz'
+import { t, tList } from '@/lib/i18n'
 import { DEFAULT_TIMEZONE, addDays, dateInZone, dayMonth, parseDate } from '@/lib/time'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
@@ -48,26 +48,31 @@ export function TimetablePage() {
 
   return (
     <>
-      <PageHeader title={t.timetable.title} subtitle={data?.class?.name} backTo={paths.home} />
+      <PageHeader title={t('timetable.title')} subtitle={data?.class?.name} backTo={paths.home} />
 
       <div className="mb-3 flex items-center gap-2">
         <Button
           variant="outline"
           size="icon"
           onClick={() => goWeek(-1)}
-          aria-label={t.timetable.prevWeek}
+          aria-label={t('timetable.prevWeek')}
           disabled={!data}
         >
           <ChevronLeft aria-hidden />
         </Button>
         <p className="min-w-0 flex-1 text-center font-semibold" aria-live="polite">
-          {data ? t.timetable.weekRange(dayMonth(data.weekStart), dayMonth(data.weekEnd)) : ' '}
+          {data
+            ? t('timetable.weekRange', {
+                from: dayMonth(data.weekStart),
+                to: dayMonth(data.weekEnd),
+              })
+            : ' '}
         </p>
         <Button
           variant="outline"
           size="icon"
           onClick={() => goWeek(1)}
-          aria-label={t.timetable.nextWeek}
+          aria-label={t('timetable.nextWeek')}
           disabled={!data}
         >
           <ChevronRight aria-hidden />
@@ -83,7 +88,7 @@ export function TimetablePage() {
               setSearchParams({}, { replace: true })
             }}
           >
-            {t.timetable.thisWeek}
+            {t('timetable.thisWeek')}
           </Button>
         </div>
       )}
@@ -121,7 +126,7 @@ function DayTabs({
   onSelect: (date: string) => void
 }) {
   return (
-    <div role="tablist" aria-label={t.timetable.days} className="mb-4 grid grid-cols-6 gap-1.5">
+    <div role="tablist" aria-label={t('timetable.days')} className="mb-4 grid grid-cols-6 gap-1.5">
       {days.map((day) => {
         const active = day.date === selected
         const isToday = day.date === today
@@ -132,7 +137,7 @@ function DayTabs({
             type="button"
             role="tab"
             aria-selected={active}
-            aria-label={`${t.timetable.weekdaysShort[day.weekday % 7]}, ${dayMonth(day.date)}${isToday ? `, ${t.timetable.today}` : ''}`}
+            aria-label={`${tList('timetable.weekdaysShort')[day.weekday % 7]}, ${dayMonth(day.date)}${isToday ? `, ${t('timetable.today')}` : ''}`}
             onClick={() => onSelect(day.date)}
             className={cn(
               'relative flex min-h-14 cursor-pointer flex-col items-center justify-center rounded-xl border text-sm transition-colors',
@@ -142,7 +147,9 @@ function DayTabs({
               isToday && !active && 'border-primary text-primary',
             )}
           >
-            <span className="font-semibold">{t.timetable.weekdaysShort[day.weekday % 7]}</span>
+            <span className="font-semibold">
+              {tList('timetable.weekdaysShort')[day.weekday % 7]}
+            </span>
             <span className={cn('tabular-nums', active ? 'opacity-90' : 'text-muted-foreground')}>
               {d}
             </span>
@@ -177,8 +184,8 @@ function DayLessons({ day }: { day: TimetableDay }) {
     return (
       <EmptyState
         icon={CalendarOff}
-        title={t.timetable.noLessons}
-        description={t.timetable.noLessonsHint}
+        title={t('timetable.noLessons')}
+        description={t('timetable.noLessonsHint')}
       />
     )
   }
@@ -199,7 +206,7 @@ function DayLessons({ day }: { day: TimetableDay }) {
             <div className="w-12 shrink-0 text-sm leading-tight tabular-nums">
               {lesson.period != null && (
                 <p className="mb-1 text-xs text-muted-foreground">
-                  {t.timetable.period(lesson.period)}
+                  {t('timetable.period', { count: lesson.period })}
                 </p>
               )}
               <p className="font-semibold">{lesson.startsAt ?? '—'}</p>
@@ -218,20 +225,20 @@ function DayLessons({ day }: { day: TimetableDay }) {
                   {lesson.topic.title}
                 </Link>
               ) : (
-                <p className="mt-0.5 text-sm text-muted-foreground">{t.timetable.noTopic}</p>
+                <p className="mt-0.5 text-sm text-muted-foreground">{t('timetable.noTopic')}</p>
               )}
               <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm text-muted-foreground">
                 {lesson.teacher && (
                   <span className="inline-flex items-center gap-1">
                     <UserRound className="size-3.5" aria-hidden />
-                    <span className="sr-only">{t.timetable.teacher}: </span>
+                    <span className="sr-only">{t('timetable.teacher')}: </span>
                     {lesson.teacher.firstName} {lesson.teacher.lastName}
                   </span>
                 )}
                 {lesson.room && (
                   <span className="inline-flex items-center gap-1">
                     <MapPin className="size-3.5" aria-hidden />
-                    <span className="sr-only">{t.timetable.room}: </span>
+                    <span className="sr-only">{t('timetable.room')}: </span>
                     {lesson.room}
                   </span>
                 )}
@@ -242,14 +249,14 @@ function DayLessons({ day }: { day: TimetableDay }) {
                     <Badge
                       to={quizId != null ? paths.quiz(quizId) : null}
                       icon={ClipboardList}
-                      label={t.timetable.quiz}
+                      label={t('timetable.quiz')}
                     />
                   )}
                   {lesson.hasHomework && (
                     <Badge
                       to={homeworkId != null ? paths.homeworkItem(homeworkId) : null}
                       icon={ClipboardPen}
-                      label={t.timetable.homework}
+                      label={t('timetable.homework')}
                     />
                   )}
                 </div>

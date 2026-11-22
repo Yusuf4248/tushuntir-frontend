@@ -8,7 +8,7 @@ import { EmptyState, ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { paths } from '@/routes/paths'
 
 import { Section } from './section'
@@ -19,7 +19,7 @@ export function WeakTopicsSection() {
   const weak = useWeakTopics()
 
   return (
-    <Section title={t.home.weakTopics}>
+    <Section title={t('home.weakTopics')}>
       {weak.isPending ? (
         <SkeletonCard lines={2} />
       ) : weak.isError ? (
@@ -31,8 +31,8 @@ export function WeakTopicsSection() {
       ) : weak.data.length === 0 ? (
         <EmptyState
           icon={Sparkles}
-          title={t.home.noWeakTopics}
-          description={t.home.noWeakTopicsHint}
+          title={t('home.noWeakTopics')}
+          description={t('home.noWeakTopicsHint')}
         />
       ) : (
         <ul className="flex flex-col gap-3">
@@ -50,7 +50,8 @@ export function WeakTopicsSection() {
                   <p className="mt-2 text-sm text-muted-foreground">
                     {[
                       topic.subSkills.slice(0, 2).join(', '),
-                      topic.openMistakes > 0 && t.home.openMistakes(topic.openMistakes),
+                      topic.openMistakes > 0 &&
+                        t('home.openMistakes', { count: topic.openMistakes }),
                     ]
                       .filter(Boolean)
                       .join(' · ')}
@@ -59,7 +60,7 @@ export function WeakTopicsSection() {
                 <Button asChild variant="secondary" size="sm" className="mt-3">
                   <Link to={paths.practice(topic.topicId)}>
                     <Dumbbell aria-hidden />
-                    {t.home.practice}
+                    {t('home.practice')}
                   </Link>
                 </Button>
               </Card>

@@ -7,7 +7,7 @@ import type { HomeworkItem, HomeworkStatus } from '@/api/types'
 import { PageHeader } from '@/components/layout/page-header'
 import { EmptyState, ErrorState } from '@/components/states'
 import { SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t, tOptional } from '@/lib/i18n'
 import { DEFAULT_TIMEZONE, dateInZone, relativeDayTime } from '@/lib/time'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
@@ -25,11 +25,11 @@ export function HomeworkListPage() {
 
   return (
     <>
-      <PageHeader title={t.homework.title} backTo={paths.home} />
+      <PageHeader title={t('homework.title')} backTo={paths.home} />
 
       <div
         role="radiogroup"
-        aria-label={t.homework.filters}
+        aria-label={t('homework.filters')}
         className="-mx-4 mb-4 flex [scrollbar-width:none] gap-2 overflow-x-auto px-4 pb-1"
       >
         {[null, ...homeworkStatuses].map((status) => {
@@ -50,7 +50,7 @@ export function HomeworkListPage() {
                   : 'bg-card hover:bg-muted',
               )}
             >
-              {status ? t.homework.status[status] : t.homework.all}
+              {status ? (tOptional(`homework.status.${status}`) ?? status) : t('homework.all')}
               <span className={cn('tabular-nums', active ? 'opacity-85' : 'text-muted-foreground')}>
                 {count}
               </span>
@@ -73,7 +73,7 @@ export function HomeworkListPage() {
       ) : shown.length === 0 ? (
         <EmptyState
           icon={ClipboardPen}
-          title={filter ? t.homework.emptyFiltered : t.homework.empty}
+          title={filter ? t('homework.emptyFiltered') : t('homework.empty')}
         />
       ) : (
         <ul className="flex flex-col gap-3">
@@ -99,12 +99,12 @@ function HomeworkRow({ item, today }: { item: HomeworkItem; today: string }) {
         <p className="mt-0.5 font-semibold">{item.title}</p>
         <p className="mt-1 text-sm text-muted-foreground">
           {item.dueAt
-            ? t.homework.due(relativeDayTime(item.dueAt, today, DEFAULT_TIMEZONE))
-            : t.homework.noDue}
+            ? t('homework.due', { when: relativeDayTime(item.dueAt, today, DEFAULT_TIMEZONE) })
+            : t('homework.noDue')}
           {item.hasAttachments && (
             <Paperclip
               className="ml-2 inline size-3.5 align-[-2px]"
-              aria-label={t.homework.hasFiles}
+              aria-label={t('homework.hasFiles')}
             />
           )}
         </p>
@@ -112,7 +112,7 @@ function HomeworkRow({ item, today }: { item: HomeworkItem; today: string }) {
           <HomeworkStatusChip status={item.status} />
           {item.score != null && (
             <span className="text-sm font-semibold tabular-nums">
-              {t.homework.score(item.score)}
+              {t('homework.score', { count: item.score })}
             </span>
           )}
         </div>

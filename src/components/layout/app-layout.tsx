@@ -3,7 +3,7 @@ import { NavLink, Outlet, useLocation, useMatches } from 'react-router'
 
 import { useUnreadCount } from '@/api/notifications'
 import { Wordmark } from '@/components/logo'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
@@ -51,7 +51,7 @@ export function AppLayout() {
     <div className="min-h-dvh md:flex">
       <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col overflow-y-auto border-r bg-card px-3 py-5 md:flex">
         <Wordmark className="mb-6 px-3" />
-        <nav aria-label={t.nav.label} className="flex flex-col gap-6">
+        <nav aria-label={t('nav.label')} className="flex flex-col gap-6">
           <ul className="flex flex-col gap-1">
             {navItems.map((item) => (
               <SideLink key={item.to} {...item} />
@@ -59,7 +59,7 @@ export function AppLayout() {
           </ul>
           <div>
             <p className="mb-1 px-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-              {t.school.title}
+              {t('school.title')}
             </p>
             <ul className="flex flex-col gap-1">
               {schoolItems.map((item) => (
@@ -67,7 +67,7 @@ export function AppLayout() {
               ))}
               <SideLink
                 to={paths.notifications}
-                label={t.school.notifications}
+                label={t('school.notifications')}
                 icon={Bell}
                 badge={unread}
               />
@@ -86,7 +86,7 @@ export function AppLayout() {
       </main>
 
       <nav
-        aria-label={t.nav.label}
+        aria-label={t('nav.label')}
         data-tab-bar
         className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
       >

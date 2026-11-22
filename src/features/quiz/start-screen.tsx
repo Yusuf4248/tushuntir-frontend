@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/layout/page-header'
 import { ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { Chip } from '@/components/ui/chip'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { URGENT_MS, timeLeft, useNow } from '@/lib/time'
 
 type StartScreenProps = {
@@ -52,7 +52,7 @@ export function StartScreen({
         <h2 className="mt-1 text-2xl leading-tight font-bold text-balance">{title}</h2>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <Chip icon={ListChecks}>{t.quiz.questionCount(questionCount)}</Chip>
+          <Chip icon={ListChecks}>{t('quiz.questionCount', { count: questionCount })}</Chip>
           {msLeft !== null && (
             <Chip tone={msLeft < URGENT_MS ? 'warning' : 'neutral'} icon={Clock}>
               {timeLeft(msLeft)}
@@ -71,7 +71,7 @@ export function StartScreen({
         {error && <ErrorState message={error} onRetry={onStart} retrying={starting} />}
         {!error && (
           <Button size="lg" block onClick={onStart} loading={starting}>
-            {starting ? t.quiz.starting : actionLabel}
+            {starting ? t('quiz.starting') : actionLabel}
             {!starting && <ArrowRight aria-hidden />}
           </Button>
         )}

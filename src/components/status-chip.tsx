@@ -10,7 +10,7 @@ import {
 
 import type { MasteryStatus } from '@/api/types'
 import { Chip, type ChipTone } from '@/components/ui/chip'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 export type ChipStatus = MasteryStatus | 'locked'
 
@@ -27,7 +27,7 @@ export function StatusChip({ status, className }: { status: ChipStatus; classNam
   const { icon, tone } = config[status]
   return (
     <Chip tone={tone} icon={icon} className={className}>
-      {t.status[status]}
+      {t(`status.${status}`)}
     </Chip>
   )
 }

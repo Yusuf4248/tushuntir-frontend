@@ -7,7 +7,7 @@ import { ApiError, messageForStatus } from '@/api/errors'
 import { tokens } from '@/api/tokens'
 import type { AuthUser } from '@/api/types'
 import { useToast } from '@/components/ui/toast'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 import { AuthContext, type AuthState } from './auth-context'
 
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthFailureHandler(() => {
       queryClient.clear()
       if (statusRef.current === 'authenticated') {
-        toast({ title: t.errors.sessionExpired, variant: 'info' })
+        toast({ title: t('errors.sessionExpired'), variant: 'info' })
       }
       setState({ status: 'anonymous' })
     })

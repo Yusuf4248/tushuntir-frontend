@@ -1,14 +1,32 @@
 import { Check, Monitor, Moon, Sun, type LucideIcon } from 'lucide-react'
 import { DropdownMenu } from 'radix-ui'
 
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { useTheme, type ThemeChoice } from '@/lib/theme'
 import { cn } from '@/lib/utils'
 
 const options: { value: ThemeChoice; label: string; icon: LucideIcon }[] = [
-  { value: 'system', label: t.profile.themeSystem, icon: Monitor },
-  { value: 'light', label: t.profile.themeLight, icon: Sun },
-  { value: 'dark', label: t.profile.themeDark, icon: Moon },
+  {
+    value: 'system',
+    get label() {
+      return t('profile.themeSystem')
+    },
+    icon: Monitor,
+  },
+  {
+    value: 'light',
+    get label() {
+      return t('profile.themeLight')
+    },
+    icon: Sun,
+  },
+  {
+    value: 'dark',
+    get label() {
+      return t('profile.themeDark')
+    },
+    icon: Moon,
+  },
 ]
 
 function option(choice: ThemeChoice) {
@@ -22,7 +40,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
-        aria-label={t.profile.themeButton(label)}
+        aria-label={t('profile.themeButton', { current: label })}
         className={cn(
           'grid size-11 shrink-0 cursor-pointer place-items-center rounded-full text-foreground transition-colors outline-none hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring data-[state=open]:bg-muted',
           className,
@@ -37,7 +55,7 @@ export function ThemeToggle({ className }: { className?: string }) {
           className="z-50 min-w-44 rounded-xl border bg-card p-1 text-card-foreground shadow-xl data-[state=open]:animate-pop-in"
         >
           <DropdownMenu.Label className="px-3 pt-2 pb-1 text-xs font-semibold text-muted-foreground">
-            {t.profile.theme}
+            {t('profile.theme')}
           </DropdownMenu.Label>
           <DropdownMenu.RadioGroup
             value={choice}
@@ -69,7 +87,7 @@ export function ThemeSwitch() {
   return (
     <div
       role="radiogroup"
-      aria-label={t.profile.theme}
+      aria-label={t('profile.theme')}
       className="grid grid-cols-3 gap-2 rounded-xl bg-muted p-1"
     >
       {options.map(({ value, label, icon: Icon }) => (

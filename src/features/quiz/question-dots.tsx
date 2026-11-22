@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 type QuestionDotsProps = {
@@ -20,7 +20,7 @@ export function QuestionDots({ count, current, isAnswered, onSelect }: QuestionD
   }, [current])
 
   return (
-    <nav aria-label={t.quiz.questionNav}>
+    <nav aria-label={t('quiz.questionNav')}>
       <ol
         ref={listRef}
         className="-mx-1 flex snap-x [scrollbar-width:none] gap-0.5 overflow-x-auto px-1"
@@ -34,7 +34,7 @@ export function QuestionDots({ count, current, isAnswered, onSelect }: QuestionD
                 type="button"
                 onClick={() => onSelect(i)}
                 aria-current={active ? 'step' : undefined}
-                aria-label={`${t.quiz.questionLabel(i + 1)}, ${answered ? t.quiz.answered : t.quiz.unanswered}`}
+                aria-label={`${t('quiz.questionLabel', { count: i + 1 })}, ${answered ? t('quiz.answered') : t('quiz.unanswered')}`}
                 className="grid size-11 cursor-pointer place-items-center"
               >
                 <span

@@ -1,5 +1,5 @@
 import { env } from '@/lib/env'
-import { t } from '@/lib/strings.uz'
+import { currentLanguage, t } from '@/lib/i18n'
 
 import { ApiError, errorFromResponse, messageForStatus } from './errors'
 import { tokens } from './tokens'
@@ -27,11 +27,15 @@ export function setAuthFailureHandler(handler: (() => void) | null): void {
 function failAuth(): never {
   tokens.clear()
   onAuthFailure?.()
-  throw new ApiError(401, t.errors.sessionExpired)
+  throw new ApiError(401, t('errors.sessionExpired'))
 }
 
 async function send(path: string, { method = 'GET', body, signal, auth = true }: RequestOptions) {
-  const headers: Record<string, string> = { Accept: 'application/json' }
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+    // The interface language; the backend may use it for its own messages.
+    'Accept-Language': currentLanguage(),
+  }
   const isForm = body instanceof FormData
   // FormData sets its own multipart Content-Type with the boundary.
   if (body !== undefined && !isForm) headers['Content-Type'] = 'application/json'

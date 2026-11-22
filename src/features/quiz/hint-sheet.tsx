@@ -3,7 +3,7 @@ import { Lightbulb, MessageCircleWarning } from 'lucide-react'
 import { MathText } from '@/components/math-text'
 import { Button } from '@/components/ui/button'
 import { Sheet } from '@/components/ui/sheet'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 
 type HintSheetProps = {
   open: boolean
@@ -37,24 +37,24 @@ export function HintSheet({
     <Sheet
       open={open}
       onOpenChange={onOpenChange}
-      title={t.quiz.hintTitle}
-      description={t.quiz.hintsUsed(used, available)}
+      title={t('quiz.hintTitle')}
+      description={t('quiz.hintsUsed', { used, total: available })}
       footer={
         canAsk ? (
           <Button block onClick={onRequest} loading={loading}>
             {!loading && <Lightbulb aria-hidden />}
-            {used === 0 ? t.quiz.firstHint : t.quiz.nextHint}
+            {used === 0 ? t('quiz.firstHint') : t('quiz.nextHint')}
           </Button>
         ) : (
-          <p className="py-2 text-center text-sm text-muted-foreground">{t.quiz.noMoreHints}</p>
+          <p className="py-2 text-center text-sm text-muted-foreground">{t('quiz.noMoreHints')}</p>
         )
       }
     >
-      {used === 0 && <p className="text-muted-foreground">{t.quiz.hintIntro}</p>}
+      {used === 0 && <p className="text-muted-foreground">{t('quiz.hintIntro')}</p>}
 
       {unknown > 0 && (
         <p className="mb-3 rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">
-          {t.quiz.hintsSeenEarlier(unknown)}
+          {t('quiz.hintsSeenEarlier', { count: unknown })}
         </p>
       )}
 
@@ -63,7 +63,7 @@ export function HintSheet({
           {shown.map(({ level, text }) => (
             <li key={level} className="rounded-lg border-l-4 border-primary bg-primary-soft/60 p-4">
               <p className="mb-1 font-display text-xs font-semibold text-primary-soft-foreground">
-                {t.quiz.hintLevel(level)}
+                {t('quiz.hintLevel', { count: level })}
               </p>
               <MathText text={text} className="leading-relaxed" />
             </li>
@@ -75,7 +75,7 @@ export function HintSheet({
         <div className="mt-3 rounded-lg border-l-4 border-warning bg-warning-soft p-4" role="note">
           <p className="mb-1 flex items-center gap-2 text-sm font-semibold text-warning">
             <MessageCircleWarning className="size-4" aria-hidden />
-            {t.quiz.misconceptionTitle}
+            {t('quiz.misconceptionTitle')}
           </p>
           <MathText text={misconception} className="leading-relaxed" />
         </div>

@@ -10,7 +10,7 @@ import { PageHeader } from '@/components/layout/page-header'
 import { EmptyState, ErrorState } from '@/components/states'
 import { Card } from '@/components/ui/card'
 import { SkeletonCard } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { DEFAULT_TIMEZONE, dateInZone, dayMonth, relativeDayTime } from '@/lib/time'
 import { paths } from '@/routes/paths'
 
@@ -25,7 +25,7 @@ export function HomeworkPage() {
   if (homework.isPending) {
     return (
       <>
-        <PageHeader title={t.homework.title} backTo={paths.homework} />
+        <PageHeader title={t('homework.title')} backTo={paths.homework} />
         <SkeletonCard lines={4} />
       </>
     )
@@ -34,9 +34,9 @@ export function HomeworkPage() {
     const notFound = homework.error instanceof ApiError && homework.error.status === 404
     return (
       <>
-        <PageHeader title={t.homework.title} backTo={paths.homework} />
+        <PageHeader title={t('homework.title')} backTo={paths.homework} />
         {notFound ? (
-          <EmptyState icon={SearchX} title={t.homework.empty} />
+          <EmptyState icon={SearchX} title={t('homework.empty')} />
         ) : (
           <ErrorState
             message={errorMessage(homework.error)}
@@ -77,22 +77,26 @@ function HomeworkView({ homework }: { homework: HomeworkDetail }) {
         <div className="flex flex-wrap items-center gap-2">
           <HomeworkStatusChip status={homework.status} />
           {homework.score != null && (
-            <span className="font-semibold tabular-nums">{t.homework.score(homework.score)}</span>
+            <span className="font-semibold tabular-nums">
+              {t('homework.score', { count: homework.score })}
+            </span>
           )}
         </div>
         <ul className="mt-3 flex flex-col gap-1.5 text-sm text-muted-foreground">
           <li className="flex items-center gap-2">
             <CalendarClock className="size-4 shrink-0" aria-hidden />
             {homework.dueAt
-              ? t.homework.due(relativeDayTime(homework.dueAt, today, DEFAULT_TIMEZONE))
-              : t.homework.noDue}
+              ? t('homework.due', {
+                  when: relativeDayTime(homework.dueAt, today, DEFAULT_TIMEZONE),
+                })
+              : t('homework.noDue')}
             <span aria-hidden>·</span>
-            {t.homework.lessonDate(dayMonth(homework.lessonDate))}
+            {t('homework.lessonDate', { date: dayMonth(homework.lessonDate) })}
           </li>
           {homework.teacher && (
             <li className="flex items-center gap-2">
               <UserRound className="size-4 shrink-0" aria-hidden />
-              <span className="sr-only">{t.homework.teacher}: </span>
+              <span className="sr-only">{t('homework.teacher')}: </span>
               {homework.teacher.firstName} {homework.teacher.lastName}
             </li>
           )}
@@ -102,7 +106,7 @@ function HomeworkView({ homework }: { homework: HomeworkDetail }) {
       {homework.description && (
         <Card>
           <h2 className="mb-2 text-sm font-semibold text-muted-foreground">
-            {t.homework.description}
+            {t('homework.description')}
           </h2>
           <p className="leading-relaxed whitespace-pre-wrap">{homework.description}</p>
         </Card>
@@ -111,7 +115,7 @@ function HomeworkView({ homework }: { homework: HomeworkDetail }) {
       {homework.attachments.length > 0 && (
         <section aria-labelledby="teacher-files">
           <h2 id="teacher-files" className="mb-2 text-lg font-semibold">
-            {t.homework.teacherFiles}
+            {t('homework.teacherFiles')}
           </h2>
           <ul className="flex flex-col gap-2">
             {homework.attachments.map((f) => (
@@ -126,15 +130,17 @@ function HomeworkView({ homework }: { homework: HomeworkDetail }) {
       {sub && (
         <section aria-labelledby="my-answer" className="flex flex-col gap-3">
           <h2 id="my-answer" className="text-lg font-semibold">
-            {t.homework.mySubmission}
+            {t('homework.mySubmission')}
           </h2>
           {(sub.feedback || sub.score != null) && (
             <div className="rounded-xl border border-success/30 bg-success-soft/60 p-4">
               <p className="mb-1 flex items-center gap-2 text-sm font-semibold text-success">
                 <MessageSquareText className="size-4" aria-hidden />
-                {t.homework.feedback}
+                {t('homework.feedback')}
                 {sub.score != null && (
-                  <span className="ml-auto tabular-nums">{t.homework.score(sub.score)}</span>
+                  <span className="ml-auto tabular-nums">
+                    {t('homework.score', { count: sub.score })}
+                  </span>
                 )}
               </p>
               {sub.feedback && <p className="leading-relaxed">{sub.feedback}</p>}
@@ -143,7 +149,9 @@ function HomeworkView({ homework }: { homework: HomeworkDetail }) {
           <Card>
             {sub.submittedAt && (
               <p className="mb-2 text-sm text-muted-foreground">
-                {t.homework.submittedAt(relativeDayTime(sub.submittedAt, today, DEFAULT_TIMEZONE))}
+                {t('homework.submittedAt', {
+                  when: relativeDayTime(sub.submittedAt, today, DEFAULT_TIMEZONE),
+                })}
               </p>
             )}
             {sub.text && <p className="leading-relaxed whitespace-pre-wrap">{sub.text}</p>}
@@ -163,14 +171,14 @@ function HomeworkView({ homework }: { homework: HomeworkDetail }) {
       {locked ? (
         <p className="flex items-center gap-2 rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">
           <Lock className="size-4 shrink-0" aria-hidden />
-          {t.homework.checkedNote}
+          {t('homework.checkedNote')}
         </p>
       ) : (
         <>
           {sub?.status === 'returned' && (
             <p className="flex items-center gap-2 rounded-xl bg-warning-soft px-4 py-3 text-sm text-warning">
               <RotateCcw className="size-4 shrink-0" aria-hidden />
-              {t.homework.returnedNote}
+              {t('homework.returnedNote')}
             </p>
           )}
           <SubmissionForm key={sub?.id ?? 'new'} homework={homework} />

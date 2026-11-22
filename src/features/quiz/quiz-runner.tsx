@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { ProgressBar } from '@/components/ui/progress-bar'
 import { useToast } from '@/components/ui/toast'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { useDocumentTitle } from '@/lib/use-document-title'
 import { paths } from '@/routes/paths'
 
@@ -76,7 +76,7 @@ export function QuizRunner({ view }: { view: AttemptView }) {
     () => stored?.misconceptions ?? {},
   )
   const [deadlinePassed, setDeadlinePassed] = useState(false)
-  useDocumentTitle(kind === 'quiz' ? t.quiz.lessonQuiz : t.quiz.practiceQuiz)
+  useDocumentTitle(kind === 'quiz' ? t('quiz.lessonQuiz') : t('quiz.practiceQuiz'))
   const [hintOpen, setHintOpen] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
 
@@ -189,21 +189,21 @@ export function QuizRunner({ view }: { view: AttemptView }) {
     <div className="flex flex-1 flex-col lg:max-w-none!">
       <header className="flex items-center gap-2">
         <Button asChild variant="ghost" size="icon" className="-ml-2">
-          <Link to={paths.home} aria-label={`${t.quiz.exit}. ${t.quiz.exitHint}`}>
+          <Link to={paths.home} aria-label={`${t('quiz.exit')}. ${t('quiz.exitHint')}`}>
             <X className="size-6" aria-hidden />
           </Link>
         </Button>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm text-muted-foreground">
-            {kind === 'quiz' ? t.quiz.lessonQuiz : t.quiz.practiceQuiz}
+            {kind === 'quiz' ? t('quiz.lessonQuiz') : t('quiz.practiceQuiz')}
           </p>
           <p className="font-display text-lg font-semibold tabular-nums" aria-live="polite">
-            {t.quiz.progress(index + 1, total)}
+            {t('quiz.progress', { current: index + 1, total })}
           </p>
         </div>
         <Button variant="secondary" size="sm" onClick={onSubmit} loading={submit.isPending}>
           {!submit.isPending && <Send aria-hidden />}
-          {t.quiz.submit}
+          {t('quiz.submit')}
         </Button>
       </header>
 
@@ -211,8 +211,8 @@ export function QuizRunner({ view }: { view: AttemptView }) {
         className="mt-3"
         value={index + 1}
         max={total}
-        label={t.quiz.questionNav}
-        valueText={t.quiz.progress(index + 1, total)}
+        label={t('quiz.questionNav')}
+        valueText={t('quiz.progress', { current: index + 1, total })}
       />
       <div className="mt-2">
         <QuestionDots count={total} current={index} isAnswered={isAnswered} onSelect={goTo} />
@@ -223,7 +223,7 @@ export function QuizRunner({ view }: { view: AttemptView }) {
         <div className="lg:col-start-1 lg:row-start-1">
           <div className="mb-3 flex items-center justify-between gap-3">
             <p className="text-sm font-semibold text-muted-foreground">
-              {t.quiz.questionLabel(index + 1)}
+              {t('quiz.questionLabel', { count: index + 1 })}
             </p>
             <SaveIndicator
               status={saver.status[question.questionId]}
@@ -259,10 +259,10 @@ export function QuizRunner({ view }: { view: AttemptView }) {
               onClick={() => setHintOpen(true)}
             >
               <Lightbulb aria-hidden />
-              {t.quiz.help}
+              {t('quiz.help')}
               {used > 0 && (
                 <span className="text-sm font-normal text-muted-foreground">
-                  · {t.quiz.hintsUsed(used, question.hintsAvailable)}
+                  · {t('quiz.hintsUsed', { used, total: question.hintsAvailable })}
                 </span>
               )}
             </Button>
@@ -273,15 +273,15 @@ export function QuizRunner({ view }: { view: AttemptView }) {
       <footer className="sticky bottom-0 -mx-4 mt-6 grid grid-cols-2 gap-3 border-t bg-background/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur md:mx-0 md:border-0 md:px-0 lg:ml-auto lg:w-[calc(50%-1.25rem)]">
         <Button variant="outline" disabled={index === 0} onClick={() => goTo(index - 1)}>
           <ArrowLeft aria-hidden />
-          {t.quiz.previous}
+          {t('quiz.previous')}
         </Button>
         {isLast ? (
           <Button onClick={onSubmit} loading={submit.isPending}>
-            {submit.isPending ? t.quiz.submitting : t.quiz.submit}
+            {submit.isPending ? t('quiz.submitting') : t('quiz.submit')}
           </Button>
         ) : (
           <Button onClick={() => goTo(index + 1)}>
-            {t.quiz.next}
+            {t('quiz.next')}
             <ArrowRight aria-hidden />
           </Button>
         )}
@@ -301,10 +301,10 @@ export function QuizRunner({ view }: { view: AttemptView }) {
       <ConfirmDialog
         open={confirmOpen}
         onOpenChange={setConfirmOpen}
-        title={t.quiz.confirmUnanswered(unanswered)}
-        description={t.quiz.confirmUnansweredHint}
-        confirmLabel={t.quiz.confirmSubmit}
-        cancelLabel={t.quiz.keepGoing}
+        title={t('quiz.confirmUnanswered', { count: unanswered })}
+        description={t('quiz.confirmUnansweredHint')}
+        confirmLabel={t('quiz.confirmSubmit')}
+        cancelLabel={t('quiz.keepGoing')}
         onConfirm={() => submit.mutate()}
       />
     </div>
@@ -316,7 +316,7 @@ function SaveIndicator({ status, onRetry }: { status?: SaveStatus; onRetry: () =
     return (
       <span className="flex items-center gap-1.5 text-sm text-muted-foreground" role="status">
         <Loader2 className="size-4 animate-spin" aria-hidden />
-        {t.quiz.saving}
+        {t('quiz.saving')}
       </span>
     )
   }
@@ -324,7 +324,7 @@ function SaveIndicator({ status, onRetry }: { status?: SaveStatus; onRetry: () =
     return (
       <span className="flex items-center gap-1.5 text-sm text-success" role="status">
         <CircleCheck className="size-4" aria-hidden />
-        {t.quiz.saved}
+        {t('quiz.saved')}
       </span>
     )
   }
@@ -336,7 +336,7 @@ function SaveIndicator({ status, onRetry }: { status?: SaveStatus; onRetry: () =
         className="-my-2 flex min-h-11 cursor-pointer items-center gap-1.5 text-sm font-medium text-danger"
       >
         <CircleAlert className="size-4" aria-hidden />
-        {t.quiz.saveFailed} · {t.quiz.retrySave}
+        {t('quiz.saveFailed')} · {t('quiz.retrySave')}
       </button>
     )
   }

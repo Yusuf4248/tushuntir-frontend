@@ -2,7 +2,7 @@ import { BookOpenText } from 'lucide-react'
 import { Fragment, type ReactNode } from 'react'
 
 import { MathText } from '@/components/math-text'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 import {
@@ -82,7 +82,7 @@ export function Textbook({ paragraphs, highlightedId, renderActions }: TextbookP
                 className="my-4 flex scroll-mt-24 items-center gap-3 text-sm font-medium text-muted-foreground first:mt-0"
               >
                 <span className="h-px flex-1 bg-border" aria-hidden />
-                {t.topicPage.page(p.page)}
+                {t('topicPage.page', { count: p.page })}
                 <span className="h-px flex-1 bg-border" aria-hidden />
               </div>
             )}

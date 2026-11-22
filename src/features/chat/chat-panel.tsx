@@ -8,7 +8,7 @@ import { MathText } from '@/components/math-text'
 import { ErrorState } from '@/components/states'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { t } from '@/lib/strings.uz'
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
@@ -19,10 +19,30 @@ import { isWaiting, useChatThread, useSendChat, type ChatItem } from './chat-thr
 const MAX_TEXT = 1000
 
 const quickActions: { action: ChatAction; label: string }[] = [
-  { action: 'explain_simple', label: t.chat.quick_explain_simple },
-  { action: 'real_life_example', label: t.chat.quick_real_life_example },
-  { action: 'in_russian', label: t.chat.quick_in_russian },
-  { action: 'quiz_me', label: t.chat.quick_quiz_me },
+  {
+    action: 'explain_simple',
+    get label() {
+      return t('chat.quick_explain_simple')
+    },
+  },
+  {
+    action: 'real_life_example',
+    get label() {
+      return t('chat.quick_real_life_example')
+    },
+  },
+  {
+    action: 'in_russian',
+    get label() {
+      return t('chat.quick_in_russian')
+    },
+  },
+  {
+    action: 'quiz_me',
+    get label() {
+      return t('chat.quick_quiz_me')
+    },
+  },
 ]
 
 const actionLabel = (action: ChatAction) =>
@@ -96,7 +116,7 @@ export function ChatPanel({
 
   return (
     <section
-      aria-label={t.chat.title}
+      aria-label={t('chat.title')}
       className={cn('flex min-h-0 flex-col bg-card text-card-foreground', className)}
     >
       <div className="flex items-center gap-3 border-b px-4 py-3">
@@ -104,11 +124,11 @@ export function ChatPanel({
           <Sparkles className="size-5" aria-hidden />
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="font-semibold">{t.chat.title}</h2>
+          <h2 className="font-semibold">{t('chat.title')}</h2>
           {topicTitle && <p className="truncate text-sm text-muted-foreground">{topicTitle}</p>}
         </div>
         {onClose && (
-          <Button variant="ghost" size="icon" onClick={onClose} aria-label={t.chat.close}>
+          <Button variant="ghost" size="icon" onClick={onClose} aria-label={t('chat.close')}>
             <X className="size-5" aria-hidden />
           </Button>
         )}
@@ -127,15 +147,15 @@ export function ChatPanel({
           </div>
         ) : thread.isError ? (
           <ErrorState
-            title={t.chat.loadFailed}
+            title={t('chat.loadFailed')}
             message={errorMessage(thread.error)}
             onRetry={() => void thread.refetch()}
             retrying={thread.isFetching}
           />
         ) : thread.data.items.length === 0 && !waiting ? (
           <div className="m-auto max-w-xs py-6 text-center">
-            <p className="font-medium">{t.chat.intro}</p>
-            <p className="mt-2 text-sm text-muted-foreground">{t.chat.introHint}</p>
+            <p className="font-medium">{t('chat.intro')}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t('chat.introHint')}</p>
           </div>
         ) : (
           thread.data.items.map((item) =>
@@ -157,7 +177,7 @@ export function ChatPanel({
       <div className="border-t px-3 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
         <div
           role="group"
-          aria-label={t.chat.quickActions}
+          aria-label={t('chat.quickActions')}
           className="-mx-3 flex [scrollbar-width:none] gap-2 overflow-x-auto px-3 pb-2"
         >
           {quickActions.map(({ action, label }) => (
@@ -191,8 +211,8 @@ export function ChatPanel({
                 submit()
               }
             }}
-            placeholder={t.chat.placeholder}
-            aria-label={t.chat.placeholder}
+            placeholder={t('chat.placeholder')}
+            aria-label={t('chat.placeholder')}
             enterKeyHint="send"
             className="max-h-36 min-h-11 flex-1 resize-none rounded-xl border border-input bg-background px-3 py-2.5 text-base leading-snug outline-none focus-visible:border-ring focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring/40"
           />
@@ -200,7 +220,7 @@ export function ChatPanel({
             type="submit"
             size="icon"
             disabled={waiting || !loaded || !draft.trim()}
-            aria-label={t.chat.send}
+            aria-label={t('chat.send')}
           >
             <SendHorizontal className="size-5" aria-hidden />
           </Button>
@@ -236,7 +256,7 @@ function StudentBubble({ item, onRetry }: { item: ChatItem; onRetry: () => void 
           <p className="text-sm text-danger">{item.error}</p>
           <Button variant="outline" size="sm" onClick={onRetry}>
             <RotateCcw aria-hidden />
-            {t.chat.retry}
+            {t('chat.retry')}
           </Button>
         </div>
       )}
@@ -245,9 +265,15 @@ function StudentBubble({ item, onRetry }: { item: ChatItem; onRetry: () => void 
 }
 
 const noticeLabel: Record<NonNullable<ChatItem['notice']>, string> = {
-  not_covered: t.chat.notCovered,
-  off_topic: t.chat.offTopic,
-  refused: t.chat.refusedQuiz,
+  get not_covered() {
+    return t('chat.notCovered')
+  },
+  get off_topic() {
+    return t('chat.offTopic')
+  },
+  get refused() {
+    return t('chat.refusedQuiz')
+  },
 }
 
 function AssistantBubble({
@@ -280,9 +306,11 @@ function AssistantBubble({
         </div>
       )}
       {sources.length > 0 && (
-        <ul className="flex flex-wrap gap-2" aria-label={t.chat.sources}>
+        <ul className="flex flex-wrap gap-2" aria-label={t('chat.sources')}>
           {sources.map((source) => {
-            const label = source.page ? t.chat.source(source.page) : t.chat.sourceNoPage
+            const label = source.page
+              ? t('chat.source', { page: source.page })
+              : t('chat.sourceNoPage')
             const chip =
               'inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full pointer-coarse:min-h-11 border border-primary/30 bg-primary-soft px-3 text-sm font-medium text-primary-soft-foreground hover:brightness-95'
             return (
@@ -322,7 +350,7 @@ function Typing() {
           />
         ))}
       </span>
-      {t.chat.typing}
+      {t('chat.typing')}
     </div>
   )
 }
