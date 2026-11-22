@@ -174,8 +174,10 @@ export function AnswerPanel({ onSubmit, submitting, onVoice }: AnswerPanelProps)
               aria-pressed={recording}
               aria-label={recording ? t.checkpoint.tapToStop : t.checkpoint.tapToRecord}
               className={cn(
-                'relative grid size-24 cursor-pointer place-items-center rounded-full text-white sticker transition-[background-color,transform,box-shadow] focus-visible:outline-4 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none disabled:opacity-60',
-                recording ? 'bg-danger hover:brightness-110' : 'bg-primary hover:bg-primary-hover',
+                'relative grid size-24 cursor-pointer place-items-center rounded-full sticker transition-[background-color,transform,box-shadow] focus-visible:outline-4 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none disabled:opacity-60',
+                recording
+                  ? 'bg-danger-solid text-white hover:brightness-110'
+                  : 'bg-primary text-primary-foreground hover:bg-primary-hover',
               )}
             >
               {recording ? (

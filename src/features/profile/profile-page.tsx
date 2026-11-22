@@ -4,9 +4,6 @@ import {
   Dumbbell,
   LogOut,
   MessageCircleMore,
-  Monitor,
-  Moon,
-  Sun,
   type LucideIcon,
 } from 'lucide-react'
 import { useState } from 'react'
@@ -18,6 +15,7 @@ import type { AttemptHistoryItem } from '@/api/types'
 import { PageHeader } from '@/components/layout/page-header'
 import { NotificationBell } from '@/components/notification-bell'
 import { EmptyState, ErrorState } from '@/components/states'
+import { ThemeSwitch, ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Chip } from '@/components/ui/chip'
@@ -25,9 +23,7 @@ import { ProgressBar } from '@/components/ui/progress-bar'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { useAuth, useStudent } from '@/features/auth/auth-context'
 import { t } from '@/lib/strings.uz'
-import { getTheme, setTheme, type ThemeChoice } from '@/lib/theme'
 import { DEFAULT_TIMEZONE, clockInZone, dateInZone, dayMonth } from '@/lib/time'
-import { cn } from '@/lib/utils'
 import { paths } from '@/routes/paths'
 
 export function ProfilePage() {
@@ -40,7 +36,15 @@ export function ProfilePage() {
 
   return (
     <>
-      <PageHeader title={t.profile.title} actions={<NotificationBell />} />
+      <PageHeader
+        title={t.profile.title}
+        actions={
+          <>
+            <ThemeToggle />
+            <NotificationBell />
+          </>
+        }
+      />
 
       <Card className="flex items-center gap-4">
         <span
@@ -227,44 +231,5 @@ function ResultBadge({ item }: { item: AttemptHistoryItem }) {
     <Chip tone={item.scorePercent >= 80 ? 'success' : 'warning'} className="mt-1.5 tabular-nums">
       {item.scorePercent}%
     </Chip>
-  )
-}
-
-const themes: { value: ThemeChoice; label: string; icon: LucideIcon }[] = [
-  { value: 'light', label: t.profile.themeLight, icon: Sun },
-  { value: 'dark', label: t.profile.themeDark, icon: Moon },
-  { value: 'system', label: t.profile.themeSystem, icon: Monitor },
-]
-
-function ThemeSwitch() {
-  const [choice, setChoice] = useState<ThemeChoice>(getTheme)
-  return (
-    <div
-      role="radiogroup"
-      aria-label={t.profile.theme}
-      className="grid grid-cols-3 gap-2 rounded-xl bg-muted p-1"
-    >
-      {themes.map(({ value, label, icon: Icon }) => (
-        <button
-          key={value}
-          type="button"
-          role="radio"
-          aria-checked={choice === value}
-          onClick={() => {
-            setChoice(value)
-            setTheme(value)
-          }}
-          className={cn(
-            'flex min-h-11 cursor-pointer items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-colors',
-            choice === value
-              ? 'bg-card text-foreground shadow-card'
-              : 'text-muted-foreground hover:text-foreground',
-          )}
-        >
-          <Icon className="size-4" aria-hidden />
-          {label}
-        </button>
-      ))}
-    </div>
   )
 }

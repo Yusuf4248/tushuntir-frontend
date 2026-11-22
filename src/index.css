@@ -24,9 +24,14 @@
   --muted: #edf1f7;
   --muted-foreground: #4e5b73;
   --border: #dfe6ef;
-  --input: #c9d3e1;
+  /* Field and outline-button edges: 3:1 against the page (WCAG 1.4.11). */
+  --input: #7f8fa7;
+  /* Line ink: outlines, sticker borders, the active quiz dot. */
   --ink: #16213e;
   --grid-line: #dfe6ef;
+  /* Sardor is a sticker drawn on paper: his lines, and text on apricot, stay dark in both themes. */
+  --sardor-line: #16213e;
+  --on-sardor: #16213e;
 
   /* The one accent: tile blue */
   --primary: #0b6e99;
@@ -48,7 +53,9 @@
   --warning-soft: #fdf0d9;
   --danger: #c2392f;
   --danger-soft: #fceceb;
-  --success: #1e7f4d;
+  /* Solid red under white text or icons (badges, the recording button): 5.4:1 in both themes. */
+  --danger-solid: #c2392f;
+  --success: #1b7a49;
   --success-soft: #e4f4ea;
 
   --radius: 0.75rem;
@@ -56,7 +63,7 @@
   --shadow-sticker: 3px 3px 0 0 var(--ink);
 }
 
-/* Dark mode: readable and unbroken, not polished. */
+/* Dark mode: the same notebook at night. Light line ink keeps outlines and stickers visible. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
@@ -67,9 +74,9 @@
     --muted: #1c2843;
     --muted-foreground: #a3b0c6;
     --border: #2a3756;
-    --input: #384869;
-    --ink: #04070f;
-    --grid-line: #1f2b45;
+    --input: #64769a;
+    --ink: #b4c3da;
+    --grid-line: #24324f;
 
     --primary: #5bb8e6;
     --primary-hover: #86cbee;
@@ -93,6 +100,9 @@
 
     --shadow-card: 0 1px 2px rgb(0 0 0 / 0.35);
     --shadow-sticker: 3px 3px 0 0 #04070f;
+    /* A thin light cut-out edge so Sardor's dark hair and doppi stand off the night paper. */
+    --sardor-outline: drop-shadow(1.5px 0 0 var(--ink)) drop-shadow(-1.5px 0 0 var(--ink))
+      drop-shadow(0 1.5px 0 var(--ink)) drop-shadow(0 -1.5px 0 var(--ink));
   }
 }
 
@@ -105,9 +115,9 @@
   --muted: #1c2843;
   --muted-foreground: #a3b0c6;
   --border: #2a3756;
-  --input: #384869;
-  --ink: #04070f;
-  --grid-line: #1f2b45;
+  --input: #64769a;
+  --ink: #b4c3da;
+  --grid-line: #24324f;
 
   --primary: #5bb8e6;
   --primary-hover: #86cbee;
@@ -131,6 +141,9 @@
 
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.35);
   --shadow-sticker: 3px 3px 0 0 #04070f;
+  /* A thin light cut-out edge so Sardor's dark hair and doppi stand off the night paper. */
+  --sardor-outline: drop-shadow(1.5px 0 0 var(--ink)) drop-shadow(-1.5px 0 0 var(--ink))
+    drop-shadow(0 1.5px 0 var(--ink)) drop-shadow(0 -1.5px 0 var(--ink));
 }
 
 @theme inline {
@@ -148,6 +161,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ink: var(--ink);
+  --color-on-sardor: var(--on-sardor);
 
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
@@ -172,6 +186,7 @@
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
+  --color-danger-solid: var(--danger-solid);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
 
@@ -194,6 +209,11 @@
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 22px 22px;
   background-position: -1px -1px;
+}
+
+/* Sardor's dark-mode outline (none in light mode). */
+.sardor {
+  filter: var(--sardor-outline, none);
 }
 
 /* The one "sticker" treatment: primary buttons and Sardor's bubble. */

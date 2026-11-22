@@ -7,6 +7,13 @@
       content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
     />
     <title>Tushuntir</title>
+    <script>
+      // Apply a saved light/dark choice before the first paint (no flash).
+      try {
+        var theme = localStorage.getItem('tushuntir.theme')
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme
+      } catch (e) {}
+    </script>
     <meta
       name="description"
       content="O'quvchilar uchun AI yordamchi: darslik, quiz, mashq va Tushuntir checkpoint."

@@ -5,6 +5,7 @@ import { weekdayDate } from '@/lib/time'
 import { useDocumentTitle } from '@/lib/use-document-title'
 
 import { NotificationBell } from '@/components/notification-bell'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 import { CheckpointCard } from './checkpoint-card'
 import { DeadlinesSection } from './deadlines-section'
@@ -32,7 +33,10 @@ export function HomePage() {
           </h1>
           <p className="mt-1 min-h-6 text-muted-foreground">{subtitle}</p>
         </div>
-        <NotificationBell className="-mr-2" />
+        <div className="-mr-2 flex shrink-0 items-center">
+          <ThemeToggle />
+          <NotificationBell />
+        </div>
       </header>
 
       {/* Phone: one column. Desktop: the AI work on the left, school and progress on the right. */}

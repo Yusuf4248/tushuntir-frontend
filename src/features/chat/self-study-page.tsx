@@ -14,6 +14,7 @@ import { useMastery, useWeakTopics } from '@/api/me'
 import type { WeakTopic } from '@/api/types'
 import { PageHeader } from '@/components/layout/page-header'
 import { NotificationBell } from '@/components/notification-bell'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { MathText } from '@/components/math-text'
 import { StatusChip } from '@/components/status-chip'
 import { EmptyState, ErrorState } from '@/components/states'
@@ -31,7 +32,12 @@ export function SelfStudyPage() {
       <PageHeader
         title={t.selfStudy.title}
         subtitle={t.selfStudy.subtitle}
-        actions={<NotificationBell />}
+        actions={
+          <>
+            <ThemeToggle />
+            <NotificationBell />
+          </>
+        }
       />
 
       <section aria-labelledby="weak-title">

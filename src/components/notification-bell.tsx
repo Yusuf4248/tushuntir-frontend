@@ -23,7 +23,7 @@ export function NotificationBell({ className }: { className?: string }) {
       {count > 0 && (
         <span
           aria-hidden
-          className="absolute top-1 right-1 grid h-5 min-w-5 place-items-center rounded-full bg-danger px-1 text-xs leading-none font-bold text-white tabular-nums ring-2 ring-background"
+          className="absolute top-1 right-1 grid h-5 min-w-5 place-items-center rounded-full bg-danger-solid px-1 text-xs leading-none font-bold text-white tabular-nums ring-2 ring-background"
         >
           {count > 99 ? '99+' : count}
         </span>
